@@ -24,4 +24,15 @@ type Concrete<T> = {
     [P in keyof T]: T[P] extends Function ? never : T[P]
 };
 
-type ReturnTypeBasedOnKey<T, K extends keyof T> = T[K];
+type ReturnTypeBasedOnKey<C, K extends keyof C> = C[K] extends (...args: any[]) => any ? ReturnType<C[K]> : C[K];
+
+type PickMatching<T, V> = { [K in keyof T as T[K] extends V ? K : never]: T[K] };
+
+type ExtractMethods<T> = PickMatching<T, Function>;
+
+type FieldKeys<C> = {
+    [K in keyof C]: C[K] extends (...args: any[]) => any ? never : K
+  }[keyof C];
+  
+// Using the FieldsOnly type to create a new type with only fields
+type FilteredFields<T> = Pick<T, FieldKeys<T>>;

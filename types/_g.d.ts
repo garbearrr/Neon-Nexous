@@ -1,7 +1,7 @@
 import { Collection } from "@rbxgar/collection";
-import { ClientInventoryEntry } from "ReplicatedStorage/client/inventory/types";
-import { BaseClientItemModule, ClientItemModule } from "ReplicatedStorage/client/item/types";
-import { ClientOreModule } from "ReplicatedStorage/client/ore/types";
+//import { ClientInventoryEntry } from "ReplicatedStorage/client/inventory/types";
+//import { BaseClientItemModule, ClientItemModule } from "ReplicatedStorage/client/item/types";
+//import { ClientOreModule } from "ReplicatedStorage/client/ore/types";
 
 /**
  * 
@@ -10,7 +10,7 @@ import { ClientOreModule } from "ReplicatedStorage/client/ore/types";
 declare global {
     interface _G {
         plot: Workspace["Plots"]["1"];
-        Inventory: Collection<string, number>;
+        /*Inventory: Collection<string, number>;
         ItemPlaceCache: Collection<string, BaseClientItemModule>;
         OreCache: Collection<string, ClientOreModule>;
         MoneyText: TextLabel;
@@ -21,7 +21,7 @@ declare global {
             Droppers: {vp: string, id: string}[];
             Furnaces: {vp: string, id: string}[];
             Upgraders: {vp: string, id: string}[];
-        }
+        }*/
     }
 }
 

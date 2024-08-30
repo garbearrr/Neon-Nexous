@@ -1,212 +1,207 @@
 interface Workspace extends Model {
 	Items: Model & {
 		Furnaces: Folder & {
-			["Ore Processor"]: Folder & {
-				["20000"]: Part & {
-					Stats: Folder & {
-						ItemName: StringValue;
-						Cost: NumberValue;
-						Add: NumberValue;
-						Multiplier: NumberValue;
-						ItemId: IntValue;
-					};
-					CollisionHitbox: Part & {
+			["20000"]: Part & {
+				Stats: Folder & {
+					ItemName: StringValue;
+					Cost: NumberValue;
+					Add: NumberValue;
+					Multiplier: NumberValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Base: Part & {
 						WeldConstraint: WeldConstraint;
 					};
-					Model: Folder & {
-						Base: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Frame: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-					ClickDetector: ClickDetector;
-					Receiver: Part & {
-						ParticleEmitter: ParticleEmitter;
-						Beam: Beam;
+					Frame: UnionOperation & {
 						WeldConstraint: WeldConstraint;
 					};
+				};
+				["Ore Processor"]: Folder;
+				ClickDetector: ClickDetector;
+				Receiver: Part & {
+					ParticleEmitter: ParticleEmitter;
+					Beam: Beam;
+					WeldConstraint: WeldConstraint;
 				};
 			};
 		};
 		Platform: Part;
 		Conveyors: Folder & {
-			Conveyor: Folder & {
-				["30000"]: Part & {
-					ConveyA1: Attachment;
-					Stats: Folder & {
-						Speed: NumberValue;
-						ItemName: StringValue;
-						ItemId: IntValue;
-						Cost: NumberValue;
-					};
-					BeamA1: Attachment;
-					DirectionIndicator: Beam & {
-						["Conveyor Arrow"]: Decal;
-					};
-					ConveyA2: Attachment;
-					CollisionHitbox: Part & {
+			["30000"]: Part & {
+				ConveyA1: Attachment;
+				Stats: Folder & {
+					Speed: NumberValue;
+					ItemName: StringValue;
+					ItemId: IntValue;
+					Cost: NumberValue;
+				};
+				BeamA1: Attachment;
+				DirectionIndicator: Beam & {
+					["Conveyor Arrow"]: Decal;
+				};
+				ConveyA2: Attachment;
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Conveyor: Part & {
 						WeldConstraint: WeldConstraint;
 					};
-					Model: Folder & {
-						Conveyor: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Front: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Sides: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
+					Front: Part & {
+						WeldConstraint: WeldConstraint;
 					};
-					ClickDetector: ClickDetector;
-					BeamA2: Attachment;
+					Sides: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
 				};
+				Conveyor: Folder;
+				ClickDetector: ClickDetector;
+				BeamA2: Attachment;
 			};
 		};
 		Upgraders: Folder & {
-			["Ore Gate"]: Folder & {
-				["40001"]: Part & {
-					Gate: Part & {
-						WeldConstraint: WeldConstraint;
+			["40001"]: Part & {
+				Conveyor: Part & {
+					ConveyA1: Attachment;
+					BeamA2: Attachment;
+					DirectionIndicator: Beam & {
+						["Conveyor Arrow"]: Decal;
 					};
-					Stats: Folder & {
-						MaxOreValue: NumberValue;
-						ItemName: StringValue;
-						Cost: NumberValue;
-						ItemId: IntValue;
-						MinOreValue: NumberValue;
-						Multiplier: NumberValue;
-						Add: NumberValue;
-					};
-					CollisionHitbox: Part & {
-						WeldConstraint: WeldConstraint;
-					};
-					Model: Folder & {
-						Conveyor: Folder & {
-							Front: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Conveyor: Part & {
-								WeldConstraint: WeldConstraint;
-							};
+					Speed: NumberValue;
+					BeamA1: Attachment;
+					ConveyA2: Attachment;
+					WeldConstraint: WeldConstraint;
+				};
+				ClickDetector: ClickDetector;
+				Upgrade: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				["Ore Gate"]: Folder;
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Conveyor: Folder & {
+						Front: Part & {
+							WeldConstraint: WeldConstraint;
 						};
-					};
-					Button: Part & {
-						WeldConstraint: WeldConstraint;
-					};
-					ClickDetector: ClickDetector;
-					Conveyor: Part & {
-						ConveyA1: Attachment;
-						BeamA2: Attachment;
-						DirectionIndicator: Beam & {
-							["Conveyor Arrow"]: Decal;
+						Conveyor: Part & {
+							WeldConstraint: WeldConstraint;
 						};
-						Speed: NumberValue;
-						BeamA1: Attachment;
-						ConveyA2: Attachment;
-						WeldConstraint: WeldConstraint;
-					};
-					Upgrade: Part & {
-						WeldConstraint: WeldConstraint;
 					};
 				};
+				Button: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Gate: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Stats: Folder & {
+					MaxOreValue: NumberValue;
+					ItemName: StringValue;
+					Cost: NumberValue;
+					ItemId: IntValue;
+					MinOreValue: NumberValue;
+					Multiplier: NumberValue;
+					Add: NumberValue;
+				};
 			};
-			["Erbium Infusor"]: Folder & {
-				["40000"]: Part & {
-					Stats: Folder & {
-						MaxOreValue: NumberValue;
-						ItemName: StringValue;
-						Cost: NumberValue;
-						ItemId: IntValue;
-						MinOreValue: NumberValue;
-						Multiplier: NumberValue;
-						Add: NumberValue;
-					};
-					CollisionHitbox: Part & {
+			["40000"]: Part & {
+				Stats: Folder & {
+					MaxOreValue: NumberValue;
+					ItemName: StringValue;
+					Cost: NumberValue;
+					ItemId: IntValue;
+					MinOreValue: NumberValue;
+					Multiplier: NumberValue;
+					Add: NumberValue;
+				};
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					UpgraderSupport: UnionOperation & {
+						Beam: Beam;
 						WeldConstraint: WeldConstraint;
 					};
-					Model: Folder & {
-						UpgraderSupport: UnionOperation & {
-							Beam: Beam;
-							WeldConstraint: WeldConstraint;
-						};
-						NeonRing: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						NeonSupport: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Base: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Conveyor: Folder & {
-							Front: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Conveyor: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-						};
-					};
-					ClickDetector: ClickDetector;
-					Conveyor: Part & {
-						ConveyA1: Attachment;
-						BeamA2: Attachment;
-						DirectionIndicator: Beam & {
-							["Conveyor Arrow"]: Decal;
-						};
-						Speed: NumberValue;
-						BeamA1: Attachment;
-						ConveyA2: Attachment;
+					NeonRing: UnionOperation & {
 						WeldConstraint: WeldConstraint;
 					};
-					Upgrade: Part & {
+					NeonSupport: UnionOperation & {
 						WeldConstraint: WeldConstraint;
 					};
+					Base: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Conveyor: Folder & {
+						Front: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+						Conveyor: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+					};
+				};
+				["Erbium Infusor"]: Folder;
+				ClickDetector: ClickDetector;
+				Conveyor: Part & {
+					ConveyA1: Attachment;
+					BeamA2: Attachment;
+					DirectionIndicator: Beam & {
+						["Conveyor Arrow"]: Decal;
+					};
+					Speed: NumberValue;
+					BeamA1: Attachment;
+					ConveyA2: Attachment;
+					WeldConstraint: WeldConstraint;
+				};
+				Upgrade: Part & {
+					WeldConstraint: WeldConstraint;
 				};
 			};
 		};
 		Droppers: Folder & {
-			["Erbium Mine"]: Folder & {
-				["10000"]: Part & {
-					Stats: Folder & {
-						ItemName: StringValue;
-						Cost: NumberValue;
-						DropSpeed: NumberValue;
-						OreValue: NumberValue;
-						ItemId: IntValue;
-					};
-					CollisionHitbox: Part & {
-						WeldConstraint: WeldConstraint;
-					};
-					Model: Folder & {
-						TubeBack: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Cap: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Tubes: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						TubeFront: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Base: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Supports: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-					Ore: Part & {
-						WeldConstraint: WeldConstraint;
-					};
-					ClickDetector: ClickDetector;
-					Drop: Attachment;
+			["10000"]: Part & {
+				["Erbium Mine"]: Folder;
+				Stats: Folder & {
+					ItemName: StringValue;
+					Cost: NumberValue;
+					DropSpeed: NumberValue;
+					OreValue: NumberValue;
+					ItemId: IntValue;
 				};
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					TubeBack: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Cap: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Tubes: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					TubeFront: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Supports: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				Ore: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				ClickDetector: ClickDetector;
+				Drop: Attachment;
 			};
 		};
 	};
