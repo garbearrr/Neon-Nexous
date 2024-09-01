@@ -1,12 +1,19 @@
-import { Players, TweenService, Workspace } from "@rbxts/services";
+import { TweenService } from "@rbxts/services";
 import { Grid } from "../Grid/Grid";
 import { Camera, Look, ViewDirection } from "../Camera/Camera";
 import { Common } from "shared/modules/Common/Common";
 import { Plot } from "../Plot/Plot";
 import { Collection } from "@rbxgar/collection";
+import { BaseItem } from "shared/modules/Item/BaseItem";
+import { Conveyor } from "../Item/Conveyor";
+import { Dropper } from "../Item/Dropper";
+import { Furnace } from "../Item/Furnace";
+import { Upgrader } from "../Item/Upgrader";
 
 const ROT_SMOOTH = 0.75;
 const CAM_TILT_PITCH = -45;
+
+// TODO: When dragging, hide item guide and make the grid look like retail tycoon 2 drag grid.
 
 let pid = 0;
 
@@ -21,9 +28,10 @@ export namespace Placement {
         CollisionGuide: undefined as unknown as Part,
         Connections: Collection<string, RBXScriptConnection>(),
         CurrentTween: undefined as unknown as Tween,
-        DragCache: Collection<string, Part>(),
+        DragCache: Collection<string, BaseItem>(),
         Item: undefined as unknown as PossibleItems,
         ItemId: 0,
+        ItemModule: undefined as unknown as BaseItem,
         TweenIsMoving: false,
     }
 
@@ -42,12 +50,16 @@ export namespace Placement {
             return;
         }
 
+        // This must be done before Item classes are instantiated.
+        const G = Grid.Instance(Plot.PlotItem);
+
         State.Item = SetupClone(ItemData);
+        State.ItemModule = ClassifyItem(State.Item);
         ConfigureHitboxGuide();
 
-        // TODO: Configure collision guide
+        State.ItemModule.OnSetup();
 
-        const G = Grid.Instance(Plot.PlotItem);
+        // TODO: Configure collision guide
         const Conn = State.Connections;
 
         Conn.Set("grid_on_move", G.Events.OnMove.Connect(({ Pos, Rot }) => StartOrUpdateTween(Pos, Rot)));
@@ -70,6 +82,20 @@ export namespace Placement {
         State.Active = true;
     }
 
+    const ClassifyItem = (Item: PossibleItems): BaseItem => {
+        if (Item.HasTag("Conveyor")) {
+            return new Conveyor(Item as ConveyorTemplate);
+        } else if (Item.HasTag("Dropper")) {
+            return new Dropper(Item as DropperTemplate);
+        } else if (Item.HasTag("Furnace")) {
+            return new Furnace(Item as FurnaceTemplate);
+        } else if (Item.HasTag("Upgrader")) {
+            return new Upgrader(Item as UpgraderTemplate);
+        } else {
+            error("Item doesn't have a valid category tag: " + Item.Name);
+        }
+    };
+
     const ConfigureHitboxGuide = () => {
         if (State.CollisionGuide !== undefined) return;
 
@@ -91,8 +117,11 @@ export namespace Placement {
         Camera.Instance().Reset();
         Grid.Instance().Reset();
 
-        State.Item.Destroy();
+        // Item will be destroyed by ItemModule.Destroy()
         State.Item = undefined as unknown as PossibleItems;
+
+        State.ItemModule.Destroy();
+        State.ItemModule = undefined as unknown as BaseItem;
 
         State.ItemId = 0;
 
@@ -103,6 +132,7 @@ export namespace Placement {
             State.CurrentTween?.Destroy();
             State.TweenIsMoving = false;
         }
+
         State.CurrentTween = undefined as unknown as Tween;
 
         State.Connections.ForEach(C => C.Disconnect());
@@ -114,15 +144,15 @@ export namespace Placement {
     const DragUpdate = (Added: boolean, CFrames: CFrame[]) => {
         if (Added) {
             for (const CF of CFrames) {
-                const Clone = State.Item.Clone() as PossibleItems;
+                const Clone = State.Item.Clone();
                 Clone.Parent = Plot.TempFolder;
                 Clone.CFrame = CF;
                 Clone.Anchored = true;
     
-                //const Mod = getItemMod(Clone);
+                const Mod = ClassifyItem(Clone);
     
-                //Mod.FireSetup();
-                //Mod.FireDragged();
+                Mod.OnSetup();
+                Mod.OnDragged();
     
                 const Tween = TweenService.Create(Clone as Part, TI, { Size: State.Item.Size });
                 Tween.Completed.Connect(() => { 
@@ -131,7 +161,7 @@ export namespace Placement {
                 Tween.Play();
     
                 const Key = `${CF.Position.X},${CF.Position.Z}`;
-                State.DragCache.Set(Key, Clone);
+                State.DragCache.Set(Key, Mod);
     
                 // TODO: Come back to collision
                 //if (!canPlaceItem(State, Clone.CollisionHitbox)){
@@ -144,15 +174,15 @@ export namespace Placement {
         } else {
             for (const CF of CFrames) {
                 const Key = `${CF.Position.X},${CF.Position.Z}`;
-                const I = State.DragCache.Get(Key) as PossibleItems;
+                const I = State.DragCache.Get(Key);
     
                 if (!I) continue;
     
-                //I.FireUndragged();
+                I.OnUndragged();
     
                 State.DragCache.Delete(Key);
     
-                const Tween = TweenService.Create(I, TI, { Size: new Vector3(0, 0, 0) });
+                const Tween = TweenService.Create(I.Part, TI, { Size: new Vector3(0, 0, 0) });
                 Tween.Completed.Connect(() => I.Destroy());
                 Tween.Play();
             }
@@ -175,9 +205,9 @@ export namespace Placement {
             const placementId = tostring(pid++);
             Clone.Name = tostring(placementId);
             
-            /* const Mod = getItemMod(Clone as ClientItem, placementId);
+            const Mod = ClassifyItem(Clone);
     
-            Clone.ClickDetector.MaxActivationDistance = 1000;
+            /*Clone.ClickDetector.MaxActivationDistance = 1000;
             Clone.ClickDetector.MouseHoverEnter.Connect((Player) => onMouseHoverEnter(Player, Clone));
             Clone.ClickDetector.MouseHoverLeave.Connect((Player) => onMouseHoverLeave(Player, Clone)); */
     
@@ -186,7 +216,7 @@ export namespace Placement {
                 Mod
             ); */
     
-            //Mod.FirePlaced();
+            Mod.OnPlaced();
     
             Clone.CFrame = Cframe;
             Clone.Transparency = 1;
@@ -224,11 +254,8 @@ export namespace Placement {
 
         State.Item.CFrame = TargetCFrame;
 
-        const Item = State.Item; //State.ItemGuide as ClientItem;
-
-        //const Mod = getItemMod(Item);
-
-        //Mod.FireMoved();
+        const Item = State.Item;
+        State.ItemModule.OnMoved();
 
         const PosDiff = new Vector3 (
             Item.Position.X - Item.CollisionHitbox.Position.X,

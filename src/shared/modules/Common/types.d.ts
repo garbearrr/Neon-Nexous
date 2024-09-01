@@ -3,8 +3,13 @@ interface ItemCategoriesType {
     [key: string]: string
 }
 
+type ConveyorTemplate = Workspace["Items"]["Conveyors"]["30000"]
+type DropperTemplate = Workspace["Items"]["Droppers"]["10000"]
+type FurnaceTemplate = Workspace["Items"]["Furnaces"]["20000"]
+type UpgraderTemplate = Workspace["Items"]["Upgraders"]["40000"]
+
 type PossibleItems =
-    Workspace["Items"]["Droppers"]["10000"] |
-    Workspace["Items"]["Furnaces"]["20000"] |
-    Workspace["Items"]["Upgraders"]["40000"] |
-    Workspace["Items"]["Conveyors"]["30000"]
+    | ConveyorTemplate
+    | DropperTemplate
+    | FurnaceTemplate
+    | UpgraderTemplate

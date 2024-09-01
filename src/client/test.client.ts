@@ -9,6 +9,6 @@ import { Placement } from "./modules/Placement/Placement";
 Debug.Enable();
 
 Input.Controls.KeyboardMouse.ToggleBuild.OnDown("build_togg", () => {
-    Placement.Toggle(10000);
+    Placement.Toggle(30000);
     print('TOGGLE BUILD');
 });

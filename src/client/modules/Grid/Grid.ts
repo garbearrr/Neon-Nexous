@@ -40,6 +40,7 @@ export class Grid {
         OnDrag: new Event<OnDrag>(),
         OnMove: new Event<OnMove>(),
         OnPlace: new Event<OnPlace>(),
+        OnRotate: new Event<number>()
     };
 
     public static Instance(GridParent?: Part): Grid {
@@ -104,14 +105,14 @@ export class Grid {
 
     private ConfigureGridTexture(): Texture {
         const TextureName = "GridTexture";
-        const TextureURL = "http://www.roblox.com/asset/?id=2600521419";
+        const TextureURL = "http://www.roblox.com/asset/?id=10640006995";
         const Parent = Grid.ParentGridPart!;
         const Lookup = Parent.FindFirstChild(TextureName);
         if (Lookup) return Lookup as Texture;
 
         const Texture = new Instance("Texture");
         Texture.Transparency    = 0;
-        Texture.Color3          = new Color3(0, 0, 1);
+        Texture.Color3          = new Color3(0, 0, 0);
         Texture.StudsPerTileU   = 6;
         Texture.StudsPerTileV   = 6;
         Texture.Face            = Enum.NormalId.Top;
@@ -180,6 +181,13 @@ export class Grid {
         }
     }
 
+    /**
+     * Get the current rotation of the item being placed in degrees.
+     */
+    public GetItemRotation(): number {
+        return Grid.Rotation;
+    }
+
     private FindClosestFraction(decimal: number, pow: number, size: number): number {
         if (pow === 0 && size % 2 === 1) return 0.5;
     
@@ -235,8 +243,6 @@ export class Grid {
 
         const GridSizeCells = new Vector2(GridParent.Size.X / GridTexture.StudsPerTileU, GridParent.Size.Z / GridTexture.StudsPerTileV);
         const TopLeftGrid = new Vector2(GridParent.Position.X - GridParent.Size.X / 2, GridParent.Position.Z - GridParent.Size.Z / 2);
-
-        print(TopLeftGrid);
 
         const CellSizeX = GridTexture.StudsPerTileU;
         const CellSizeY = GridTexture.StudsPerTileV;
@@ -450,6 +456,8 @@ export class Grid {
         this.CellSkip = CellSkip;
         this.CellOffset = CellOffset;
 
+        this.Events.OnRotate.Fire(Grid.Rotation);
+        
         this.FireCast();
     }
 
