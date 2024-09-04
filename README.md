@@ -1,1 +1,3 @@
 A roblox sandbox tycoon style game with the goal of promoting creativity, automation, and optimization while deviating from the linear style of typical entries in the tycoon genre.
+
+Following a dev-provided linear workflow to progress in a game gets very redundant and keeps the player having to wait to accumulate currency. We aim to create a dynamic way of generating currency and passive incomes to have the player create and use their own path on growing in the game. We are going off of another game: "Miner's Haven".
