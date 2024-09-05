@@ -3,12 +3,12 @@ import { Grid } from "../Grid/Grid";
 import { Camera, Look, ViewDirection } from "../Camera/Camera";
 import { Common } from "shared/modules/Common/Common";
 import { Plot } from "../Plot/Plot";
-import { Collection } from "@rbxgar/collection";
 import { BaseItem } from "shared/modules/Item/BaseItem";
 import { Conveyor } from "../Item/Conveyor";
 import { Dropper } from "../Item/Dropper";
 import { Furnace } from "../Item/Furnace";
 import { Upgrader } from "../Item/Upgrader";
+import { Collection } from "shared/modules/Collection/Collection";
 
 const ROT_SMOOTH = 0.75;
 const CAM_TILT_PITCH = -45;

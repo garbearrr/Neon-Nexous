@@ -16,9 +16,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@rbxgar/build": "github:garbearrr/rbxbuild#main",
-    "@rbxgar/camera": "github:garbearrr/rbxcamera#main",
-    "@rbxgar/collection": "github:garbearrr/rbxcollection#main",
     "@rbxts/services": "^1.5.4",
     "roblox-ts": "^2.3.0"
   }

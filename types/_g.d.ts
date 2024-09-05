@@ -1,4 +1,3 @@
-import { Collection } from "@rbxgar/collection";
 //import { ClientInventoryEntry } from "ReplicatedStorage/client/inventory/types";
 //import { BaseClientItemModule, ClientItemModule } from "ReplicatedStorage/client/item/types";
 //import { ClientOreModule } from "ReplicatedStorage/client/ore/types";
@@ -9,7 +8,7 @@ import { Collection } from "@rbxgar/collection";
  */
 declare global {
     interface _G {
-        plot: Workspace["Plots"]["1"];
+        //plot: Workspace["Plots"]["1"];
         /*Inventory: Collection<string, number>;
         ItemPlaceCache: Collection<string, BaseClientItemModule>;
         OreCache: Collection<string, ClientOreModule>;
