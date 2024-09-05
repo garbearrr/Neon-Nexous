@@ -14,9 +14,6 @@
 					"$className": "Folder",
 					"@rbxts": {
 						"$path": "node_modules/@rbxts"
-					},
-					"@rbxgar": {
-						"$path": "node_modules/@rbxgar"
 					}
 				}
 			},

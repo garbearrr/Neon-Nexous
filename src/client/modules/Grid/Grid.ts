@@ -1,4 +1,3 @@
-import { ActiveCast, FastCast, FastCastBehavior, FastCastConstructor } from "@rbxgar/fastcast";
 import { Players, ReplicatedStorage, Workspace } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 import { Event } from "shared/modules/Event/Event";
