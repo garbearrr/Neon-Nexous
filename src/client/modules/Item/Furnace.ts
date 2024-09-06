@@ -1,4 +1,4 @@
-import { BaseItem } from "shared/modules/Item/BaseItem";
+import { BaseItem } from "client/modules/Item/BaseItem";
 
 export class Furnace extends BaseItem implements FurnaceData {
     public readonly Receiver: Part;

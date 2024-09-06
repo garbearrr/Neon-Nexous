@@ -1,4 +1,4 @@
-import { UserInputService } from "@rbxts/services";
+import { Players, UserInputService } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 import { Event } from "shared/modules/Event/Event";
 
@@ -37,7 +37,14 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
         });
     }
 
-    public IsDown(Gamepad = Enum.UserInputType.Gamepad1): boolean {
+    public IsDown(ignoreGui: boolean = false, Gamepad = Enum.UserInputType.Gamepad1): boolean {
+        if (ignoreGui) {
+            const Mouse = Players.LocalPlayer.GetMouse();
+            const Gui = Players.LocalPlayer.FindFirstChild("PlayerGui") as PlayerGui;
+            if (Gui?.GetGuiObjectsAtPosition(Mouse.X, Mouse.Y).size() > 0)
+                return false;
+        }
+
         try {
             const res = UserInputService.IsKeyDown(this.Control as Enum.KeyCode)
             if (res) return res;

@@ -1,4 +1,4 @@
-import { BaseItem } from "shared/modules/Item/BaseItem";
+import { BaseItem } from "client/modules/Item/BaseItem";
 import { Item } from "./Common";
 import { Grid } from "../Grid/Grid";
 
@@ -25,6 +25,7 @@ export class Conveyor extends BaseItem implements ConveyorData {
 
     public override OnPlaced(): void {
         super.OnPlaced();
+
         this.DirectionIndicator.Enabled = false;
         
         const ConveyorA1 = this.ConveyA1;
@@ -43,6 +44,7 @@ export class Conveyor extends BaseItem implements ConveyorData {
 
     public override OnSetup(): void {
         super.OnSetup();
+        
         this.DirectionIndicator.Enabled = true;
 
         const G = Grid.Instance();

@@ -1,4 +1,4 @@
-import { BaseItem } from "shared/modules/Item/BaseItem";
+import { BaseItem } from "client/modules/Item/BaseItem";
 import { Item } from "./Common";
 
 export class Upgrader extends BaseItem implements UpgraderData {

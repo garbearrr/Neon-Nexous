@@ -166,6 +166,17 @@ export function Collection<K extends defined, V extends defined>(): Collection<K
 			return undefined;
 		},
 
+		// Finds keys in the collection that satisfy a test on their associated values.
+		FindKeys(fn: (value: V, key: K) => boolean): K[] | undefined {
+			const keys: K[] = [];
+			for (const [key, value] of _Map) {
+				if (fn(value, key)) {
+					keys.push(key);
+				}
+			}
+			return keys.size() === 0 ? undefined : keys;
+		},
+
         // Retrieves the first value or first 'count' values from the collection.
 		First(count?: number): V | V[] | undefined {
 			const iterator = _Map[Symbol.iterator]();
@@ -554,6 +565,10 @@ export interface CollectionMethods<K, V> extends CollectionEvents<K, V> {
 	 * Finds a key in the collection that satisfies a test on its associated value.
 	 */
 	FindKey(fn: (value: V, key: K) => boolean): K | undefined;
+	/**
+	 * Finds keys in the collection that satisfy a test on their associated values.
+	 */
+	FindKeys(fn: (value: V, key: K) => boolean): K[] | undefined;
 	/**
 	 * Retrieves the first value or first 'count' values from the collection.
 	 */

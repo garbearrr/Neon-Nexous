@@ -23,7 +23,7 @@ interface iControlData<T extends UniqueInputTypes> {
      * Checks if a given key, button, mouse button, etc. is down.
      * @param Gamepad Optional argument to specify which gamepad to check.
      */
-    IsDown(Gamepad?: Enum.UserInputType): boolean;
+    IsDown(ignoreGui?: boolean, Gamepad?: Enum.UserInputType): boolean;
     /**
      * Bind a function to an input that fires on input change.
      * @param id Custom name identifer for your connection.

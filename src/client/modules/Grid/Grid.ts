@@ -121,6 +121,26 @@ export class Grid {
 
         return Texture;
     }
+
+    /**
+     * Get the cells the item is taking up on the grid.
+     */
+    public GetCellsTakenUp(Loc?: Vector3): Vector2[] {
+        // Top left should be 0,0 and it should increase positively on both axis down and right.
+        const ItemSizeCells = this.GetItemSizeInCellsXY();
+        const LocInCells = this.GetItemLocInCells(Loc);
+
+        const CellsTakenUp: Vector2[] = [];
+        for (let y = 0; y < ItemSizeCells.Y; y++) {
+            for (let x = 0; x < ItemSizeCells.X; x++) {
+                const CX = LocInCells.X + x;
+                const CY = math.abs(LocInCells.Y + y);
+                CellsTakenUp.push(new Vector2(math.floor(CX), math.floor(CY)));
+            }
+        }
+
+        return CellsTakenUp;
+    }
     
     private GetCellSkipAndCellOffset(): [Vector2, Vector2] {
         const ItemSizeInCells = this.GetItemSizeInCellsXY();
@@ -181,6 +201,65 @@ export class Grid {
     }
 
     /**
+     * Get the item's location in cells on the grid from the top left cell of the item in the event it is bigger than 1x1.
+     */
+    public GetItemLocInCells(Loc?: Vector3): Vector2 {
+        const ItemSizeCells = this.GetItemSizeInCellsXY();
+        const [CellSkip, CellOffset] = this.GetCellSkipAndCellOffset();
+        const Target = Loc || this.LastTargetCFrame.Position;
+
+        const GridParent = Grid.ParentGridPart!;
+        const GridTexture = this.GridTexture;
+
+        const GridSizeCells = new Vector2(GridParent.Size.X / GridTexture.StudsPerTileU, GridParent.Size.Z / GridTexture.StudsPerTileV);
+        const TopLeftGrid = new Vector2(GridParent.Position.X - GridParent.Size.X / 2, GridParent.Position.Z - GridParent.Size.Z / 2);
+
+        const CellSizeX = GridTexture.StudsPerTileU;
+        const CellSizeY = GridTexture.StudsPerTileV;
+
+        const ClampedTarget = new Vector3(
+            math.clamp(
+                Target.X,
+                TopLeftGrid.X                               + CellSkip.X * CellSizeX + CellOffset.X,
+                TopLeftGrid.X + GridSizeCells.X * CellSizeX - CellSkip.X * CellSizeX - CellOffset.X
+            ),
+            GridParent.Position.Y + GridParent.Size.Y / 2 + this.ItemSize.Y / 2,
+            math.clamp(
+                Target.Z, 
+                TopLeftGrid.Y                               + CellSkip.Y * CellSizeY + CellOffset.Y, 
+                TopLeftGrid.Y + GridSizeCells.Y * CellSizeY - CellSkip.Y * CellSizeY - CellOffset.Y,
+            )
+        );
+
+        const CellsAwayFromTopLeft = new Vector2(
+            (ClampedTarget.X - TopLeftGrid.X) / CellSizeX,
+            (TopLeftGrid.Y - ClampedTarget.Z) / CellSizeY
+        );
+
+        const NoWholeNumber = new Vector2(
+            CellsAwayFromTopLeft.X - math.floor(CellsAwayFromTopLeft.X),
+            CellsAwayFromTopLeft.Y - math.floor(CellsAwayFromTopLeft.Y)
+        );
+
+        const NoDecimal = new Vector2(
+            math.floor(CellsAwayFromTopLeft.X),
+            math.floor(CellsAwayFromTopLeft.Y)
+        );
+
+        const SnappedDecimal = new Vector2(
+            this.FindClosestFraction(NoWholeNumber.X, this.SnapSize, ItemSizeCells.X),
+            this.FindClosestFraction(NoWholeNumber.Y, this.SnapSize, ItemSizeCells.Y)
+        );
+
+        const SnappedWhole = new Vector2(
+            NoDecimal.X + SnappedDecimal.X,
+            NoDecimal.Y + SnappedDecimal.Y
+        );
+
+        return SnappedWhole;
+    }
+
+    /**
      * Get the current rotation of the item being placed in degrees.
      */
     public GetItemRotation(): number {
@@ -218,10 +297,10 @@ export class Grid {
         return new Vector2(ObjectSizeX, ObjectSizeY);
     }
 
-    private IsPlaceButtonDown(): boolean {
+    public IsPlaceButtonDown(): boolean {
         // TODO: Add controller input.
         const KbMouse = Input.Controls.KeyboardMouse.GridItemPlace;
-        return KbMouse.IsDown();
+        return KbMouse.IsDown(true);
     }
 
     public LockDragHorizontal(): this {
@@ -560,6 +639,7 @@ export class Grid {
         this.Connections.Set(
             "grid_place",
             Input.Controls.KeyboardMouse.GridItemPlace.OnUp("GridItemPlaceUp", () => this.Place())
+                .IgnoreGameProcessedEvent(true)
         )
     
         for (const FireSignal of this.FireSignals.Values()) {
@@ -571,6 +651,9 @@ export class Grid {
             this.Connections.Set(FireSignal.Name, Connection);
             FireSignal.Connection = Connection;
         }
+
+        this.DragLockedHorizontal = false;
+        this.DragLockedVertical = false;
 
         this.FireCast();
 

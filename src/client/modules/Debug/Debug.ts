@@ -1,7 +1,10 @@
-import { Players } from "@rbxts/services";
+import { Players, Workspace } from "@rbxts/services";
 import { Input } from "../Input/Input";
 import { Camera } from "../Camera/Camera";
 import { ExtractMethods } from "../../../../types/util";
+import { Collection } from "shared/modules/Collection/Collection";
+import { Placement } from "../Placement/Placement";
+import { PlacedItems } from "../PlacedItems/PlacedItems";
 
 // NOTE: This isn't designed to be destructed and reinstantiated.
 
@@ -20,6 +23,7 @@ export class Debug {
         print("❗❗❗ CLIENT DEBUG ENABLED ❗❗❗");
         this.CamDebugInit();
         this.InputDebugInit();
+        this.ItemDebugInit();
 
         const DGUI = this.ClientDebug;
 
@@ -230,5 +234,162 @@ export class Debug {
 
             return RemoveFlag(ID, Key, Flag)
         });
+    }
+
+    private ItemDebugInit(): void {
+        const IGUI = this.ClientDebug.ItemModule;
+
+        const GenTab = IGUI.ActionFrame.General;
+        const ItemsTab = IGUI.ActionFrame.Items;
+        const PlacedTab = IGUI.ActionFrame.Placed;
+        const InvTab = IGUI.ActionFrame.Inventory;
+
+        const GenFrame = IGUI.GeneralFrame;
+        const ItemsFrame = IGUI.ItemsFrame;
+        const PlacedFrame = IGUI.PlacedFrame;
+        //const InvFrame = IGUI.InventoryFrame;
+
+        let CurrentFrame: ScrollingFrame = GenFrame as ScrollingFrame;
+
+        const IFrameAdded: typeof IGUI["ItemsFrame"]["ItemEntry"][]  = [];
+        const IFrameCons: RBXScriptConnection[] = [];
+        const ItemsFrameInit = (Frame: typeof IGUI["ItemsFrame"]) => {
+            IFrameAdded.forEach((Item) => Item.Destroy());
+            IFrameCons.forEach((Con) => Con.Disconnect());
+
+            const Entry = Frame.ItemEntry;
+            Entry.Visible = false;
+
+            const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];
+            if (!Items) {
+                this.DebugError("Items folder not found.");
+                return;
+            }
+
+            const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
+            const FoundItems = Collection<string, {ItemId: string, Name: string, Item: Part}>();
+
+            for (const Folder of TypeFolders) {
+                const Items = Folder.GetChildren() as PossibleItems[];
+
+                for (const Item of Items) {
+                    const ID = Item.Name;
+                    const Name = Item.Stats.ItemName.Value;
+                    FoundItems.Set(ID, {ItemId: ID, Name: Name, Item});
+                }
+            }
+
+            FoundItems.ForEach((Item) => {
+                const Clone = Entry.Clone();
+                Clone.Visible = true;
+                Clone.Parent = Frame;
+                Clone.Name = Item.ItemId;
+                Clone.ID.Text = Item.ItemId;
+                (Clone.FindFirstChild("Name")! as TextLabel).Text = Item.Name;
+            
+                const VP = Clone.ViewportFrame;
+                const IClone = Item.Item.Clone();
+
+                const Model = new Instance("Model");
+                Model.Parent = VP;
+                IClone.Parent = Model;
+                Model.PrimaryPart = IClone;
+                // Inc for closer, dec for further
+                Model.PivotTo(new CFrame(0, -0.5, -14).mul(CFrame.Angles(0, math.rad(-30), 0)));
+
+                const Connection = Clone.InputBegan.Connect((Input) => {
+                    if (Input.UserInputType !== Enum.UserInputType.MouseButton1) return;
+
+                    Placement.Activate(tonumber(Item.ItemId)!);
+                });
+
+                IFrameCons.push(Connection);
+            
+                IFrameAdded.push(Clone);
+            });            
+        }
+
+        const PFrameAdded: typeof IGUI["PlacedFrame"]["ItemEntry"][]  = [];
+        const PFrameCons: RBXScriptConnection[] = [];
+        const PlacedFrameInit = (Frame: typeof IGUI["PlacedFrame"]) => {
+            PFrameAdded.forEach((Item) => Item.Destroy());
+            PFrameCons.forEach((Con) => Con.Disconnect());
+
+            const Entry = Frame.ItemEntry;
+            Entry.Visible = false;
+
+            const Placed = PlacedItems.GetUniqueItems();
+
+            const FindItem = (ID: string) => {
+                const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];
+                if (!Items) {
+                    this.DebugError("Items folder not found.");
+                    return;
+                }
+
+                const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
+                for (const Folder of TypeFolders) {
+                    const Item = Folder.FindFirstChild(ID) as PossibleItems;
+                    if (Item) return Item;
+                }
+            }
+
+            const BlinkTimes = 15;
+            for (const Item of Placed.Values()) {
+                const Clone = Entry.Clone();
+                Clone.Visible = true;
+                Clone.Parent = Frame;
+                Clone.Name = tostring(Item.Stats.ItemId.Value);
+                Clone.ID.Text = tostring(Item.Stats.ItemId.Value);
+                Clone.PID.Text = tostring(Item.GetPID());
+                (Clone.FindFirstChild("Name")! as TextLabel).Text = Item.Stats.ItemName.Value;
+            
+                const VP = Clone.ViewportFrame;
+                const IClone = FindItem(tostring(Item.Stats.ItemId.Value))!.Clone();
+
+                const Model = new Instance("Model");
+                Model.Parent = VP;
+                IClone.Parent = Model;
+                Model.PrimaryPart = IClone;
+                // Inc for closer, dec for further
+                Model.PivotTo(new CFrame(0, -0.5, -14).mul(CFrame.Angles(0, math.rad(-30), 0)));
+
+                const Connection = Clone.InputBegan.Connect((Input) => {
+                    if (Input.UserInputType !== Enum.UserInputType.MouseButton1) return;
+
+                    Item.CollisionHitbox.Color = Color3.fromRGB(255, 0, 0);
+                    Item.CollisionHitbox.Material = Enum.Material.Neon;
+                    
+                    for (let i = 0; i < BlinkTimes; i++) {
+                        wait(0.1);
+                        Item.CollisionHitbox.Transparency = Item.CollisionHitbox.Transparency === 0 ? 1 : 0;
+                    }
+                });
+
+                const Connection2 = Clone.Dest.Activated.Connect(() => {
+                    PlacedItems.RemoveItem(Item.GetPID());
+                    PlacedFrameInit(Frame);
+                });
+
+                PFrameCons.push(Connection);
+                PFrameCons.push(Connection2);
+                PFrameAdded.push(Clone);
+            }
+        }
+
+        const SetFrame = (Tab: TextButton, Frame: ScrollingFrame, CB?: Callback) => {
+            Tab.Activated.Connect(() => {
+                CurrentFrame.Visible = false;
+                Frame.Visible = true;
+                CurrentFrame = Frame;
+                if (CB !== undefined)
+                    CB(Frame);
+            });
+        }
+
+        SetFrame(GenTab, GenFrame);
+        SetFrame(ItemsTab, ItemsFrame, ItemsFrameInit);
+        SetFrame(PlacedTab, PlacedFrame, PlacedFrameInit);
+        //SetFrame(InvTab, InvFrame);
     }
 }
