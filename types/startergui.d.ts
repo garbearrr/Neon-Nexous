@@ -286,6 +286,45 @@ interface StarterGui extends BasePlayerGui {
 		};
 	};
 	ClientDebug: ScreenGui & {
+		ItemModule: Frame & {
+			ActionFrame: Frame & {
+				Items: TextButton;
+				General: TextButton;
+				UIListLayout: UIListLayout;
+				Inventory: TextButton;
+				Placed: TextButton;
+			};
+			Close: TextButton & {
+				CloseButton: LocalScript;
+			};
+			PlacedFrame: ScrollingFrame & {
+				UIListLayout: UIListLayout;
+				ItemEntry: Frame & {
+					UICorner: UICorner;
+					ID: TextLabel;
+					PID: TextLabel;
+					ViewportFrame: ViewportFrame;
+					Dest: TextButton;
+				};
+				UIPadding: UIPadding;
+			};
+			GeneralFrame: ScrollingFrame & {
+				UIListLayout: UIListLayout;
+				UIPadding: UIPadding;
+				TogHixboxes: TextButton & {
+					UICorner: UICorner;
+				};
+			};
+			ItemsFrame: ScrollingFrame & {
+				UIListLayout: UIListLayout;
+				ItemEntry: Frame & {
+					ID: TextLabel;
+					ViewportFrame: ViewportFrame;
+					UICorner: UICorner;
+				};
+				UIPadding: UIPadding;
+			};
+		};
 		InputModule: Frame & {
 			Label: TextLabel;
 			UIDragDetector: UIDragDetector;

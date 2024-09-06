@@ -1,15 +1,32 @@
 interface BaseItemData {
-    ClickDetector: ClickDetector;
-    CollisionHitbox: Part & {
+    readonly ClickDetector: ClickDetector;
+    readonly CollisionHitbox: Part & {
         WeldConstraint: WeldConstraint;
     };
-    Model: Folder;
-    Stats: Folder & {
+    readonly Model: Folder;
+    readonly Stats: Folder & {
         ItemId: IntValue;
         Cost: NumberValue;
         ItemName: StringValue;
     };
 }
+
+interface IBaseItem {
+    Destroy(): void
+    GetPID(): number
+    /** Fires when the item is being dragged during placement. */
+    OnDragged(): void
+    /** Fires when the items is moved during placement. */
+    OnMoved(): void
+    /** Fires when the item is placed. */
+    OnPlaced(): void
+    /** Fires when the item is selected for placement and casting begins. */
+    OnSetup(): void
+    /** Fires when the item is removed from a drag. */
+    OnUndragged(): void
+}
+
+interface BaseItemType extends BaseItemData, IBaseItem {}
 
 interface ConveyorData extends BaseItemData {
     BeamA1: Attachment;

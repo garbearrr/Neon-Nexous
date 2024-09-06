@@ -1,4 +1,4 @@
-import { BaseItem } from "shared/modules/Item/BaseItem";
+import { BaseItem } from "client/modules/Item/BaseItem";
 
 export class Dropper extends BaseItem implements DropperData {
     public readonly Drop: DropperData["Drop"];

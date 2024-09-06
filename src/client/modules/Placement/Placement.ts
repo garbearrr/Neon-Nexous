@@ -3,7 +3,7 @@ import { Grid } from "../Grid/Grid";
 import { Camera, Look, ViewDirection } from "../Camera/Camera";
 import { Common } from "shared/modules/Common/Common";
 import { Plot } from "../Plot/Plot";
-import { BaseItem } from "shared/modules/Item/BaseItem";
+import { BaseItem } from "client/modules/Item/BaseItem";
 import { Conveyor } from "../Item/Conveyor";
 import { Dropper } from "../Item/Dropper";
 import { Furnace } from "../Item/Furnace";
@@ -189,18 +189,12 @@ export namespace Placement {
         }
     }
 
+    export const IsActive = () => State.Active;
+
     const OnPlace = (CF: CFrame[]) => {
         for (const Cframe of CF) {
             const Clone = State.Item.Clone();
-            //Clone.CFrame = Cframe.mul(new CFrame(0, CBC.COLLISION_CHECK_Y_OFFSET, 0));
-            Clone.Parent = Plot.PlacedFolder;
-    
-            // TODO: Come back to collision
-            /* if (!canPlaceItem(State, Clone.CollisionHitbox, true)) {
-                Clone.Destroy();
-                print("Cant place item!")
-                continue;
-            } */
+            Clone.CFrame = Cframe;
     
             const placementId = tostring(pid++);
             Clone.Name = tostring(placementId);
@@ -210,11 +204,6 @@ export namespace Placement {
             /*Clone.ClickDetector.MaxActivationDistance = 1000;
             Clone.ClickDetector.MouseHoverEnter.Connect((Player) => onMouseHoverEnter(Player, Clone));
             Clone.ClickDetector.MouseHoverLeave.Connect((Player) => onMouseHoverLeave(Player, Clone)); */
-    
-            /* _G.ItemPlaceCache.Set(
-                placementId,
-                Mod
-            ); */
     
             Mod.OnPlaced();
     
@@ -303,8 +292,13 @@ export namespace Placement {
         State.Item.Destroy();
         State.Item = SetupClone(Item);
 
-        // TODO: Update collision guide
+        for (const Item of State.DragCache.Values()) {
+            Item.Destroy();
+        }
 
+        State.DragCache.Clear();
+
+        while (Grid.Instance().IsPlaceButtonDown()) wait();
         Grid.Instance().StartCasting(State.Item, ItemId);
     }
 }
