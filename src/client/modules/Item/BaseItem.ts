@@ -51,6 +51,7 @@ export abstract class BaseItem implements BaseItemType {
     public OnPlaced(): void {
         // This needs to be recalculated again for some reason or else it will always be false.
         this.CellsOccupied = Grid.Instance().GetCellsTakenUp(this.Part.Position);
+        print("CellsOccupied", this.CellsOccupied);
         this.CanPlace = PlacedItems.CanPlace(this.CellsOccupied);
 
         if (!this.CanPlace) return;

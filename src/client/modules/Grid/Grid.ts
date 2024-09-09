@@ -112,8 +112,8 @@ export class Grid {
         const Texture = new Instance("Texture");
         Texture.Transparency    = 0;
         Texture.Color3          = new Color3(0, 0, 0);
-        Texture.StudsPerTileU   = 6;
-        Texture.StudsPerTileV   = 6;
+        Texture.StudsPerTileU   = 3;
+        Texture.StudsPerTileV   = 3;
         Texture.Face            = Enum.NormalId.Top;
         Texture.Texture         = TextureURL;
         Texture.Parent          = Parent;
@@ -141,6 +141,7 @@ export class Grid {
 
         return CellsTakenUp;
     }
+
     
     private GetCellSkipAndCellOffset(): [Vector2, Vector2] {
         const ItemSizeInCells = this.GetItemSizeInCellsXY();
@@ -246,9 +247,12 @@ export class Grid {
             math.floor(CellsAwayFromTopLeft.Y)
         );
 
+        const SnapSize = this.SnapSize;
+
+        // Adjust for fractional cells if SnapSize is set
         const SnappedDecimal = new Vector2(
-            this.FindClosestFraction(NoWholeNumber.X, this.SnapSize, ItemSizeCells.X),
-            this.FindClosestFraction(NoWholeNumber.Y, this.SnapSize, ItemSizeCells.Y)
+            this.FindClosestFraction(NoWholeNumber.X, SnapSize, ItemSizeCells.X),
+            this.FindClosestFraction(NoWholeNumber.Y, SnapSize, ItemSizeCells.Y)
         );
 
         const SnappedWhole = new Vector2(
@@ -259,6 +263,7 @@ export class Grid {
         return SnappedWhole;
     }
 
+
     /**
      * Get the current rotation of the item being placed in degrees.
      */
@@ -267,7 +272,7 @@ export class Grid {
     }
 
     private FindClosestFraction(decimal: number, pow: number, size: number): number {
-        if (pow === 0 && size % 2 === 1) return 0.5;
+        //if (pow === 0 && size % 2 === 1) return 0.5; <- Might need this when when SnapSize is 0??
     
         const powerOfTwo = math.pow(2, pow);  // Calculate 2^n
         const scaledValue = decimal * powerOfTwo;  // Scale the value to the range [0, 2^n]
@@ -608,9 +613,12 @@ export class Grid {
      * How many "sub" cells items will snap to.
      * 
      * The result is 1 / 2^N. Ex: Snapsize 1 = 1/2 cells.
+     * 
+     * This will break placement overlap checks
      * @param SnapSize
      * @default 0
      * @min 0
+     * @deprecated
      */
     public SetSnapSize(SnapSize: number): this {
         if (SnapSize < 0) SnapSize = 0;

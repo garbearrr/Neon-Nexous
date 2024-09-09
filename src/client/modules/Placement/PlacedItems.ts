@@ -21,6 +21,7 @@ export namespace PlacedItems {
      * @param Cells The cells that the item occupies
      */
     export const CanPlace = (Cells: Vector2[]): boolean => {
+        // TODO: Fix overlap for fractional cells
         return Cells.every(C => PlacedItemCache.Get(C.X + "_" + C.Y) === undefined);
     }
 

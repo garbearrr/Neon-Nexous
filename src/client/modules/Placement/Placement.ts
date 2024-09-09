@@ -77,8 +77,7 @@ export namespace Placement {
             .UnSetLookVectors(Look.Y)
             .SetRotationSmoothness(ROT_SMOOTH);
         
-        G.SetSnapSize(1)
-            .StartCasting(State.Item, ItemId);
+        G.StartCasting(State.Item, ItemId);
 
         State.Active = true;
     }
