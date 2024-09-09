@@ -1,5 +1,13 @@
 import { Event } from "../Event/Event";
 
+const slice = <T extends defined>(array: T[], start: number, ending: number): T[] => {
+	const newArray: T[] = [];
+	for (let i = start; i < ending; i++) {
+		newArray.push(array[i]);
+	}
+	return newArray;
+};
+
 export function Collection<K extends defined, V extends defined>(): Collection<K, V> {
 	const _Map: Map<K, V> = new Map<K, V>();
 	const _Events: CollectionEvents<K, V> = {
@@ -179,26 +187,10 @@ export function Collection<K extends defined, V extends defined>(): Collection<K
 
         // Retrieves the first value or first 'count' values from the collection.
 		First(count?: number): V | V[] | undefined {
-			const iterator = _Map[Symbol.iterator]();
-
 			if (count === undefined) {
-				const first = iterator.next();
-				return first.done ? undefined : first.value[1];
+				return methods(state).Array()[0];
 			}
-
-			if (count < 0) {
-				return [];
-			}
-
-			const values: V[] = [];
-			let iterCount = 0;
-			let iteratorResult = iterator.next();
-			while (!iteratorResult.done && iterCount < count) {
-				values.push(iteratorResult.value[1]);
-				iterCount++;
-				iteratorResult = iterator.next();
-			}
-			return values.size() === 0 ? undefined : values.size() === 1 ? values[0] : values;
+			return slice(methods(state).Array(), 0, count);
 		},
 
         // Maps each entry in the collection into an array using a function, then flattens the result into a single array.
@@ -274,26 +266,14 @@ export function Collection<K extends defined, V extends defined>(): Collection<K
 
         // Retrieves the last value in the collection.
 		Last(): V | V[] | undefined {
-			const iterator = _Map[Symbol.iterator]();
-			let iteratorResult = iterator.next();
-			let last: V | undefined = undefined;
-			while (!iteratorResult.done) {
-				last = iteratorResult.value[1];
-				iteratorResult = iterator.next();
-			}
-			return last;
+			const values = methods(state).Array();
+			return values[values.size() - 1];
 		},
 
         // Retrieves the last key in the collection.
 		LastKey(): K | undefined {
-			const iterator = _Map[Symbol.iterator]();
-			let iteratorResult = iterator.next();
-			let lastKey: K | undefined = undefined;
-			while (!iteratorResult.done) {
-				lastKey = iteratorResult.value[0];
-				iteratorResult = iterator.next();
-			}
-			return lastKey;
+			const keys = methods(state).KeyArray();
+			return keys[keys.size() - 1];
 		},
 
         // Maps each entry in the collection into a new array using a function.

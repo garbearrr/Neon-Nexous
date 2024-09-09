@@ -4,7 +4,7 @@ import { Camera } from "../Camera/Camera";
 import { ExtractMethods } from "../../../../types/util";
 import { Collection } from "shared/modules/Collection/Collection";
 import { Placement } from "../Placement/Placement";
-import { PlacedItems } from "../PlacedItems/PlacedItems";
+import { PlacedItems } from "../Placement/PlacedItems";
 
 // NOTE: This isn't designed to be destructed and reinstantiated.
 

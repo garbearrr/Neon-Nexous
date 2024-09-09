@@ -1,5 +1,5 @@
 import { Grid } from "../Grid/Grid";
-import { PlacedItems } from "../PlacedItems/PlacedItems";
+import { PlacedItems } from "../Placement/PlacedItems";
 import { Plot } from "../Plot/Plot";
 
 export abstract class BaseItem implements BaseItemType {

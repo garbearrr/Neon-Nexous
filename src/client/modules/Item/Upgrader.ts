@@ -1,5 +1,7 @@
 import { BaseItem } from "client/modules/Item/BaseItem";
 import { Item } from "./Common";
+import { CollectionService } from "@rbxts/services";
+import { OreManager } from "../Ore/OreManager";
 
 export class Upgrader extends BaseItem implements UpgraderData {
     public readonly Conveyor: UpgraderData["Conveyor"];
@@ -26,14 +28,16 @@ export class Upgrader extends BaseItem implements UpgraderData {
         Item.Common.ActivateConveyor(ConveyA1, ConveyA2, Speed, Part);
 
         const Conn = this.Upgrade.Touched.Connect((HitPart) => {
-            // TODO: Ore upgrade logic
-            /*
-            const Ore = _G.OreCache.Get(HitPart.Name);
+            if (!CollectionService.HasTag(HitPart, "Ore")) return;
 
+            const Ore = OreManager.Get(tonumber(HitPart.Name)!);
             if (Ore === undefined) return;
+            
+            const CurValue = Ore.GetValue();
+            const NewValue = CurValue * this.Stats.Multiplier.Value + this.Stats.Add.Value;
+            Ore.SetValue(NewValue);
 
-            Ore.Upgrade(State.Add, State.Multiplier, State.MinOreValue, State.MaxOreValue);
-            */
+            // TODO: Implement tagging system.
         });
 
         this.Connections.push(Conn);

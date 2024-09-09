@@ -36,3 +36,7 @@ type FieldKeys<C> = {
   
 // Using the FieldsOnly type to create a new type with only fields
 type FilteredFields<T> = Pick<T, FieldKeys<T>>;
+
+type NonCallableWithMethod<TArgs extends any[] = [], TResult = void> = {
+    myMethod: (...args: TArgs) => TResult;
+};
