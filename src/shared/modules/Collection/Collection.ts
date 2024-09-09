@@ -1,8 +1,8 @@
 import { Event } from "../Event/Event";
 
-const slice = <T extends defined>(array: T[], start: number, end: number): T[] => {
+const slice = <T extends defined>(array: T[], start: number, ending: number): T[] => {
 	const newArray: T[] = [];
-	for (let i = start; i < end; i++) {
+	for (let i = start; i < ending; i++) {
 		newArray.push(array[i]);
 	}
 	return newArray;

@@ -1,4 +1,5 @@
 // https://github.com/littensy/set-timeout/tree/master
+// Edited Debounce due to compiler type bug -- untested.
 
 import { RunService } from "@rbxts/services";
 
@@ -31,19 +32,19 @@ export namespace Scheduling {
      * @see https://github.com/lodash/lodash/blob/master/debounce.js/
      * @see https://css-tricks.com/debouncing-throttling-explained-examples/
      */
-    /* export function Debounce<T extends Callback>(callback: T, wait = 0, options: DebounceOptions = {}): Debounced<T> {
+    export function Debounce(callback: (...args: unknown[]) => unknown, wait = 0, options: DebounceOptions = {}): Debounced {
         const { leading = false, trailing = true, maxWait } = options;
 
         const maxing = maxWait !== undefined;
 
         let lastCallTime = 0;
         let lastInvokeTime = 0;
-        let lastArgs: Parameters<T> | undefined;
-        let result: ReturnType<T>;
+        let lastArgs: unknown[] | undefined;
+        let result: unknown;
         let cancelTimeout: (() => void) | undefined;
 
         const invoke = (time: number) => {
-            const args: unknown[] = lastArgs!;
+            const args = lastArgs!;
             lastArgs = undefined;
             lastInvokeTime = time;
             result = callback(...args);
@@ -51,11 +52,8 @@ export namespace Scheduling {
         };
 
         const leadingEdge = (time: number) => {
-            // Reset any `maxWait` timer.
             lastInvokeTime = time;
-            // Start the timer for the trailing edge.
             cancelTimeout = SetTimeout(timerExpired, wait);
-            // Invoke the leading edge.
             return leading ? invoke(time) : result;
         };
 
@@ -64,21 +62,18 @@ export namespace Scheduling {
             const timeSinceLastInvoke = time - lastInvokeTime;
             const timeWaiting = wait - timeSinceLastCall;
 
-            return maxing ? math.min(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+            return maxing ? math.min(timeWaiting, maxWait! - timeSinceLastInvoke) : timeWaiting;
         };
 
         const shouldInvoke = (time: number) => {
             const timeSinceLastCall = time - lastCallTime;
             const timeSinceLastInvoke = time - lastInvokeTime;
 
-            // Either this is the first call, activity has stopped and we're at the
-            // trailing edge, the system time has gone backwards and we're treating
-            // it as the trailing edge, or we've hit the `maxWait` limit.
             return (
                 lastCallTime === undefined ||
                 timeSinceLastCall >= wait ||
                 timeSinceLastCall < 0 ||
-                (maxing && timeSinceLastInvoke >= maxWait)
+                (maxing && timeSinceLastInvoke >= maxWait!)
             );
         };
 
@@ -89,15 +84,12 @@ export namespace Scheduling {
                 return trailingEdge(time);
             }
 
-            // Restart the timer.
             cancelTimeout = SetTimeout(timerExpired, remainingWait(time));
         };
 
         const trailingEdge = (time: number) => {
             cancelTimeout = undefined;
 
-            // Only invoke if we have `lastArgs` which means `invoke` was
-            // debounced at least once.
             if (trailing && lastArgs) {
                 return invoke(time);
             }
@@ -121,7 +113,7 @@ export namespace Scheduling {
             return cancelTimeout !== undefined;
         };
 
-        const debounced = (...args: Parameters<T>) => {
+        const debounced = (...args: unknown[]) => {
             const time = os.clock();
             const isInvoking = shouldInvoke(time);
 
@@ -133,7 +125,6 @@ export namespace Scheduling {
                     return leadingEdge(lastCallTime);
                 }
                 if (maxing) {
-                    // Handle invocations in a tight loop.
                     cancelTimeout = SetTimeout(timerExpired, wait);
                     return invoke(lastCallTime);
                 }
@@ -145,11 +136,10 @@ export namespace Scheduling {
         };
 
         return setmetatable(
-		{ cancel, flush, pending },
-		{ __call: (_, ...args) => debounced(...(args as Parameters<T>)) },
-	) as unknown as Debounced<T>;
-        
-    } */
+            { cancel, flush, pending },
+            { __call: (_self, ...args: unknown[]) => debounced(...args) }
+        ) as unknown as Debounced;
+    }
 
     /**
      * Calls a function every `interval` seconds until the countdown reaches 0.

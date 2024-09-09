@@ -13,11 +13,13 @@ interface DebounceOptions {
 	maxWait?: number;
 }
 
-type Debounced<T extends Callback> = T & {
-	cancel: () => void;
-	flush: () => ReturnType<T>;
-	pending: () => boolean;
+type Debounced = {
+    (...args: unknown[]): unknown; // The debounced function can take any arguments and return any value
+    cancel: () => void;  // Cancels any pending invocations
+    flush: () => unknown;  // Immediately invokes the callback and returns its result
+    pending: () => boolean;  // Checks if there are any pending invocations
 };
+
 
 interface ThrottleOptions {
 	/**
