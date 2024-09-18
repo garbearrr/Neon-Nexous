@@ -1,6 +1,7 @@
 import { CollectionService } from "@rbxts/services";
 import { BaseItem } from "client/modules/Item/BaseItem";
 import { OreManager } from "../Ore/OreManager";
+import { ItemFacingDirection } from "./Common";
 
 export class Furnace extends BaseItem implements FurnaceData {
     public readonly Receiver: Part;
@@ -10,6 +11,10 @@ export class Furnace extends BaseItem implements FurnaceData {
         super(Item);
         this.Receiver = Item.Receiver;
         this.Stats = Item.Stats;
+    }
+
+    public override GetFacingDirection(): ItemFacingDirection | undefined {
+        return;
     }
 
     public override OnPlaced(): void {

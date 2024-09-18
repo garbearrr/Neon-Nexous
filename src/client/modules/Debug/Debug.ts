@@ -267,7 +267,7 @@ export class Debug {
             }
 
             const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
-            const FoundItems = Collection<string, {ItemId: string, Name: string, Item: Part}>();
+            const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part}>();
 
             for (const Folder of TypeFolders) {
                 const Items = Folder.GetChildren() as PossibleItems[];

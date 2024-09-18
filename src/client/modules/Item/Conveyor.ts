@@ -2,6 +2,7 @@ import { BaseItem } from "client/modules/Item/BaseItem";
 import { Item } from "./Common";
 import { Grid } from "../Grid/Grid";
 
+
 export class Conveyor extends BaseItem implements ConveyorData {
     public readonly BeamA1: ConveyorData["BeamA1"];
     public readonly BeamA2: ConveyorData["BeamA2"];
@@ -19,7 +20,7 @@ export class Conveyor extends BaseItem implements ConveyorData {
         this.DirectionIndicator = Item.DirectionIndicator;
         this.Stats = Item.Stats;
 
-        const C = Grid.Instance().Events.OnRotate.Connect((Rot) => this.OnRotated(Rot));
+        const C = Grid.GetGlobalInstance().Events.OnRotate.Connect((Rot) => this.OnRotated(Rot));
         this.Connections.push(C);
     }
 
@@ -38,8 +39,8 @@ export class Conveyor extends BaseItem implements ConveyorData {
 
     private OnRotated(Rot: number): void {
         (Rot === 0 || Rot === 180)
-            ? Grid.Instance().LockDragVertical()
-            : Grid.Instance().LockDragHorizontal();
+            ? Grid.GetGlobalInstance().LockDragVertical()
+            : Grid.GetGlobalInstance().LockDragHorizontal();
     }
 
     public override OnSetup(): void {
@@ -47,7 +48,7 @@ export class Conveyor extends BaseItem implements ConveyorData {
         
         this.DirectionIndicator.Enabled = true;
 
-        const G = Grid.Instance();
+        const G = Grid.GetGlobalInstance();
         const Rot = G.GetItemRotation();
 
         (Rot === 0 || Rot === 180) 

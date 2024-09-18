@@ -10,7 +10,7 @@ export class Camera {
     private readonly Humanoid = (Players.LocalPlayer.Character || Players.LocalPlayer.CharacterAdded.Wait()[0]).WaitForChild("Humanoid") as Humanoid;
     public readonly CurrentCamera = Workspace.CurrentCamera!;
 
-    private readonly Connections = Collection<string, RBXScriptConnection>();
+    private readonly Connections = new Collection<string, RBXScriptConnection>();
 
     private readonly OriginalCamType =  Workspace.CurrentCamera!.CameraType;
     private readonly OriginalJumpPower: number;

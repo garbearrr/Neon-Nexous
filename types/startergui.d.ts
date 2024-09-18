@@ -213,78 +213,6 @@ interface StarterGui extends BasePlayerGui {
 			};
 		};
 	};
-	Shop: ScreenGui & {
-		ShopFrame: Frame & {
-			Items: ScrollingFrame & {
-				ExampleFrame: ViewportFrame & {
-					UICorner: UICorner;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Model: Model & {
-						TubeBack: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Cap: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Supports: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Tubes: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Base: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						TubeFront: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-				UIPadding: UIPadding;
-				UIGridLayout: UIGridLayout;
-			};
-			TabsMaster: Frame & {
-				Tabs: Frame & {
-					Furnaces: ImageButton & {
-						UICorner: UICorner;
-					};
-					UIGridLayout: UIGridLayout;
-					Conveyors: ImageButton & {
-						UICorner: UICorner;
-					};
-					Upgraders: ImageButton & {
-						UICorner: UICorner;
-					};
-					ImageButton: ImageButton & {
-						UICorner: UICorner;
-					};
-					Droppers: ImageButton & {
-						UICorner: UICorner;
-					};
-				};
-				UIPadding: UIPadding;
-			};
-			UIListLayout: UIListLayout;
-			UISizeConstraint: UISizeConstraint;
-			UIAspectRatioConstraint: UIAspectRatioConstraint;
-			Textboxes: Frame & {
-				Password: TextBox & {
-					UICorner: UICorner;
-				};
-				UIGridLayout: UIGridLayout;
-				Search: TextBox & {
-					UICorner: UICorner;
-				};
-				UIPadding: UIPadding;
-			};
-		};
-	};
-	Money: ScreenGui & {
-		MoneyFrame: Frame & {
-			UIDragDetector: UIDragDetector;
-			MoneyText: TextLabel;
-		};
-	};
 	ClientDebug: ScreenGui & {
 		ItemModule: Frame & {
 			ActionFrame: Frame & {
@@ -298,31 +226,31 @@ interface StarterGui extends BasePlayerGui {
 				CloseButton: LocalScript;
 			};
 			PlacedFrame: ScrollingFrame & {
-				UIListLayout: UIListLayout;
 				ItemEntry: Frame & {
-					UICorner: UICorner;
-					ID: TextLabel;
 					PID: TextLabel;
-					ViewportFrame: ViewportFrame;
 					Dest: TextButton;
+					UICorner: UICorner;
+					ViewportFrame: ViewportFrame;
+					ID: TextLabel;
 				};
 				UIPadding: UIPadding;
+				UIGridLayout: UIGridLayout;
 			};
 			GeneralFrame: ScrollingFrame & {
-				UIListLayout: UIListLayout;
-				UIPadding: UIPadding;
 				TogHixboxes: TextButton & {
 					UICorner: UICorner;
 				};
+				UIGridLayout: UIGridLayout;
+				UIPadding: UIPadding;
 			};
 			ItemsFrame: ScrollingFrame & {
-				UIListLayout: UIListLayout;
 				ItemEntry: Frame & {
 					ID: TextLabel;
 					ViewportFrame: ViewportFrame;
 					UICorner: UICorner;
 				};
 				UIPadding: UIPadding;
+				UIGridLayout: UIGridLayout;
 			};
 		};
 		InputModule: Frame & {
@@ -485,6 +413,86 @@ interface StarterGui extends BasePlayerGui {
 					Setting: TextLabel;
 				};
 			};
+		};
+	};
+	GridDragGUI: SurfaceGui & {
+		UIGridLayout: UIGridLayout;
+		UIPadding: UIPadding;
+		Empty: Frame;
+		TemplateVPCell: Frame & {
+			UICorner: UICorner;
+			Frame: Frame & {
+				UICorner: UICorner;
+				UIGradient: UIGradient;
+				Arrow: TextLabel;
+				ViewportFrame: ViewportFrame & {
+					Model: Model & {
+						["10000"]: Part & {
+							["Erbium Mine"]: Folder;
+							Stats: Folder & {
+								ItemName: StringValue;
+								Cost: NumberValue;
+								DropSpeed: NumberValue;
+								OreValue: NumberValue;
+								ItemId: IntValue;
+							};
+							CollisionHitbox: Part & {
+								WeldConstraint: WeldConstraint;
+							};
+							Model: Folder & {
+								TubeBack: UnionOperation & {
+									WeldConstraint: WeldConstraint;
+								};
+								Cap: Part & {
+									WeldConstraint: WeldConstraint;
+								};
+								Tubes: UnionOperation & {
+									WeldConstraint: WeldConstraint;
+								};
+								TubeFront: UnionOperation & {
+									WeldConstraint: WeldConstraint;
+								};
+								Base: UnionOperation & {
+									WeldConstraint: WeldConstraint;
+								};
+								Supports: UnionOperation & {
+									WeldConstraint: WeldConstraint;
+								};
+							};
+							Ore: Part & {
+								WeldConstraint: WeldConstraint;
+							};
+							ClickDetector: ClickDetector;
+							Drop: Attachment;
+						};
+					};
+				};
+			};
+			UIGradient: UIGradient;
+		};
+		TemplateXCell: Frame & {
+			UICorner: UICorner;
+			Frame: Frame & {
+				UICorner: UICorner;
+				X: TextLabel;
+				Arrow: TextLabel;
+				UIGradient: UIGradient;
+			};
+			UIGradient: UIGradient;
+		};
+		BlankCell: Frame & {
+			UICorner: UICorner;
+			Frame: Frame & {
+				UICorner: UICorner;
+				UIGradient: UIGradient;
+			};
+			UIGradient: UIGradient;
+		};
+	};
+	Money: ScreenGui & {
+		MoneyFrame: Frame & {
+			UIDragDetector: UIDragDetector;
+			MoneyText: TextLabel;
 		};
 	};
 	ShopGUI: BillboardGui & {
@@ -698,6 +706,72 @@ interface StarterGui extends BasePlayerGui {
 				Right: TextLabel;
 				Left: TextLabel;
 				CategoryName: TextLabel;
+			};
+		};
+	};
+	Shop: ScreenGui & {
+		ShopFrame: Frame & {
+			Items: ScrollingFrame & {
+				ExampleFrame: ViewportFrame & {
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Model: Model & {
+						TubeBack: UnionOperation & {
+							WeldConstraint: WeldConstraint;
+						};
+						Cap: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+						Supports: UnionOperation & {
+							WeldConstraint: WeldConstraint;
+						};
+						Tubes: UnionOperation & {
+							WeldConstraint: WeldConstraint;
+						};
+						Base: UnionOperation & {
+							WeldConstraint: WeldConstraint;
+						};
+						TubeFront: UnionOperation & {
+							WeldConstraint: WeldConstraint;
+						};
+					};
+				};
+				UIPadding: UIPadding;
+				UIGridLayout: UIGridLayout;
+			};
+			TabsMaster: Frame & {
+				Tabs: Frame & {
+					Furnaces: ImageButton & {
+						UICorner: UICorner;
+					};
+					UIGridLayout: UIGridLayout;
+					Conveyors: ImageButton & {
+						UICorner: UICorner;
+					};
+					Upgraders: ImageButton & {
+						UICorner: UICorner;
+					};
+					ImageButton: ImageButton & {
+						UICorner: UICorner;
+					};
+					Droppers: ImageButton & {
+						UICorner: UICorner;
+					};
+				};
+				UIPadding: UIPadding;
+			};
+			UIListLayout: UIListLayout;
+			UISizeConstraint: UISizeConstraint;
+			UIAspectRatioConstraint: UIAspectRatioConstraint;
+			Textboxes: Frame & {
+				Password: TextBox & {
+					UICorner: UICorner;
+				};
+				UIGridLayout: UIGridLayout;
+				Search: TextBox & {
+					UICorner: UICorner;
+				};
+				UIPadding: UIPadding;
 			};
 		};
 	};
