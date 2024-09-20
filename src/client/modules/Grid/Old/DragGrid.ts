@@ -8,7 +8,7 @@ import { Input } from "../../Input/Input";
 const TWEEN_DURATION = 0.20;
 
 export class DragGrid {
-    private static _instance?: DragGrid;
+    /* private static _instance?: DragGrid;
 
     private PlayerGui: PlayerGui = Players.LocalPlayer.FindFirstChildOfClass("PlayerGui") as PlayerGui;
     private DragUI: StarterGui["GridDragGUI"] = this.PlayerGui.WaitForChild("GridDragGUI") as StarterGui["GridDragGUI"];
@@ -121,7 +121,7 @@ export class DragGrid {
                 this.RunningTweens.Delete(CF);
             }
         }
-    }
+    } */
 }
 
 class CellInfo {

@@ -14,3 +14,5 @@ Input.Controls.KeyboardMouse.ToggleBuild.OnDown("build_togg", () => {
     Placement.Toggle(30000);
     print('TOGGLE BUILD');
 });
+
+import("./onload/index");

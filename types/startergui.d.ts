@@ -1,218 +1,4 @@
 interface StarterGui extends BasePlayerGui {
-	InvGUI: BillboardGui & {
-		Frame: Frame & {
-			Inventory: TextLabel;
-			UIPadding: UIPadding;
-			UpgraderViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["40000"]: Part & {
-						Stats: Folder & {
-							MaxOreValue: NumberValue;
-							ItemName: StringValue;
-							Cost: NumberValue;
-							ItemId: IntValue;
-							MinOreValue: NumberValue;
-							Multiplier: NumberValue;
-							Add: NumberValue;
-						};
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							UpgraderSupport: UnionOperation & {
-								Beam: Beam;
-								WeldConstraint: WeldConstraint;
-							};
-							NeonRing: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-							NeonSupport: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-							Base: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-							Conveyor: Folder & {
-								Front: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-								Conveyor: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-							};
-						};
-						ClickDetector: ClickDetector;
-						Conveyor: Part & {
-							ConveyA1: Attachment;
-							BeamA2: Attachment;
-							DirectionIndicator: Beam & {
-								["Conveyor Arrow"]: Decal;
-							};
-							Speed: NumberValue;
-							BeamA1: Attachment;
-							ConveyA2: Attachment;
-							WeldConstraint: WeldConstraint;
-						};
-						Upgrade: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			UICorner: UICorner;
-			PlaceButton: TextButton & {
-				UICorner: UICorner;
-				Frame: Frame;
-			};
-			ConveyorViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["30000"]: Part & {
-						ConveyA1: Attachment;
-						Stats: Folder & {
-							Speed: NumberValue;
-							ItemName: StringValue;
-							ItemId: IntValue;
-							Cost: NumberValue;
-						};
-						BeamA1: Attachment;
-						DirectionIndicator: Beam & {
-							["Conveyor Arrow"]: Decal;
-						};
-						ConveyA2: Attachment;
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							Conveyor: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Front: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Sides: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-						};
-						ClickDetector: ClickDetector;
-						BeamA2: Attachment;
-					};
-				};
-			};
-			FurnaceViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["20000"]: Part & {
-						Stats: Folder & {
-							ItemName: StringValue;
-							Cost: NumberValue;
-							Add: NumberValue;
-							Multiplier: NumberValue;
-							ItemId: IntValue;
-						};
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							Base: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Frame: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-						};
-						ClickDetector: ClickDetector;
-						Receiver: Part & {
-							ParticleEmitter: ParticleEmitter;
-							Beam: Beam;
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			Item: Frame & {
-				ItemName: TextLabel;
-				Left: TextLabel;
-				Right: TextLabel;
-			};
-			Category: Frame & {
-				Right: TextLabel;
-				Left: TextLabel;
-				CategoryName: TextLabel;
-			};
-			GateViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["40001"]: Part & {
-						Gate: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Stats: Folder & {
-							MaxOreValue: NumberValue;
-							ItemName: StringValue;
-							Cost: NumberValue;
-							ItemId: IntValue;
-							MinOreValue: NumberValue;
-							Multiplier: NumberValue;
-							Add: NumberValue;
-						};
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							Conveyor: Folder & {
-								Front: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-								Conveyor: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-							};
-						};
-						Button: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						ClickDetector: ClickDetector;
-						Conveyor: Part & {
-							ConveyA1: Attachment;
-							BeamA2: Attachment;
-							DirectionIndicator: Beam & {
-								["Conveyor Arrow"]: Decal;
-							};
-							Speed: NumberValue;
-							BeamA1: Attachment;
-							ConveyA2: Attachment;
-							WeldConstraint: WeldConstraint;
-						};
-						Upgrade: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			DropperViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["10000"]: Model & {
-						TubeBack: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Cap: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Supports: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Tubes: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Base: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						TubeFront: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-		};
-	};
 	ClientDebug: ScreenGui & {
 		ItemModule: Frame & {
 			ActionFrame: Frame & {
@@ -415,300 +201,6 @@ interface StarterGui extends BasePlayerGui {
 			};
 		};
 	};
-	GridDragGUI: SurfaceGui & {
-		UIGridLayout: UIGridLayout;
-		UIPadding: UIPadding;
-		Empty: Frame;
-		TemplateVPCell: Frame & {
-			UICorner: UICorner;
-			Frame: Frame & {
-				UICorner: UICorner;
-				UIGradient: UIGradient;
-				Arrow: TextLabel;
-				ViewportFrame: ViewportFrame & {
-					Model: Model & {
-						["10000"]: Part & {
-							["Erbium Mine"]: Folder;
-							Stats: Folder & {
-								ItemName: StringValue;
-								Cost: NumberValue;
-								DropSpeed: NumberValue;
-								OreValue: NumberValue;
-								ItemId: IntValue;
-							};
-							CollisionHitbox: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Model: Folder & {
-								TubeBack: UnionOperation & {
-									WeldConstraint: WeldConstraint;
-								};
-								Cap: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-								Tubes: UnionOperation & {
-									WeldConstraint: WeldConstraint;
-								};
-								TubeFront: UnionOperation & {
-									WeldConstraint: WeldConstraint;
-								};
-								Base: UnionOperation & {
-									WeldConstraint: WeldConstraint;
-								};
-								Supports: UnionOperation & {
-									WeldConstraint: WeldConstraint;
-								};
-							};
-							Ore: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							ClickDetector: ClickDetector;
-							Drop: Attachment;
-						};
-					};
-				};
-			};
-			UIGradient: UIGradient;
-		};
-		TemplateXCell: Frame & {
-			UICorner: UICorner;
-			Frame: Frame & {
-				UICorner: UICorner;
-				X: TextLabel;
-				Arrow: TextLabel;
-				UIGradient: UIGradient;
-			};
-			UIGradient: UIGradient;
-		};
-		BlankCell: Frame & {
-			UICorner: UICorner;
-			Frame: Frame & {
-				UICorner: UICorner;
-				UIGradient: UIGradient;
-			};
-			UIGradient: UIGradient;
-		};
-	};
-	Money: ScreenGui & {
-		MoneyFrame: Frame & {
-			UIDragDetector: UIDragDetector;
-			MoneyText: TextLabel;
-		};
-	};
-	ShopGUI: BillboardGui & {
-		Frame: Frame & {
-			UIPadding: UIPadding;
-			UpgraderViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["40000"]: Part & {
-						Stats: Folder & {
-							MaxOreValue: NumberValue;
-							ItemName: StringValue;
-							Cost: NumberValue;
-							ItemId: IntValue;
-							MinOreValue: NumberValue;
-							Multiplier: NumberValue;
-							Add: NumberValue;
-						};
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							UpgraderSupport: UnionOperation & {
-								Beam: Beam;
-								WeldConstraint: WeldConstraint;
-							};
-							NeonRing: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-							NeonSupport: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-							Base: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-							Conveyor: Folder & {
-								Front: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-								Conveyor: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-							};
-						};
-						ClickDetector: ClickDetector;
-						Conveyor: Part & {
-							ConveyA1: Attachment;
-							BeamA2: Attachment;
-							DirectionIndicator: Beam & {
-								["Conveyor Arrow"]: Decal;
-							};
-							Speed: NumberValue;
-							BeamA1: Attachment;
-							ConveyA2: Attachment;
-							WeldConstraint: WeldConstraint;
-						};
-						Upgrade: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			Money: TextLabel;
-			ConveyorViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["30000"]: Part & {
-						ConveyA1: Attachment;
-						Stats: Folder & {
-							Speed: NumberValue;
-							ItemName: StringValue;
-							ItemId: IntValue;
-							Cost: NumberValue;
-						};
-						BeamA1: Attachment;
-						DirectionIndicator: Beam & {
-							["Conveyor Arrow"]: Decal;
-						};
-						ConveyA2: Attachment;
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							Conveyor: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Front: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Sides: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-						};
-						ClickDetector: ClickDetector;
-						BeamA2: Attachment;
-					};
-				};
-			};
-			FurnaceViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["20000"]: Part & {
-						Stats: Folder & {
-							ItemName: StringValue;
-							Cost: NumberValue;
-							Add: NumberValue;
-							Multiplier: NumberValue;
-							ItemId: IntValue;
-						};
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							Base: Part & {
-								WeldConstraint: WeldConstraint;
-							};
-							Frame: UnionOperation & {
-								WeldConstraint: WeldConstraint;
-							};
-						};
-						ClickDetector: ClickDetector;
-						Receiver: Part & {
-							ParticleEmitter: ParticleEmitter;
-							Beam: Beam;
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			Item: Frame & {
-				ItemName: TextLabel;
-				Left: TextLabel;
-				Right: TextLabel;
-			};
-			DropperViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["10000"]: Model & {
-						TubeBack: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Cap: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Supports: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Tubes: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Base: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						TubeFront: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			GateViewport: Frame & {
-				ViewportFrame: ViewportFrame & {
-					["40001"]: Part & {
-						Gate: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Stats: Folder & {
-							MaxOreValue: NumberValue;
-							ItemName: StringValue;
-							Cost: NumberValue;
-							ItemId: IntValue;
-							MinOreValue: NumberValue;
-							Multiplier: NumberValue;
-							Add: NumberValue;
-						};
-						CollisionHitbox: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Model: Folder & {
-							Conveyor: Folder & {
-								Front: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-								Conveyor: Part & {
-									WeldConstraint: WeldConstraint;
-								};
-							};
-						};
-						Button: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						ClickDetector: ClickDetector;
-						Conveyor: Part & {
-							ConveyA1: Attachment;
-							BeamA2: Attachment;
-							DirectionIndicator: Beam & {
-								["Conveyor Arrow"]: Decal;
-							};
-							Speed: NumberValue;
-							BeamA1: Attachment;
-							ConveyA2: Attachment;
-							WeldConstraint: WeldConstraint;
-						};
-						Upgrade: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-			};
-			UICorner: UICorner;
-			BuyButton: TextButton & {
-				UICorner: UICorner;
-				Frame: Frame;
-			};
-			Category: Frame & {
-				Right: TextLabel;
-				Left: TextLabel;
-				CategoryName: TextLabel;
-			};
-		};
-	};
 	Shop: ScreenGui & {
 		ShopFrame: Frame & {
 			Items: ScrollingFrame & {
@@ -775,15 +267,339 @@ interface StarterGui extends BasePlayerGui {
 			};
 		};
 	};
-	InspectActions: ScreenGui & {
-		ItemName: TextLabel;
-		Frame: Frame & {
-			UIGridLayout: UIGridLayout;
-			Move: TextButton;
-			UICorner: UICorner;
-			Sell: TextButton;
-			Store: TextButton;
-			Cancel: TextButton;
+	MainUI: ScreenGui & {
+		MainPadding: UIPadding;
+		Top: Frame & {
+			UIListLayout: UIListLayout;
+			["1_Message"]: Frame & {
+				Message: Frame & {
+					UICorner: UICorner;
+					["2_MoneyText"]: TextLabel;
+					UIGradient: UIGradient;
+					UIPadding: UIPadding;
+				};
+			};
+			["2_Actions"]: Frame & {
+				["4_Settings"]: TextButton & {
+					UICorner: UICorner;
+					Settings: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					UIGradient: UIGradient;
+				};
+				["00_Menu"]: Frame & {
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+				};
+				["3_Shop"]: TextButton & {
+					UICorner: UICorner;
+					Shop: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					UIGradient: UIGradient;
+				};
+				["0_Expand"]: Frame & {
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+				};
+				UIListLayout: UIListLayout;
+				["1_Build"]: TextButton & {
+					UICorner: UICorner;
+					UIGradient: UIGradient;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Build: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				Expand: LocalScript;
+				["2_Inventory"]: TextButton & {
+					UICorner: UICorner;
+					Inv: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					UIGradient: UIGradient;
+				};
+			};
+			["3_Currency"]: Frame & {
+				UIListLayout: UIListLayout;
+				["1_Money"]: Frame & {
+					["2_MoneyText"]: TextLabel;
+					UIGradient: UIGradient;
+					UIListLayout: UIListLayout;
+					UICorner: UICorner;
+					UIPadding: UIPadding;
+					["3_AddButton"]: TextButton & {
+						UICorner: UICorner;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					["1_CurrencyIcon"]: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+				};
+				UIPadding: UIPadding;
+				["2_AltCurrency"]: Frame & {
+					["2_MoneyText"]: TextLabel;
+					UIGradient: UIGradient;
+					UIListLayout: UIListLayout;
+					UICorner: UICorner;
+					UIPadding: UIPadding;
+					["3_AddButton"]: TextButton & {
+						UICorner: UICorner;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					["1_CurrencyIcon"]: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+				};
+			};
+		};
+		Bottom: Frame & {
+			Shop: Frame & {
+				UIPadding: UIPadding;
+				["3_Content"]: Frame & {
+					UICorner: UICorner;
+					Divider: Frame;
+					ScrollingFrame: ScrollingFrame & {
+						TemplateRow: Frame & {
+							UIListLayout: UIListLayout;
+							TemplateItem: Frame & {
+								ViewportFrame: ViewportFrame & {
+									Model: Model & {
+										["10000"]: Part & {
+											["Erbium Mine"]: Folder;
+											Stats: Folder & {
+												ItemName: StringValue;
+												Cost: NumberValue;
+												DropSpeed: NumberValue;
+												OreValue: NumberValue;
+												ItemId: IntValue;
+											};
+											ClickDetector: ClickDetector;
+											Model: Folder & {
+												TubeBack: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Cap: Part & {
+													WeldConstraint: WeldConstraint;
+												};
+												Supports: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Tubes: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Base: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												TubeFront: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+											};
+											Ore: Part & {
+												WeldConstraint: WeldConstraint;
+											};
+											CollisionHitbox: Part & {
+												WeldConstraint: WeldConstraint;
+											};
+											Drop: Attachment;
+										};
+									};
+								};
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								UICorner: UICorner;
+							};
+							UIPadding: UIPadding;
+						};
+						UIGridLayout: UIGridLayout;
+					};
+					UIGradient: UIGradient;
+				};
+				UIListLayout: UIListLayout;
+				["1_Bar"]: Frame & {
+					Divider: Frame;
+					Bar: Frame & {
+						UIGradient: UIGradient;
+						["2_Close"]: TextButton & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+						};
+						UICorner: UICorner;
+						["1_Title"]: TextLabel;
+						UIListLayout: UIListLayout;
+						UIPadding: UIPadding;
+					};
+				};
+				UICorner: UICorner;
+			};
+		};
+	};
+	OldUI: ScreenGui & {
+		MainPadding: UIPadding;
+		Top: Frame & {
+			["1_Message"]: Frame & {
+				Message: Frame & {
+					UICorner: UICorner;
+					["2_MoneyText"]: TextLabel;
+					UIGradient: UIGradient;
+					UIPadding: UIPadding;
+				};
+			};
+			["2_Actions"]: Frame & {
+				["3_Shop"]: Frame & {
+					Shop: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					UIGradient: UIGradient;
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Expand: LocalScript;
+				};
+				["4_Settngs"]: Frame & {
+					UIGradient: UIGradient;
+					UICorner: UICorner;
+					Expand: LocalScript;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Settings: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+				};
+				UIListLayout: UIListLayout;
+				["1_Build"]: Frame & {
+					UIGradient: UIGradient;
+					UICorner: UICorner;
+					Expand: LocalScript;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Build: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+				};
+				["2_Inventory"]: Frame & {
+					Inv: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					UIGradient: UIGradient;
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Expand: LocalScript;
+				};
+			};
+			UIListLayout: UIListLayout;
+			UIAspectRatioConstraint: UIAspectRatioConstraint;
+			["3_Currency"]: Frame & {
+				UIListLayout: UIListLayout;
+				["1_Money"]: Frame & {
+					["2_MoneyText"]: TextLabel;
+					UIGradient: UIGradient;
+					UIListLayout: UIListLayout;
+					UICorner: UICorner;
+					UIPadding: UIPadding;
+					["3_AddButton"]: TextButton & {
+						UICorner: UICorner;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					["1_CurrencyIcon"]: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+				};
+				["2_AltCurrency"]: Frame & {
+					["2_MoneyText"]: TextLabel;
+					UIGradient: UIGradient;
+					UIListLayout: UIListLayout;
+					UICorner: UICorner;
+					UIPadding: UIPadding;
+					["3_AddButton"]: TextButton & {
+						UICorner: UICorner;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					["1_CurrencyIcon"]: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+				};
+			};
+		};
+		Bottom: Frame & {
+			Shop: Frame & {
+				UIListLayout: UIListLayout;
+				["1_Bar"]: Frame & {
+					["1_Title"]: TextLabel;
+					["2_Close"]: TextButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIListLayout: UIListLayout;
+					UIPadding: UIPadding;
+					UIGradient: UIGradient;
+				};
+				["2_Content"]: Frame & {
+					UIGradient: UIGradient;
+					ScrollingFrame: ScrollingFrame & {
+						TemplateRow: Frame & {
+							UIListLayout: UIListLayout;
+							TemplateItem: Frame & {
+								ViewportFrame: ViewportFrame & {
+									Model: Model & {
+										["10000"]: Part & {
+											["Erbium Mine"]: Folder;
+											Stats: Folder & {
+												ItemName: StringValue;
+												Cost: NumberValue;
+												DropSpeed: NumberValue;
+												OreValue: NumberValue;
+												ItemId: IntValue;
+											};
+											ClickDetector: ClickDetector;
+											Model: Folder & {
+												TubeBack: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Cap: Part & {
+													WeldConstraint: WeldConstraint;
+												};
+												Supports: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Tubes: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Base: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												TubeFront: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+											};
+											Ore: Part & {
+												WeldConstraint: WeldConstraint;
+											};
+											CollisionHitbox: Part & {
+												WeldConstraint: WeldConstraint;
+											};
+											Drop: Attachment;
+										};
+									};
+								};
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								UICorner: UICorner;
+							};
+							UIPadding: UIPadding;
+						};
+						UIGridLayout: UIGridLayout;
+					};
+				};
+			};
 		};
 	};
 }
