@@ -2,6 +2,7 @@ import { CollectionService } from "@rbxts/services";
 import { BaseItem } from "client/modules/Item/BaseItem";
 import { OreManager } from "../Ore/OreManager";
 import { ItemFacingDirection } from "./Common";
+import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 
 export class Furnace extends BaseItem implements FurnaceData {
     public readonly Receiver: Part;
@@ -27,7 +28,10 @@ export class Furnace extends BaseItem implements FurnaceData {
             if (Ore === undefined) return;
 
             const CurValue = Ore.GetValue();
-            const NewValue = CurValue * this.Stats.Multiplier.Value + this.Stats.Add.Value;
+            const NewValue = CurValue
+                .Multiply(new BigNumber(this.Stats.Multiplier.Value))
+                .Add(new BigNumber(this.Stats.Add.Value));
+
             Ore.SetValue(NewValue);
             Ore.Process();
         });

@@ -3,10 +3,10 @@ interface IOre {
     Ore: TemplateOre;
     OreId: number;
 
-    AddValue(Value: number): void;
-    GetValue(): number;
+    AddValue(Value: iBigNumber): void;
+    GetValue(): iBigNumber;
     Process(): void;
-    SetValue(Value: number): void;
+    SetValue(Value: iBigNumber): void;
     Destroy(): void;
 }
 
