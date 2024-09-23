@@ -208,15 +208,22 @@ interface Workspace extends Model {
 	Camera: Camera;
 	Plots: Folder & {
 		["1"]: Folder & {
+			PlacedItems: Folder;
 			Ore: Folder;
+			Anchors: Folder & {
+				Template: Part & {
+					SurfaceGui: SurfaceGui & {
+						TextLabel: TextLabel;
+					};
+				};
+			};
+			Temp: Folder;
+			DragGridPart: Part;
 			BuildModulePlot: Part & {
 				CameraContainer: Part;
 			};
-			PlacedItems: Folder;
-			Temp: Folder;
 		};
 	};
-	SpawnLocation: SpawnLocation;
 	Map: Model & {
 		DesertedIsland: Model;
 		VolcanoIsland: Model & {
@@ -234,4 +241,6 @@ interface Workspace extends Model {
 			Folliage: Model;
 		};
 	};
+	SpawnLocation: SpawnLocation;
+	Grid: Decal;
 }

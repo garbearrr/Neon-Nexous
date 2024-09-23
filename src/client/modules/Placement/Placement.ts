@@ -1,5 +1,4 @@
 import { TweenService } from "@rbxts/services";
-import { Grid } from "../Grid/Grid";
 import { Camera, Look, ViewDirection } from "../Camera/Camera";
 import { Common } from "shared/modules/Common/Common";
 import { Plot } from "../Plot/Plot";
@@ -9,6 +8,8 @@ import { Dropper } from "../Item/Dropper";
 import { Furnace } from "../Item/Furnace";
 import { Upgrader } from "../Item/Upgrader";
 import { Collection } from "shared/modules/Collection/Collection";
+import { Grid } from "../Grid/Grid";
+import { ObjectCache } from "shared/modules/ObjectCache/ObjectCache";
 
 const ROT_SMOOTH = 0.75;
 const CAM_TILT_PITCH = -45;
@@ -26,12 +27,16 @@ export namespace Placement {
     const State = {
         Active: false,
         CollisionGuide: undefined as unknown as Part,
-        Connections: Collection<string, RBXScriptConnection>(),
+        Connections: new Collection<string, RBXScriptConnection>(),
         CurrentTween: undefined as unknown as Tween,
-        DragCache: Collection<string, BaseItem>(),
+        DragCache: new Collection<string, BaseItem>(),
+        HideGuide: false,
         Item: undefined as unknown as PossibleItems,
         ItemId: 0,
         ItemModule: undefined as unknown as BaseItem,
+        ObjectCache: undefined as unknown as IObjectCache,
+        SimpleDrag: false,
+        SimplePlace: false,
         TweenIsMoving: false,
     }
 
@@ -51,20 +56,22 @@ export namespace Placement {
         }
 
         // This must be done before Item classes are instantiated.
-        const G = Grid.Instance(Plot.PlotItem);
-
+        const G = Grid.Instance("AnchorDragGrid", Plot.PlotItem);
         State.Item = SetupClone(ItemData);
+
+        State.ObjectCache = new ObjectCache(ItemData, Grid.GetGlobalInstance().MaxItemsPossible(State.Item));
+
         State.ItemModule = ClassifyItem(State.Item);
         ConfigureHitboxGuide();
 
         State.ItemModule.OnSetup();
 
-        // TODO: Configure collision guide
         const Conn = State.Connections;
 
         Conn.Set("grid_on_move", G.Events.OnMove.Connect(({ Pos, Rot }) => StartOrUpdateTween(Pos, Rot)));
-        Conn.Set("grid_on_drag", G.Events.OnDrag.Connect(({ Added, CF }) => DragUpdate(Added, CF)));
+        //Conn.Set("grid_on_drag", G.Events.OnDrag.Connect(({ Added, CF }) => DragUpdate(Added, CF)));
         Conn.Set("grid_on_place", G.Events.OnPlace.Connect(({ CF }) => OnPlace(CF)));
+        Conn.Set("grid_on_update", G.Events.OnUpdate.Connect(({ CF }) => OnUpdate(CF)));
 
         Camera.Instance().GetCamera().CFrame = Plot.CameraContainer.CFrame;
         
@@ -77,8 +84,7 @@ export namespace Placement {
             .UnSetLookVectors(Look.Y)
             .SetRotationSmoothness(ROT_SMOOTH);
         
-        G.SetSnapSize(1)
-            .StartCasting(State.Item, ItemId);
+        G.StartCasting(State.Item, ItemId);
 
         State.Active = true;
     }
@@ -116,7 +122,7 @@ export namespace Placement {
      */
     export const Deactivate = (destoyTweenInstant = false) => {
         Camera.Instance().Reset();
-        Grid.Instance().Reset();
+        Grid.GetGlobalInstance().CleanUp();
 
         // Item will be destroyed by ItemModule.Destroy()
         State.Item = undefined as unknown as PossibleItems;
@@ -139,55 +145,10 @@ export namespace Placement {
         State.Connections.ForEach(C => C.Disconnect());
         State.DragCache.Clear();
 
-        State.Active = false;
-    }
+        State.ObjectCache.Destroy();
+        State.ObjectCache = undefined as unknown as IObjectCache;
 
-    const DragUpdate = (Added: boolean, CFrames: CFrame[]) => {
-        if (Added) {
-            for (const CF of CFrames) {
-                const Clone = State.Item.Clone();
-                Clone.Parent = Plot.TempFolder;
-                Clone.CFrame = CF;
-                Clone.Anchored = true;
-    
-                const Mod = ClassifyItem(Clone);
-    
-                Mod.OnSetup();
-                Mod.OnDragged();
-    
-                const Tween = TweenService.Create(Clone as Part, TI, { Size: State.Item.Size });
-                Tween.Completed.Connect(() => { 
-                    Clone.Size = State.Item.Size;
-                });
-                Tween.Play();
-    
-                const Key = `${CF.Position.X},${CF.Position.Z}`;
-                State.DragCache.Set(Key, Mod);
-    
-                // TODO: Come back to collision
-                //if (!canPlaceItem(State, Clone.CollisionHitbox)){
-                //    Clone.Transparency = 0.8;
-                //    Clone.Color = CBC.CANT_PLACE_COLOR;
-                //} else {
-                    Clone.Transparency = 1;
-                //}
-            }
-        } else {
-            for (const CF of CFrames) {
-                const Key = `${CF.Position.X},${CF.Position.Z}`;
-                const I = State.DragCache.Get(Key);
-    
-                if (!I) continue;
-    
-                I.OnUndragged();
-    
-                State.DragCache.Delete(Key);
-    
-                const Tween = TweenService.Create(I.Part, TI, { Size: new Vector3(0, 0, 0) });
-                Tween.Completed.Connect(() => I.Destroy());
-                Tween.Play();
-            }
-        }
+        State.Active = false;
     }
 
     export const IsActive = () => State.Active;
@@ -202,10 +163,6 @@ export namespace Placement {
             
             const Mod = ClassifyItem(Clone);
     
-            /*Clone.ClickDetector.MaxActivationDistance = 1000;
-            Clone.ClickDetector.MouseHoverEnter.Connect((Player) => onMouseHoverEnter(Player, Clone));
-            Clone.ClickDetector.MouseHoverLeave.Connect((Player) => onMouseHoverLeave(Player, Clone)); */
-    
             Mod.OnPlaced();
     
             Clone.CFrame = Cframe;
@@ -213,12 +170,78 @@ export namespace Placement {
         }
     
         State.DragCache.ForEach((Part) => {
-            Part.Destroy();
+            Part.Destroy(false);
+            State.ObjectCache.ReturnPart(Part.Part);
         });
     
         State.DragCache.Clear();
+
+        //DragGrid.Instance().DestroyCells();
+
+        State.HideGuide = false;
     
         //State.InspectMod.UpdateBehavior();
+    }
+
+    const OnUpdate = (CFrames: CFrame[]) => {
+        const FrameCache = new Collection<string, BaseItem>();
+        const CellSize = Grid.GetGlobalInstance().GetCellSize();
+    
+        for (const CF of CFrames) {
+            const position = CF.Position;
+            const GridX = math.floor(position.X / CellSize + 0.5); // Round to nearest integer
+            const GridZ = math.floor(position.Z / CellSize + 0.5);
+            const Key = `${GridX},${GridZ},${CF.ToEulerAnglesXYZ()[1]}`;
+            let Mod: BaseItem;
+    
+            if (State.DragCache.Has(Key)) {
+                // The item already exists; update its position if needed.
+                Mod = State.DragCache.Get(Key)!;
+                // If you need to update the position, you can do it here.
+                // Mod.Part.CFrame = CF; // Not necessary if position hasn't changed
+            } else {
+                // Create a new item since it doesn't exist at this position.
+                const Clone = State.ObjectCache.GetPart() as PossibleItems;
+                Mod = ClassifyItem(Clone);
+    
+                Clone.CFrame = CF;
+    
+                Mod.OnSetup();
+                Mod.OnDragged();
+            }
+    
+            FrameCache.Set(Key, Mod);
+        }
+    
+        // Clean up any parts that are no longer needed.
+        State.DragCache.ForEach((Mod, Key) => {
+            if (!FrameCache.Has(Key)) {
+                Mod.OnUndragged();
+                State.ObjectCache.ReturnPart(Mod.Part);
+                Mod.Destroy(false);
+            }
+        });
+    
+        // Update the drag cache for the next frame.
+        State.DragCache = FrameCache;
+    }
+    
+    
+
+    /**
+     * Set simple drag mode on/off. Simple drag mode uses GUI instead of 3D models.
+     * @param SimpleDrag 
+     */
+    export const SetSimpleDrag = (SimpleDrag: boolean) => {
+        State.SimpleDrag = SimpleDrag;
+    }
+
+    /**
+     * Set simple place mode on/off. Simple place mode uses GUI instead of 3D models.
+     * @param SimplePlace
+     */
+    export const SetSimplePlace = (SimplePlace: boolean) => {
+        State.SimplePlace = SimplePlace;
     }
 
     const SetupClone = (Item: Part): PossibleItems => {
@@ -236,7 +259,13 @@ export namespace Placement {
         if (State.CurrentTween)
             State.CurrentTween.Cancel();
 
-        const TargetCFrame = new CFrame(Pos).mul(CFrame.Angles(
+        const HideAdjust = new CFrame (
+            Pos.X,
+            Pos.Y + (State.HideGuide ? -100 : 0),
+            Pos.Z
+        )
+
+        const TargetCFrame = HideAdjust.mul(CFrame.Angles(
             Rot.X,
             Rot.Y,
             Rot.Z
@@ -294,12 +323,15 @@ export namespace Placement {
         State.Item = SetupClone(Item);
 
         for (const Item of State.DragCache.Values()) {
-            Item.Destroy();
+            Item.Destroy(false);
         }
 
         State.DragCache.Clear();
 
-        while (Grid.Instance().IsPlaceButtonDown()) wait();
-        Grid.Instance().StartCasting(State.Item, ItemId);
+        State.ObjectCache.Destroy();
+        State.ObjectCache = new ObjectCache(Item, Grid.GetGlobalInstance().MaxItemsPossible(State.Item));
+
+        while (Grid.GetGlobalInstance().IsPlaceButtonDown()) wait();
+        Grid.Instance("SquareDragGrid", Plot.PlotItem).StartCasting(State.Item, ItemId);
     }
 }

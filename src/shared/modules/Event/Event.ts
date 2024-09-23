@@ -1,5 +1,5 @@
 
-export class Event<T> {
+export class Event<T> implements IEvent<T>{
     private Connections: Map<number, (value: T) => void> = new Map();
 
     public constructor() {}
@@ -25,7 +25,7 @@ export class Event<T> {
     }
 }
 
-class EventConnection<T> implements RBXScriptConnection {
+class EventConnection<T> implements IEventConnection<T> {
     Connected: boolean = true;
     Connection: number;
     Event: Event<T>;

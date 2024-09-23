@@ -42,6 +42,15 @@ interface iControlData<T extends UniqueInputTypes> {
      * @param func The function to call on input up.
      */
     OnUp(id: string, func: CallbackType): iBindConfig;
+    /**
+     * Remove custom ignore gui filter function.
+     */
+    RemoveIgnoreGuiFunc(): iControlData<T>;
+    /**
+     * Set a filter function that can be used to conditionally ignore gui input for IsDown.
+     * @param f The function to use to determine if a gui object should be ignored.
+     */
+    SetConditionalIgnoreGuiFunc(f: (G: GuiObject) => boolean): iControlData<T>;
 }
 
 
@@ -95,6 +104,7 @@ type KeyboardMouseControls = {
     CamZoomOut:     Enum.KeyCode | UserInputTypeKBStrip;
     /**This is intended to be used with OnChanged only.*/
     CamZoomScroll:  Enum.UserInputType.MouseWheel;
+    GridAnchor:     Enum.KeyCode | UserInputTypeKBStrip;
     GridItemRotate: Enum.KeyCode | UserInputTypeKBStrip;
     GridItemPlace:  Enum.KeyCode | UserInputTypeKBStrip;
     ToggleBuild:    Enum.KeyCode | UserInputTypeKBStrip;

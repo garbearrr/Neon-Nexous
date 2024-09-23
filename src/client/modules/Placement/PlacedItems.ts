@@ -3,7 +3,7 @@ import { Collection } from "shared/modules/Collection/Collection";
 export namespace PlacedItems {
     // Using the interface to avoid circular imports
     /** "CellX_CellY" -> ItemModule */
-    const PlacedItemCache = Collection<string, BaseItemType>();
+    const PlacedItemCache = new Collection<string, BaseItemType>();
     let pid = 0;
 
     /**
@@ -21,11 +21,12 @@ export namespace PlacedItems {
      * @param Cells The cells that the item occupies
      */
     export const CanPlace = (Cells: Vector2[]): boolean => {
+        // TODO: Fix overlap for fractional cells
         return Cells.every(C => PlacedItemCache.Get(C.X + "_" + C.Y) === undefined);
     }
 
     /** Get unique items in cache */
-    export const GetUniqueItems = (): Collection<string, BaseItemType> => {
+    export const GetUniqueItems = (): ICollection<string, BaseItemType> => {
         const PIDs = new Set<number>();
         return PlacedItemCache.Filter((Item, _) => {
             if (PIDs.has(Item.GetPID())) return false;

@@ -4,6 +4,7 @@ import { Players, Workspace } from "@rbxts/services";
 // TODO: Since we are focused on the client side, we will just assing a random plot.
 
 export namespace Plot {
+    export let AnchorFolder: Readonly<Workspace["Plots"]["1"]["Anchors"]>;
     export let CameraContainer: Readonly<Part>;
     export let OreFolder: Readonly<Folder>;
     export let PlacedFolder: Readonly<Folder>;
@@ -15,6 +16,7 @@ export namespace Plot {
         const Random = math.random(1, Open.size());
         const Plot = Workspace.Plots.FindFirstChild(tostring(Random)) as Workspace["Plots"]["1"];
 
+        AnchorFolder = Plot.Anchors;
         CameraContainer = Plot.BuildModulePlot.CameraContainer;
         OreFolder = Plot.Ore;
         PlacedFolder = Plot.PlacedItems;

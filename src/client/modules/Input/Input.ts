@@ -7,6 +7,9 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
     public readonly Scheme: keyof ControlsType;
     public readonly Changeable: boolean = true;
 
+    private CustomIgnoreGuiFunc: ((G: GuiObject) => boolean) | undefined;
+    private DefaultIgnoreGuiFunc: (G: GuiObject) => boolean = (_) => true;
+
     public constructor(scheme: keyof ControlsType, control: T, changeable = true) {
         this.Scheme = scheme;
         this.Control = control;
@@ -15,7 +18,7 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
 
     private Bind(id: string, key: string, func: CallbackType): iBindConfig {
         const IBindings = Input.Instance().GetBindings();
-        const Bindings = IBindings.Get(key) || IBindings.Set(key, Collection<string, iBindConfig>());
+        const Bindings = IBindings.Get(key) || IBindings.Set(key, new Collection<string, iBindConfig>());
 
         const Config = new BindConfig(id, key, this.Control, func);
         Bindings.Set(id, Config);
@@ -41,8 +44,10 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
         if (ignoreGui) {
             const Mouse = Players.LocalPlayer.GetMouse();
             const Gui = Players.LocalPlayer.FindFirstChild("PlayerGui") as PlayerGui;
-            if (Gui?.GetGuiObjectsAtPosition(Mouse.X, Mouse.Y).size() > 0)
+            const Filtered = Gui.GetGuiObjectsAtPosition(Mouse.X, Mouse.Y).filter(G => this.CustomIgnoreGuiFunc ? !this.CustomIgnoreGuiFunc(G) : this.DefaultIgnoreGuiFunc(G));
+            if (Filtered.size() > 0) {
                 return false;
+            }   
         }
 
         try {
@@ -75,6 +80,16 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
         const Key = this.Scheme + "_" + this.Control.Name + "_" + OnType.Up;
         return this.Bind(id, Key, func);
     }
+
+    public RemoveIgnoreGuiFunc(): this {
+        this.CustomIgnoreGuiFunc = undefined;
+        return this;
+    }
+
+    public SetConditionalIgnoreGuiFunc(f: (G: GuiObject) => boolean): this {
+        this.CustomIgnoreGuiFunc = f;
+        return this;
+    }
 }
 
 // Make sure the value matches the key
@@ -85,8 +100,8 @@ const OnType: {Changed: "Changed", Down: "Down", Up: "Up"} = {
 }
 
 export class Input {
-    private readonly Bindings = Collection<string, Collection<string, iBindConfig>>();
-    private readonly Connections = Collection<string, RBXScriptConnection>();
+    private readonly Bindings = new Collection<string, Collection<string, iBindConfig>>();
+    private readonly Connections = new Collection<string, RBXScriptConnection>();
 
     private static _instance: Input | undefined;
 
@@ -154,6 +169,7 @@ export class Input {
             CamZoomIn:          new ControlData("KeyboardMouse", Enum.KeyCode.I),
             CamZoomOut:         new ControlData("KeyboardMouse", Enum.KeyCode.O),
             CamZoomScroll:      new ControlData("KeyboardMouse", Enum.UserInputType.MouseWheel, false),
+            GridAnchor:         new ControlData("KeyboardMouse", Enum.KeyCode.C),
             GridItemRotate:     new ControlData("KeyboardMouse", Enum.KeyCode.R),
             GridItemPlace:      new ControlData("KeyboardMouse", Enum.UserInputType.MouseButton1),
             ToggleBuild:        new ControlData("KeyboardMouse", Enum.KeyCode.B)

@@ -8,7 +8,27 @@ export class Util {
      */
     static Lerp(a: number, b: number, t: number): number {
         return a + (b - a) * math.clamp(t, 0, 1);
-    } 
+    }
+
+    static Slice<T extends defined>(array: T[], start: number, ending: number): T[] {
+        const newArray: T[] = [];
+        for (let i = start; i < ending; i++) {
+            newArray.push(array[i]);
+        }
+        return newArray;
+    };
+
+    
+    static SplitArray<T extends defined>(arr: T[], chunkSize: number): T[][] {
+        const result: T[][] = [];
+        
+        for (let i = 0; i < arr.size(); i += chunkSize) {
+            const chunk = Util.Slice<T>(arr, i, i + chunkSize);
+            result.push(chunk);
+        }
+    
+        return result;
+    }
 
     /**
      * Inverse linear interpolation between two values

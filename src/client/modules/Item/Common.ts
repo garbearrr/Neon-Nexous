@@ -6,3 +6,10 @@ export namespace Item.Common {
         Conveyor.AssemblyLinearVelocity = Direction.mul(Speed);
     }
 }
+
+export enum ItemFacingDirection {
+    North,
+    East,
+    South,
+    West
+}
