@@ -5,13 +5,15 @@ import { Plot } from "../Plot/Plot";
 import { Ore } from "../Ore/Ore";
 import { CollectionService } from "@rbxts/services";
 import { OreManager } from "../Ore/OreManager";
+import { ItemFacingDirection } from "./Common";
+import { Grid } from "../Grid/Grid";
 
 /**
  * Outer Collection Key: Interval in seconds between drops.
  * 
  * Inner Collection Key: PID of the dropper.
  */
-export const DropperTimings = Collection<number, Collection<number, DropLink>>();
+export const DropperTimings = new Collection<number, Collection<number, DropLink>>();
 
 export class Dropper extends BaseItem implements DropperData {
     public readonly Drop: DropperData["Drop"];
@@ -27,6 +29,16 @@ export class Dropper extends BaseItem implements DropperData {
         this.Stats = Item.Stats;
     }
 
+    public override AsModel(): Model {
+        const Clone = this.Part.Clone() as DropperData & Part;
+        Clone.Ore.Destroy();
+
+        const Model = new Instance("Model");
+        Clone.Parent = Model;
+        Model.PrimaryPart = Clone.CollisionHitbox;
+        return Model;
+    }
+
     private static BeginDropInterval(TimingCache: Collection<number, DropLink>, Timing: number): () => void {
         return Scheduling.SetInterval(() => {
             TimingCache.ForEach((Link, _PID) => {
@@ -37,6 +49,21 @@ export class Dropper extends BaseItem implements DropperData {
 
     public GetDropLink(): DropLink | undefined {
         return this.DropLink;
+    }
+
+    public override GetFacingDirection(): ItemFacingDirection | undefined {
+        switch (Grid.GetGlobalInstance().GetItemRotation()) {
+            case 0:
+                return ItemFacingDirection.East;
+            case 90:
+                return ItemFacingDirection.North;
+            case 180:
+                return ItemFacingDirection.West;
+            case 270:
+                return ItemFacingDirection.South;
+            default:
+                return ItemFacingDirection.North;
+        }
     }
 
     public override Destroy(): void {
@@ -83,7 +110,7 @@ class DropLink {
         this.StartDInterval = DInt;
         this.Setup();
     }
-    
+
     /** Get the cleanup function for this dropper. Not directly callable. */
     public GetCleanup(): never {
         return this.Cleanup as never;
@@ -92,7 +119,7 @@ class DropLink {
     private Setup(): void {
         const CommonInterval = DropperTimings.Get(this.Timing);
         if (CommonInterval === undefined) {
-            const DL = DropperTimings.Set(this.Timing, Collection());
+            const DL = DropperTimings.Set(this.Timing, new Collection());
             DL.Set(this.PID, this);
             this.Cleanup = this.StartDInterval(DL, this.Timing);
             return;

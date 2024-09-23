@@ -2,7 +2,7 @@ import { Collection } from "shared/modules/Collection/Collection";
 
 export namespace OreManager {
     /** Key is ore id */
-    const OreCache = Collection<number, IOre>();
+    const OreCache = new Collection<number, IOre>();
 
     export const Add = (Ore: IOre): void => {
         OreCache.Set(Ore.OreId, Ore);

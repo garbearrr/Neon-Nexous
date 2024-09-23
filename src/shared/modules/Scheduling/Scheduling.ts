@@ -232,7 +232,7 @@ export namespace Scheduling {
      * @see https://github.com/lodash/lodash/blob/master/throttle.js/
      * @see https://css-tricks.com/debouncing-throttling-explained-examples/
      */
-    /* export function Throttle<T extends Callback>(callback: T, wait = 0, options: ThrottleOptions = {}) {
+    export function Throttle<T extends Callback>(callback: T, wait = 0, options: ThrottleOptions = {}) {
         const { leading = true, trailing = true } = options;
 
         return Debounce(callback, wait, {
@@ -240,5 +240,5 @@ export namespace Scheduling {
             trailing,
             maxWait: wait,
         });
-    } */
+    }
 }
