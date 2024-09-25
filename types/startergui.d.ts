@@ -326,7 +326,10 @@ interface StarterGui extends BasePlayerGui {
 			["3_Currency"]: Frame & {
 				UIListLayout: UIListLayout;
 				["1_Money"]: Frame & {
-					["2_MoneyText"]: TextLabel;
+					["2_MoneyText"]: TextLabel & {
+						Value: NumberValue;
+						UIGradient: UIGradient;
+					};
 					UIGradient: UIGradient;
 					UIListLayout: UIListLayout;
 					UICorner: UICorner;
