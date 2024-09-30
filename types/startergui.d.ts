@@ -1,4 +1,56 @@
 interface StarterGui extends BasePlayerGui {
+	ThreeDUI: SurfaceGui & {
+		UIPadding: UIPadding;
+		Frame: Frame & {
+			UICorner: UICorner;
+			UIStroke: UIStroke;
+			Scanlines: ImageLabel & {
+				UICorner: UICorner;
+				Shop: Frame & {
+					["1_TopBar"]: Frame & {
+						UIListLayout: UIListLayout;
+						X_Close: TextButton & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+						};
+						UIPadding: UIPadding;
+						Title: TextLabel;
+					};
+					["3_Content"]: Frame;
+					UIListLayout: UIListLayout;
+					UICorner: UICorner;
+					["2_Divider"]: Frame;
+				};
+				Settings: Frame & {
+					["1_TopBar"]: Frame & {
+						UIListLayout: UIListLayout;
+						X_Close: TextButton & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+						};
+						UIPadding: UIPadding;
+						Title: TextLabel;
+					};
+					UICorner: UICorner;
+					UIListLayout: UIListLayout;
+					["3_Content"]: Frame;
+					["2_Divider"]: Frame;
+				};
+				Inventory: Frame & {
+					["1_TopBar"]: Frame & {
+						UIListLayout: UIListLayout;
+						X_Close: TextButton & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+						};
+						Title: TextLabel;
+						UIPadding: UIPadding;
+					};
+					UICorner: UICorner;
+					["3_Content"]: Frame;
+					UIListLayout: UIListLayout;
+					["2_Divider"]: Frame;
+				};
+			};
+		};
+	};
 	ClientDebug: ScreenGui & {
 		ItemModule: Frame & {
 			ActionFrame: Frame & {
@@ -201,72 +253,6 @@ interface StarterGui extends BasePlayerGui {
 			};
 		};
 	};
-	Shop: ScreenGui & {
-		ShopFrame: Frame & {
-			Items: ScrollingFrame & {
-				ExampleFrame: ViewportFrame & {
-					UICorner: UICorner;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Model: Model & {
-						TubeBack: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Cap: Part & {
-							WeldConstraint: WeldConstraint;
-						};
-						Supports: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Tubes: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						Base: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-						TubeFront: UnionOperation & {
-							WeldConstraint: WeldConstraint;
-						};
-					};
-				};
-				UIPadding: UIPadding;
-				UIGridLayout: UIGridLayout;
-			};
-			TabsMaster: Frame & {
-				Tabs: Frame & {
-					Furnaces: ImageButton & {
-						UICorner: UICorner;
-					};
-					UIGridLayout: UIGridLayout;
-					Conveyors: ImageButton & {
-						UICorner: UICorner;
-					};
-					Upgraders: ImageButton & {
-						UICorner: UICorner;
-					};
-					ImageButton: ImageButton & {
-						UICorner: UICorner;
-					};
-					Droppers: ImageButton & {
-						UICorner: UICorner;
-					};
-				};
-				UIPadding: UIPadding;
-			};
-			UIListLayout: UIListLayout;
-			UISizeConstraint: UISizeConstraint;
-			UIAspectRatioConstraint: UIAspectRatioConstraint;
-			Textboxes: Frame & {
-				Password: TextBox & {
-					UICorner: UICorner;
-				};
-				UIGridLayout: UIGridLayout;
-				Search: TextBox & {
-					UICorner: UICorner;
-				};
-				UIPadding: UIPadding;
-			};
-		};
-	};
 	MainUI: ScreenGui & {
 		MainPadding: UIPadding;
 		Top: Frame & {
@@ -282,7 +268,7 @@ interface StarterGui extends BasePlayerGui {
 			["2_Actions"]: Frame & {
 				["4_Settings"]: TextButton & {
 					UICorner: UICorner;
-					Settings: ImageButton & {
+					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
 					UIAspectRatioConstraint: UIAspectRatioConstraint;
@@ -294,7 +280,7 @@ interface StarterGui extends BasePlayerGui {
 				};
 				["3_Shop"]: TextButton & {
 					UICorner: UICorner;
-					Shop: ImageButton & {
+					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
 					UIAspectRatioConstraint: UIAspectRatioConstraint;
@@ -307,16 +293,16 @@ interface StarterGui extends BasePlayerGui {
 				UIListLayout: UIListLayout;
 				["1_Build"]: TextButton & {
 					UICorner: UICorner;
-					UIGradient: UIGradient;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Build: ImageButton & {
+					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					UIGradient: UIGradient;
 				};
 				Expand: LocalScript;
 				["2_Inventory"]: TextButton & {
 					UICorner: UICorner;
-					Inv: ImageButton & {
+					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
 					UIAspectRatioConstraint: UIAspectRatioConstraint;
@@ -334,11 +320,6 @@ interface StarterGui extends BasePlayerGui {
 					UIListLayout: UIListLayout;
 					UICorner: UICorner;
 					UIPadding: UIPadding;
-					["3_AddButton"]: TextButton & {
-						UICorner: UICorner;
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-						UIGradient: UIGradient;
-					};
 					["1_CurrencyIcon"]: ImageLabel & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 						UIGradient: UIGradient;
@@ -351,11 +332,6 @@ interface StarterGui extends BasePlayerGui {
 					UIListLayout: UIListLayout;
 					UICorner: UICorner;
 					UIPadding: UIPadding;
-					["3_AddButton"]: TextButton & {
-						UICorner: UICorner;
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-						UIGradient: UIGradient;
-					};
 					["1_CurrencyIcon"]: ImageLabel & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 						UIGradient: UIGradient;
@@ -364,8 +340,10 @@ interface StarterGui extends BasePlayerGui {
 			};
 		};
 		Bottom: Frame & {
-			Shop: Frame & {
+			Inventory: Frame & {
+				VisXVal: NumberValue;
 				UIPadding: UIPadding;
+				NotVisXVal: NumberValue;
 				["3_Content"]: Frame & {
 					UICorner: UICorner;
 					Divider: Frame;
@@ -421,6 +399,86 @@ interface StarterGui extends BasePlayerGui {
 							UIPadding: UIPadding;
 						};
 						UIGridLayout: UIGridLayout;
+						UIPadding: UIPadding;
+					};
+					UIGradient: UIGradient;
+				};
+				UIListLayout: UIListLayout;
+				["1_Bar"]: Frame & {
+					Divider: Frame;
+					Bar: Frame & {
+						UIGradient: UIGradient;
+						["2_Close"]: TextButton & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+						};
+						UICorner: UICorner;
+						["1_Title"]: TextLabel;
+						UIListLayout: UIListLayout;
+						UIPadding: UIPadding;
+					};
+				};
+				UICorner: UICorner;
+			};
+			Shop: Frame & {
+				VisXVal: NumberValue;
+				UIPadding: UIPadding;
+				NotVisXVal: NumberValue;
+				["3_Content"]: Frame & {
+					UICorner: UICorner;
+					Divider: Frame;
+					ScrollingFrame: ScrollingFrame & {
+						TemplateRow: Frame & {
+							UIListLayout: UIListLayout;
+							TemplateItem: Frame & {
+								ViewportFrame: ViewportFrame & {
+									Model: Model & {
+										["10000"]: Part & {
+											["Erbium Mine"]: Folder;
+											Stats: Folder & {
+												ItemName: StringValue;
+												Cost: NumberValue;
+												DropSpeed: NumberValue;
+												OreValue: NumberValue;
+												ItemId: IntValue;
+											};
+											ClickDetector: ClickDetector;
+											Model: Folder & {
+												TubeBack: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Cap: Part & {
+													WeldConstraint: WeldConstraint;
+												};
+												Supports: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Tubes: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												Base: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+												TubeFront: UnionOperation & {
+													WeldConstraint: WeldConstraint;
+												};
+											};
+											Ore: Part & {
+												WeldConstraint: WeldConstraint;
+											};
+											CollisionHitbox: Part & {
+												WeldConstraint: WeldConstraint;
+											};
+											Drop: Attachment;
+										};
+									};
+								};
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								UICorner: UICorner;
+							};
+							UIPadding: UIPadding;
+						};
+						UIGridLayout: UIGridLayout;
+						UIPadding: UIPadding;
 					};
 					UIGradient: UIGradient;
 				};

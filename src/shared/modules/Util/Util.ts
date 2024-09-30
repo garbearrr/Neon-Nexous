@@ -1,4 +1,7 @@
 export class Util {
+    static EndsWith(str: string, suffix: string): boolean {
+        return str.sub(-suffix.size(), str.size()) === suffix;
+    }
     /**
      * Linear interpolation between two values
      * @param a 
