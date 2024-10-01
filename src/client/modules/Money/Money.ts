@@ -16,4 +16,10 @@ export namespace Money {
         UI.Currency.TweenMoney(State.Money, Final);
         State.Money = Final;
     }
+
+    export const RemoveMoney = (Value: BigNumber) => {
+        const Final = State.Money.Subtract(Value);
+        UI.Currency.TweenMoney(State.Money, Final);
+        State.Money = Final;
+    }
 }

@@ -1,7 +1,7 @@
 interface StarterGui extends BasePlayerGui {
 	ThreeDUI: SurfaceGui & {
 		UIPadding: UIPadding;
-		Frame: Frame & {
+		MainFrame: Frame & {
 			UICorner: UICorner;
 			UIStroke: UIStroke;
 			Scanlines: ImageLabel & {
@@ -12,12 +12,45 @@ interface StarterGui extends BasePlayerGui {
 						X_Close: TextButton & {
 							UIAspectRatioConstraint: UIAspectRatioConstraint;
 						};
-						UIPadding: UIPadding;
 						Title: TextLabel;
+						UIPadding: UIPadding;
 					};
-					["3_Content"]: Frame;
-					UIListLayout: UIListLayout;
 					UICorner: UICorner;
+					["3_Content"]: Frame & {
+						UIListLayout: UIListLayout;
+						["3_Desc"]: Frame & {
+							["2_Name"]: TextLabel;
+							["1_ItemImg"]: TextButton & {
+								UIPadding: UIPadding;
+								UIStroke: UIStroke;
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								ImageButton: ImageButton & {
+									UIAspectRatioConstraint: UIAspectRatioConstraint;
+								};
+							};
+							["3_Buy"]: TextButton;
+							UIPadding: UIPadding;
+							UIListLayout: UIListLayout;
+						};
+						["1_ItemFrame"]: ScrollingFrame & {
+							TemplateRow: Frame & {
+								UIListLayout: UIListLayout;
+								UIPadding: UIPadding;
+								TemplateItem: TextButton & {
+									UIPadding: UIPadding;
+									UIStroke: UIStroke;
+									UIAspectRatioConstraint: UIAspectRatioConstraint;
+									ImageButton: ImageButton & {
+										UIAspectRatioConstraint: UIAspectRatioConstraint;
+									};
+								};
+							};
+							UIGridLayout: UIGridLayout;
+							UIPadding: UIPadding;
+						};
+						["2_Divider"]: Frame;
+					};
+					UIListLayout: UIListLayout;
 					["2_Divider"]: Frame;
 				};
 				Settings: Frame & {
@@ -44,7 +77,27 @@ interface StarterGui extends BasePlayerGui {
 						UIPadding: UIPadding;
 					};
 					UICorner: UICorner;
-					["3_Content"]: Frame;
+					["3_Content"]: Frame & {
+						["3_DescriptionFrame"]: ScrollingFrame;
+						UIListLayout: UIListLayout;
+						["1_ItemFrame"]: ScrollingFrame & {
+							TemplateRow: Frame & {
+								UIListLayout: UIListLayout;
+								UIPadding: UIPadding;
+								TemplateItem: TextButton & {
+									UIPadding: UIPadding;
+									UIStroke: UIStroke;
+									UIAspectRatioConstraint: UIAspectRatioConstraint;
+									ImageButton: ImageButton & {
+										UIAspectRatioConstraint: UIAspectRatioConstraint;
+									};
+								};
+							};
+							UIGridLayout: UIGridLayout;
+							UIPadding: UIPadding;
+						};
+						["2_Divider"]: Frame;
+					};
 					UIListLayout: UIListLayout;
 					["2_Divider"]: Frame;
 				};
@@ -314,7 +367,8 @@ interface StarterGui extends BasePlayerGui {
 				["1_Money"]: Frame & {
 					["2_MoneyText"]: TextLabel & {
 						Value: NumberValue;
-						UIGradient: UIGradient;
+						AddUIGradient: UIGradient;
+						TakeUIGradient: UIGradient;
 					};
 					UIGradient: UIGradient;
 					UIListLayout: UIListLayout;

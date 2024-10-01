@@ -1,6 +1,7 @@
 import { Workspace, RunService, UserInputService, TweenService, Players } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 import { Scheduling } from "shared/modules/Scheduling/Scheduling";
+import { ThreeDeePage } from "./ThreeDeePage";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -9,10 +10,10 @@ const Camera = Workspace.CurrentCamera!;
 const GuiPart = Workspace.WaitForChild("GuiPart") as Workspace["GuiPart"];
 
 declare type FramesInScanlines = {
-    [K in keyof typeof SurfaceGui["Frame"]["Scanlines"]]: typeof SurfaceGui["Frame"]["Scanlines"][K] extends Frame ? K : never;
-}[keyof typeof SurfaceGui["Frame"]["Scanlines"]];
+    [K in keyof typeof SurfaceGui["MainFrame"]["Scanlines"]]: typeof SurfaceGui["MainFrame"]["Scanlines"][K] extends Frame ? K : never;
+}[keyof typeof SurfaceGui["MainFrame"]["Scanlines"]];
 
-declare type TemplatePage = typeof SurfaceGui["Frame"]["Scanlines"]["Shop"];
+//declare type TemplatePage = typeof SurfaceGui["MainFrame"]["Scanlines"]["Shop"];
 
 // Desired screen space percentages
 const DesiredScreenWidthPercentage = 0.75  // 80% of the screen width
@@ -24,7 +25,7 @@ const Distance = 5; // In studs
 // Maximum rotation angle
 const MaxRotationAngle = math.rad(2.5); // Maximum rotation in radians
 
-const ScanlineTexture = SurfaceGui.Frame.Scanlines;
+const ScanlineTexture = SurfaceGui.MainFrame.Scanlines;
 const SLTI = new TweenInfo(12, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, true, 0);
 const ActivateTI = new TweenInfo(0.9, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, 0, false, 0);
 const CloseTI = new TweenInfo(0.5, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, 0, false, 0);
@@ -38,7 +39,7 @@ const TypeTimeout = 0.06;
 class ThreeDUIManager {
     private Active = false;
     private CanExit = false;
-    private CurrentPage?: TemplatePage;
+    private CurrentPage?: ThreeDeePage;
 
     private Executing = false;
     private Interrupted = false;
@@ -52,16 +53,20 @@ class ThreeDUIManager {
     private StopInterval: Callback | undefined;
 
     private readonly Connections = new Collection<string, RBXScriptConnection>();
-    private readonly Pages = new Collection<FramesInScanlines, TemplatePage>();
+    private readonly Pages = new Collection<FramesInScanlines, ThreeDeePage>();
     private readonly TitleTexts = new Collection<string, string>();
 
     public constructor() {
-        const PossiblePages = ScanlineTexture.GetChildren();
-        for (const Page of PossiblePages) {
-            if (Page.IsA("Frame")) {
-                this.Pages.Set(Page.Name as FramesInScanlines, Page as TemplatePage);
-            }
+        
+    }
+
+    public AddPage(Page: FramesInScanlines, PageInstance: ThreeDeePage) {
+        if (this.Pages.Has(Page)) {
+            warn(`Page ${Page} already exists in 3DGUI.`);
+            return;
         }
+
+        this.Pages.Set(Page, PageInstance);
     }
 
     private Close() {
@@ -81,7 +86,8 @@ class ThreeDUIManager {
 
         this.Active = false;
         this.CanExit = false;
-        this.CurrentPage!.Visible = false;
+        this.CurrentPage!.Page.Visible = false;
+        this.CurrentPage!.OnClose();
         this.CurrentPage = undefined;
 
         this.Executing = false;
@@ -108,7 +114,7 @@ class ThreeDUIManager {
     }
 
     public DisplayPage(Page: FramesInScanlines) {
-        if (this.CurrentPage !== undefined && this.CurrentPage.Name === Page) {
+        if (this.CurrentPage !== undefined && this.CurrentPage.Page.Name === Page) {
             return;
         }
 
@@ -118,12 +124,14 @@ class ThreeDUIManager {
             return;
         }
 
+        NewPage.OnOpen();
+
         this.Connections.Get("Close")?.Disconnect();
-        const XCon = NewPage["1_TopBar"].X_Close.Activated.Connect(() => this.Close());
+        const XCon = NewPage.Page["1_TopBar"].X_Close.Activated.Connect(() => this.Close());
         this.Connections.Set("Close", XCon);
 
         if (!this.TitleTexts.Has(Page)) {
-            this.TitleTexts.Set(Page, NewPage["1_TopBar"].Title.Text);
+            this.TitleTexts.Set(Page, NewPage.Page["1_TopBar"].Title.Text);
         }
 
         if (this.CurrentPage !== undefined) {
@@ -137,8 +145,9 @@ class ThreeDUIManager {
                 this.Interrupted = false;
             }
 
-            this.CurrentPage.Visible = false;
-            this.CurrentPage["1_TopBar"].Title.Text = this.TitleTexts.Get(this.CurrentPage.Name)!;
+            this.CurrentPage.Page.Visible = false;
+            this.CurrentPage.Page["1_TopBar"].Title.Text = this.TitleTexts.Get(this.CurrentPage.Page.Name)!;
+            this.CurrentPage.OnClose();
 
             if (this.StopInterval !== undefined) {
                 this.StopInterval();
@@ -146,15 +155,15 @@ class ThreeDUIManager {
             }
 
             this.CurrentPage = NewPage;
-            NewPage["1_TopBar"].Title.Text = this.PendingTitleText;
-            NewPage.Visible = true;
+            NewPage.Page["1_TopBar"].Title.Text = this.PendingTitleText;
+            NewPage.Page.Visible = true;
             this.ShowTitle();
             return;
         }
 
         this.CurrentPage = NewPage;
-        NewPage["1_TopBar"].Title.Text = "";
-        NewPage.Visible = true;
+        NewPage.Page["1_TopBar"].Title.Text = "";
+        NewPage.Page.Visible = true;
         this.Active = true;
 
         const OGBrightness = SurfaceGui.Brightness;
@@ -245,7 +254,7 @@ class ThreeDUIManager {
 
     private ShowTitle() {
         this.Executing = true;
-        const TB = this.CurrentPage!["1_TopBar"];
+        const TB = this.CurrentPage!.Page["1_TopBar"];
         this.Interrupted = false;
 
         while(this.PendingTitleText.size() > 0) {
@@ -259,7 +268,7 @@ class ThreeDUIManager {
         if (this.IsInterrupted()) return;
         
         TB.Title.Text = "_";
-        const Title = this.TitleTexts.Get(this.CurrentPage!.Name)!;
+        const Title = this.TitleTexts.Get(this.CurrentPage!.Page.Name)!;
 
         for (const char of Title) {
             TB.Title.Text = TB.Title.Text .sub(0, TB.Title.Text.size() - 1) + char + "_";

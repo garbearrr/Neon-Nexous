@@ -1,7 +1,7 @@
 import { Players } from "@rbxts/services";
 import { BaseActionButton } from "./BaseActionButton";
 
-import ThreeDeeUI from "../3Duitest";
+import ThreeDeeUI from "../3DUI/3Duitest";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;

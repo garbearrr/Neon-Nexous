@@ -1,52 +1,44 @@
-import { CollectionService, Players, TweenService } from "@rbxts/services";
+import { CollectionService, Players } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
-import { Event } from "shared/modules/Event/Event";
 import { Scheduling } from "shared/modules/Scheduling/Scheduling";
 import { Util } from "shared/modules/Util/Util";
-
-declare type TemplateFrame = StarterGui["MainUI"]["Bottom"]["Shop"];
+import { Template3DPage, ThreeDeePage } from "../ThreeDeePage";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
-const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
+const ThreeDUI = PlayerGui.WaitForChild("ThreeDUI") as StarterGui["ThreeDUI"];
 
-export abstract class BaseItemMenuGrid {
-    protected readonly Menu: TemplateFrame;
+export abstract class BaseItemMenuGrid extends ThreeDeePage {
+    protected readonly Menu: Template3DPage;
 
     private SizeChangeConnection: RBXScriptConnection | undefined;
 
     private readonly OGCellSizeData: UDim2;
     private readonly OGCellSize: number;
-    private readonly OGFramePos: UDim2;
-    private readonly ContentFrame: TemplateFrame["3_Content"]["ScrollingFrame"];
-    private readonly TemplateRow: TemplateFrame["3_Content"]["ScrollingFrame"]["TemplateRow"];
+    private readonly ContentFrame: Template3DPage["3_Content"]["1_ItemFrame"];
+    private readonly TemplateRow: Template3DPage["3_Content"]["1_ItemFrame"]["TemplateRow"];
 
     protected ActivationTI = new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0);
-    protected CellsPerRow = 4;
+    protected CellsPerRow = 5;
     protected CellTag = "ShopCell";
     protected RowTag = "ShopRow";
 
-    public Events = {
-       OnClose: new Event<void>()
-    }
-
-    public constructor(Frame: TemplateFrame) {
+    protected constructor(Frame: Template3DPage) {
+        super(Frame);
         this.Menu = Frame;
-        this.OGFramePos = Frame.Position;
 
-        Frame.Visible = false;
-        this.SetNotVisPosition();
+        Frame.Visible = true;
+        //this.SetNotVisPosition();
 
-        this.ContentFrame = Frame["3_Content"]["ScrollingFrame"];
+        this.ContentFrame = Frame["3_Content"]["1_ItemFrame"];
         this.TemplateRow = this.ContentFrame.TemplateRow;
         this.TemplateRow.Visible = false;
         this.TemplateRow.TemplateItem.Visible = false;
-        this.TemplateRow.TemplateItem.ViewportFrame.Model["10000"].Destroy();
+        //this.TemplateRow.TemplateItem.ViewportFrame.Model["10000"].Destroy();
 
         this.OGCellSizeData = this.ContentFrame.UIGridLayout.CellSize;
         this.OGCellSize = this.OGCellSizeData.Y.Offset;
-
-        Frame["1_Bar"].Bar["2_Close"].Activated.Connect(() => this.OnClose());
+        //Frame["1_Bar"].Bar["2_Close"].Activated.Connect(() => this.OnClose());
     }
 
     private ConnectSizeChange() {
@@ -54,7 +46,7 @@ export abstract class BaseItemMenuGrid {
 
         const DebouncedPopulate = Scheduling.Debounce(() => this.PopulateMenu(), 0.2);
         
-        this.SizeChangeConnection = MainUI.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
+        this.SizeChangeConnection = ThreeDUI.GetPropertyChangedSignal("AbsoluteSize").Connect(() => {
             if (!this.Menu.Visible) return;
             DebouncedPopulate();
         });
@@ -69,14 +61,10 @@ export abstract class BaseItemMenuGrid {
             CellClone.Parent = this.ContentFrame;
             CollectionService.AddTag(CellClone, this.CellTag);
 
-            const ItemClone = Item.Clone();
-            ItemClone.Parent = CellClone.ViewportFrame.Model;
-            CellClone.ViewportFrame.Model.PrimaryPart = ItemClone;
-            CellClone.ViewportFrame.Model.PivotTo(new CFrame(0, -0.5, -14).mul(CFrame.Angles(0, math.rad(-30), 0)));
-            CellClone.Name = ItemId;
-
             CellClone.Visible = true;
             NewCells.push(CellClone);
+
+            this.OnCellAdded([CellClone, CellClone.ImageButton], ItemId, Name, Item);
         }
 
         return NewCells;
@@ -84,9 +72,16 @@ export abstract class BaseItemMenuGrid {
 
     protected abstract ItemSource(): Collection<string, {ItemId: string, Name: string, Item: Part}>;
 
-    private OnClose() {
-        this.ToggleMenu();
-        this.Events.OnClose.Fire();
+    protected OnCellAdded(Buttons: GuiButton[], ItemId: string, Name: string, Item: Part): void {
+
+    }
+
+    public override OnClose() {
+        this.SizeChangeConnection?.Disconnect();
+    }
+
+    public override OnOpen() {
+        this.ConnectSizeChange();
     }
 
     protected PopulateMenu() {
@@ -126,7 +121,8 @@ export abstract class BaseItemMenuGrid {
                     CellClone.Parent = RowClone;
                     CellClone.Position = new UDim2(0, j * NewCellSize, 0, 0);
                     CellClone.Visible = true;
-                    CellClone.BackgroundTransparency = 1;
+                    CellClone.ImageButton.Visible = false;
+                    CellClone.UIStroke.Enabled = false;
                 }
             }
         }
@@ -134,41 +130,5 @@ export abstract class BaseItemMenuGrid {
         for (const Row of ExistingRows) {
             Row.Destroy();
         }
-    }
-
-    protected SetNotVisPosition() {
-        this.Menu.Position = new UDim2(
-            this.Menu.NotVisXVal.Value,
-            this.OGFramePos.X.Offset,
-            this.OGFramePos.Y.Scale,
-            this.OGFramePos.Y.Offset
-        );
-    }
-
-    protected SetOGPosition() {
-        this.Menu.Position = this.OGFramePos;
-    }
-
-    public ToggleMenu() {
-        const Pos = this.Menu.Visible ? this.Menu.NotVisXVal.Value : this.OGFramePos.X.Scale;
-        
-        if (!this.Menu.Visible) {
-            this.ConnectSizeChange();
-
-            this.Menu.Visible = true;
-
-            const Tween = TweenService.Create(this.Menu, this.ActivationTI, { Position: new UDim2(Pos, this.OGFramePos.X.Offset, this.Menu.Position.Y.Scale, this.Menu.Position.Y.Offset) });
-            Tween.Play();
-        } else {
-            this.SizeChangeConnection?.Disconnect();
-
-            const Tween = TweenService.Create(this.Menu, this.ActivationTI, { Position: new UDim2(Pos, this.OGFramePos.X.Offset, this.Menu.Position.Y.Scale, this.Menu.Position.Y.Offset) });
-            Tween.Completed.Connect(() => {
-                this.Menu.Visible = false;
-            });
-
-            Tween.Play();
-        }
- 
     }
 }

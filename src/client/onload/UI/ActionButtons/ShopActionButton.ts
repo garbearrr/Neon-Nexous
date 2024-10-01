@@ -1,8 +1,7 @@
 import { Players } from "@rbxts/services";
 import { BaseActionButton } from "./BaseActionButton";
-import { Scheduling } from "shared/modules/Scheduling/Scheduling";
 
-import ShopMenuGrid from "../ItemMenuGrids/ShopMenuGrid";
+import ThreeDeeUI from "../3DUI/3Duitest";
 
 const TI_TIMEOUT = 0.3;
 
@@ -18,27 +17,13 @@ class ShopActionButton extends BaseActionButton {
     public constructor(Button: typeof ShopButton) {
         super(Button);
 
-        ShopMenuGrid.SetTweenTime(TI_TIMEOUT);
-        ShopMenuGrid.Events.OnClose.Connect(() => this.ShopOnClose());
+        //ShopMenuGrid.SetTweenTime(TI_TIMEOUT);
+        //ShopMenuGrid.Events.OnClose.Connect(() => this.ShopOnClose());
     }
 
-    protected override OnActivated(): void {
-        if (this.ToggleTimeOut) return;
-        this.ToggleTimeOut = true;
-
-        this.Toggle();
-        ShopMenuGrid.ToggleMenu();
-
-        Scheduling.SetTimeout(() => this.ToggleTimeOut = false, TI_TIMEOUT);
-    }
-
-    private ShopOnClose() {
-        if (this.ToggleTimeOut) return;
-        this.ToggleTimeOut = true;
-        
-        this.Toggle();
-
-        Scheduling.SetTimeout(() => this.ToggleTimeOut = false, TI_TIMEOUT);
+    public override OnActivated(): void {
+        super.OnActivated();
+        ThreeDeeUI.DisplayPage("Shop");
     }
 }
 
