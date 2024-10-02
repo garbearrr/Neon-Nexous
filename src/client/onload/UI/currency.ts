@@ -22,6 +22,7 @@ export namespace UI.Currency {
 
     export const TweenMoney = (from: BigNumber, to: BigNumber) => {
         const MoneyText = GetMoneyText();
+        const Grad = to.IsGreaterThan(from) ? MoneyText.AddUIGradient : MoneyText.TakeUIGradient;
         const NumberValue = MoneyText["Value"];
         NumberValue.Value = tonumber(from.ToAbbreviatedString(true)) || 0;
 
@@ -33,7 +34,7 @@ export namespace UI.Currency {
         const NewSize = new UDim2(OriginalSize.X.Scale, OriginalSize.X.Offset, OriginalSize.Y.Scale + 0.13, OriginalSize.Y.Offset);
         MoneyText.Size = NewSize;
 
-        MoneyText.UIGradient.Enabled = true;
+        Grad.Enabled = true;
 
         const TI = new TweenInfo(0.4, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, 0, false, 0);
         const Connection = NumberValue.Changed.Connect(() => {
@@ -45,7 +46,7 @@ export namespace UI.Currency {
             Connection.Disconnect();
             MoneyText.Text = to.ToAbbreviatedString();
             MoneyText.Size = OriginalSize;
-            MoneyText.UIGradient.Enabled = false;
+            Grad.Enabled = false;
         });
 
         currentTween.Play();

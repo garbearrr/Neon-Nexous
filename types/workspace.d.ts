@@ -203,6 +203,82 @@ interface Workspace extends Model {
 				ClickDetector: ClickDetector;
 				Drop: Attachment;
 			};
+			["10001"]: Part & {
+				["Erbium Mine"]: Folder;
+				Stats: Folder & {
+					ItemName: StringValue;
+					Cost: NumberValue;
+					DropSpeed: NumberValue;
+					OreValue: NumberValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					TubeBack: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Cap: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Tubes: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					TubeFront: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Supports: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				Ore: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				ClickDetector: ClickDetector;
+				Drop: Attachment;
+			};
+			["10002"]: Part & {
+				["Erbium Mine"]: Folder;
+				Stats: Folder & {
+					ItemName: StringValue;
+					Cost: NumberValue;
+					DropSpeed: NumberValue;
+					OreValue: NumberValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					TubeBack: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Cap: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Tubes: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					TubeFront: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Supports: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				Ore: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				ClickDetector: ClickDetector;
+				Drop: Attachment;
+			};
 		};
 	};
 	Camera: Camera;
@@ -221,6 +297,49 @@ interface Workspace extends Model {
 			DragGridPart: Part;
 			BuildModulePlot: Part & {
 				CameraContainer: Part;
+			};
+		};
+	};
+	GuiPart: Part & {
+		SurfaceGui: SurfaceGui & {
+			UIPadding: UIPadding;
+			Frame: Frame & {
+				UICorner: UICorner;
+				UIStroke: UIStroke;
+				Scanlines: ImageLabel & {
+					UICorner: UICorner;
+					Shop: Frame & {
+						["1_TopBar"]: Frame & {
+							Title: TextLabel;
+							X_Close: TextButton;
+							UIPadding: UIPadding;
+						};
+						UIListLayout: UIListLayout;
+						UICorner: UICorner;
+						["3_Content"]: Frame;
+						["2_Divider"]: Frame;
+					};
+					Settings: Frame & {
+						["1_TopBar"]: Frame & {
+							Title: TextLabel;
+							UIPadding: UIPadding;
+						};
+						UIListLayout: UIListLayout;
+						UICorner: UICorner;
+						["3_Content"]: Frame;
+						["2_Divider"]: Frame;
+					};
+					Inventory: Frame & {
+						["1_TopBar"]: Frame & {
+							Title: TextLabel;
+							UIPadding: UIPadding;
+						};
+						UIListLayout: UIListLayout;
+						UICorner: UICorner;
+						["3_Content"]: Frame;
+						["2_Divider"]: Frame;
+					};
+				};
 			};
 		};
 	};

@@ -17,6 +17,26 @@ export class BigNumber implements iBigNumber {
         }
     }
 
+    private Compare(other: BigNumber): number {
+        // Compare exponents first
+        if (this.exponent > other.exponent) {
+            return 1;
+        } else if (this.exponent < other.exponent) {
+            return -1;
+        }
+    
+        // If exponents are the same, compare mantissas
+        if (this.mantissa > other.mantissa) {
+            return 1;
+        } else if (this.mantissa < other.mantissa) {
+            return -1;
+        }
+    
+        // Both mantissa and exponent are equal
+        return 0;
+    }
+    
+
     private FromNumber(value: number) {
         if (value === 0) {
             this.mantissa = 0;
@@ -193,6 +213,30 @@ export class BigNumber implements iBigNumber {
 
         const normalized = this.Normalize(newMantissa, newExponent);
         return new BigNumberAltConstructor(normalized.mantissa, normalized.exponent);
+    }
+
+    public IsEqualTo(other: BigNumber): boolean {
+        return this.Compare(other) === 0;
+    }
+    
+    public IsNotEqualTo(other: BigNumber): boolean {
+        return this.Compare(other) !== 0;
+    }
+    
+    public IsGreaterThan(other: BigNumber): boolean {
+        return this.Compare(other) > 0;
+    }
+    
+    public IsGreaterThanOrEqualTo(other: BigNumber): boolean {
+        return this.Compare(other) >= 0;
+    }
+    
+    public IsLessThan(other: BigNumber): boolean {
+        return this.Compare(other) < 0;
+    }
+    
+    public IsLessThanOrEqualTo(other: BigNumber): boolean {
+        return this.Compare(other) <= 0;
     }
 
     public GetAbbreviation(): string {
