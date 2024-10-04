@@ -4,6 +4,7 @@ import { OreManager } from "../Ore/OreManager";
 import { ItemFacingDirection } from "./Common";
 import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 
+//Very necessary to add furnace for multiplier for the dropped ores!!
 export class Furnace extends BaseItem implements FurnaceData {
     public readonly Receiver: Part;
     public readonly Stats: FurnaceData["Stats"];
