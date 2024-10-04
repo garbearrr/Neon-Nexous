@@ -24,25 +24,6 @@ export class Conveyor extends BaseItem implements ConveyorData {
         this.Connections.push(C);
     }
 
-    public override OnPlaced(): void {
-        super.OnPlaced();
-
-        this.DirectionIndicator.Enabled = false;
-        
-        const ConveyorA1 = this.ConveyA1;
-        const ConveyorA2 = this.ConveyA2;
-        const Speed = this.Stats.Speed.Value;
-        const Part = this.CollisionHitbox;
-
-        Item.Common.ActivateConveyor(ConveyorA1, ConveyorA2, Speed, Part);
-    }
-
-    private OnRotated(Rot: number): void {
-        (Rot === 0 || Rot === 180)
-            ? Grid.GetGlobalInstance().LockDragVertical()
-            : Grid.GetGlobalInstance().LockDragHorizontal();
-    }
-
     public override OnSetup(): void {
         super.OnSetup();
         
@@ -54,5 +35,24 @@ export class Conveyor extends BaseItem implements ConveyorData {
         (Rot === 0 || Rot === 180) 
             ? G.LockDragVertical()
             : G.LockDragHorizontal();
+    }
+
+    private OnRotated(Rot: number): void {
+        (Rot === 0 || Rot === 180)
+            ? Grid.GetGlobalInstance().LockDragVertical()
+            : Grid.GetGlobalInstance().LockDragHorizontal();
+    }
+
+    public override OnPlaced(): void {
+        super.OnPlaced();
+
+        this.DirectionIndicator.Enabled = false;
+        
+        const ConveyorA1 = this.ConveyA1;
+        const ConveyorA2 = this.ConveyA2;
+        const Speed = this.Stats.Speed.Value;
+        const Part = this.CollisionHitbox;
+
+        Item.Common.ActivateConveyor(ConveyorA1, ConveyorA2, Speed, Part);
     }
 }
