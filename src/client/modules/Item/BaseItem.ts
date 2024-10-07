@@ -2,7 +2,7 @@ import { Players } from "@rbxts/services";
 import { PlacedItems } from "../Placement/PlacedItems";
 import { Plot } from "../Plot/Plot";
 import { ItemFacingDirection } from "./Common";
-import { Grid } from "../Grid/Grid";
+import { BuildModes, Grid } from "../Grid/Grid";
 
 export abstract class BaseItem implements BaseItemType {
     public readonly ClickDetector: BaseItemData["ClickDetector"];
@@ -53,6 +53,10 @@ export abstract class BaseItem implements BaseItemType {
     public Destroy(DestroyPart = true): void {
         this.Connections.forEach((Connection) => Connection.Disconnect());
         if (DestroyPart) this.Part.Destroy();
+    }
+
+    public GetBuildModeType(): keyof BuildModes {
+        return "SquareDragGrid";
     }
 
     public GetFacingDirection(): ItemFacingDirection | undefined {

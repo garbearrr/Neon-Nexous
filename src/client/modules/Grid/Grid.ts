@@ -2,7 +2,7 @@ import { AnchorDragGrid } from "./AnchorDragGrid";
 import { ContextualDragGrid } from "./ContextualDragGrid";
 import { SquareDragGrid } from "./SquareDragGrid";
 
-interface BuildModes {
+export interface BuildModes {
     "AnchorDragGrid": AnchorDragGrid;
     "ContextualDragGrid": ContextualDragGrid;
     "SquareDragGrid": SquareDragGrid;

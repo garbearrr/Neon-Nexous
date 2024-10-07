@@ -55,13 +55,14 @@ export namespace Placement {
             return;
         }
 
-        // This must be done before Item classes are instantiated.
-        const G = Grid.Instance("AnchorDragGrid", Plot.PlotItem);
         State.Item = SetupClone(ItemData);
 
         State.ObjectCache = new ObjectCache(ItemData, Grid.GetGlobalInstance().MaxItemsPossible(State.Item));
 
         State.ItemModule = ClassifyItem(State.Item);
+
+        const G = Grid.Instance(State.ItemModule.GetBuildModeType(), Plot.PlotItem);
+
         ConfigureHitboxGuide();
 
         State.ItemModule.OnSetup();

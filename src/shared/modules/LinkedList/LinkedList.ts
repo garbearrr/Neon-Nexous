@@ -34,6 +34,21 @@ export class LinkedList<T> {
         this.Size++;
     }
 
+    // Add a value to the front of the list
+    AddFront(value: T): void {
+        const newNode = new Node(value);
+
+        if (!this.Head) {
+            this.Head = newNode;
+            this.Tail = newNode;
+        } else {
+            newNode.Next = this.Head;
+            this.Head = newNode;
+        }
+
+        this.Size++;
+    }
+
     // Remove a value from the list
     Remove(value: T): boolean {
         if (!this.Head) return false;

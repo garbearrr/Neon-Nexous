@@ -1,6 +1,6 @@
 import { BaseItem } from "client/modules/Item/BaseItem";
 import { Item } from "./Common";
-import { Grid } from "../Grid/Grid";
+import { BuildModes, Grid } from "../Grid/Grid";
 
 
 export class Conveyor extends BaseItem implements ConveyorData {
@@ -22,6 +22,10 @@ export class Conveyor extends BaseItem implements ConveyorData {
 
         const C = Grid.GetGlobalInstance().Events.OnRotate.Connect((Rot) => this.OnRotated(Rot));
         this.Connections.push(C);
+    }
+
+    public override GetBuildModeType(): keyof BuildModes {
+        return "AnchorDragGrid";
     }
 
     public override OnPlaced(): void {
