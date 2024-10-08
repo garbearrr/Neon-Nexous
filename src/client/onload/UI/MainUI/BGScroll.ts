@@ -25,7 +25,7 @@ const ScrollDirection = new Vector2(-1, 1); // Direction of the background scrol
 const TilesAcross = 12; // Number of tiles horizontally
 const TilesDown = 6; // Number of tiles vertically
 const StartingTransparency = Background.ImageTransparency; // Initial transparency of the background
-const CustomScrollSpeed = 20; // Speed multiplier for custom scroll
+const CustomScrollSpeed = 25; // Speed multiplier for custom scroll
 const FadeStartPercentage = 0.5; // 50% of the zone where fade-out starts
 const FadeEndPercentage = 0.75;  // 75% of the zone where fade-out ends
 const TransparencyThreshold = 0.05; // Threshold to determine when to change images
@@ -47,15 +47,18 @@ let ImageZones: ImageZone[] = [];
 
 export namespace BGScroll {
     let Active = false;
-    let isTweening = false;
     let Position = new Vector2(0, 0); // Current background position
-    
+
     const Connections = new Collection<string, RBXScriptConnection>();
     const Frames = [] as MainUIPage[];
-    
+
     // Variable to track if the mouse is over MainScroll
     let isMouseOverScroll = false;
-    
+
+    // Pending scroll variable
+    let pendingScroll: number = 0; // Accumulates scroll deltas
+    const ScrollSpeed = 500; // Pixels per second for smooth scrolling
+
     export const Activate = () => {
         if (Active) return;
 
@@ -115,65 +118,215 @@ export namespace BGScroll {
 
     export const AddFrame = (frame: MainUIPage) => {
         Frames.push(frame);
+        InitializeImageZones(); // Recalculate zones whenever a new frame is added
     };
 
+    // Method to focus on a target frame
     export const FocusOnFrame = (targetFrame: Frame) => {
         // Ensure that targetFrame is a child of MainScroll
         if (!targetFrame.IsDescendantOf(MainScroll)) {
             warn(`Target frame ${targetFrame.Name} is not a descendant of MainScroll.`);
             return;
         }
-    
+
         // Calculate the desired CanvasPosition.Y to center the frame
-        const frameOffset = targetFrame.AbsolutePosition.Y;
+        const frameOffset = targetFrame.Position.Y.Offset;
         const frameHeight = targetFrame.AbsoluteSize.Y;
         const scrollFrameHeight = MainScroll.AbsoluteSize.Y;
-    
+
         const targetCanvasPosY = math.clamp(
             frameOffset - (scrollFrameHeight / 2) + (frameHeight / 2),
             0,
             MainScroll.AbsoluteCanvasSize.Y - scrollFrameHeight
         );
-    
+
         print(`Focusing on frame: ${targetFrame.Name}`);
         print(`Frame Y Offset: ${frameOffset}`);
         print(`Frame Height: ${frameHeight}`);
         print(`Scroll Frame Height: ${scrollFrameHeight}`);
         print(`Calculated target CanvasPosition.Y: ${targetCanvasPosY}`);
-    
+
         if (!Active) {
             // If the module is not active, immediately set the scroll to the target frame
             MainScroll.CanvasPosition = new Vector2(MainScroll.CanvasPosition.X, targetCanvasPosY);
             print(`Set CanvasPosition directly to: ${MainScroll.CanvasPosition}`);
         } else {
-            // If the module is active, smoothly tween to the target frame
-            if (isTweening) {
-                print("A tween is already in progress. Please wait.");
-                return;
-            }
-    
-            isTweening = true;
-            const targetPos = new Vector2(MainScroll.CanvasPosition.X, targetCanvasPosY);
-            print(`Tweening CanvasPosition to: ${targetPos}`);
-    
-            const tween = TweenService.Create(
-                MainScroll,
-                FocusTweenInfo,
-                { CanvasPosition: targetPos }
-            );
-            tween.Play();
-    
-            // Handle Tween completion
-            tween.Completed.Connect((status) => {
-                if (status === Enum.PlaybackState.Completed) {
-                    isTweening = false;
-                    print(`Tween to ${targetPos} completed.`);
-                }
-            });
+            // If the module is active, calculate the pending scroll delta
+            const currentScrollY = MainScroll.CanvasPosition.Y;
+            const deltaScroll = targetCanvasPosY - currentScrollY;
+            pendingScroll += deltaScroll;
+            print(`Added ${deltaScroll} to pendingScroll. New pendingScroll: ${pendingScroll}`);
         }
     };
     
+    export const Deactivate = () => {
+        if (!Active) return;
+
+        Active = false;
+
+        MainFrame.Visible = false; // Hide the MainFrame to prevent rendering
+
+        // Disconnect all connections to prevent memory leaks
+        Connections.ForEach((Conn) => Conn.Disconnect());
+        Connections.Clear();
+
+        // Unbind the mouse wheel action
+        ContextActionService.UnbindAction("MouseWheelAction");
+
+        print("BGScroll Deactivated");
+    };
+
+    /**
+     * Calculates the transparency based on normalized scroll position and thresholds.
+     * @param p - Normalized scroll position within the zone (0 to 1).
+     * @param t1 - Fade-Out Start Threshold (0 < t1 < t2 < 1).
+     * @param t2 - Fade-Out End Threshold (t1 < t2 < 1).
+     * @param startingTransparency - The initial transparency value (0 to 1).
+     * @returns The calculated transparency value.
+     */
+    function CalculateTransparency(
+        p: number,
+        t1: number,
+        t2: number,
+        startingTransparency: number
+    ): number {
+        if (p < t1) {
+            // Display Zone
+            return startingTransparency;
+        } else if (p >= t1 && p < t2) {
+            // Fade-Out Zone
+            const progress = (p - t1) / (t2 - t1);
+            return startingTransparency + progress * (1 - startingTransparency);
+        } else if (p >= t2 && p <= 1) {
+            // Fade-In Zone
+            const progress = (p - t2) / (1 - t2);
+            return 1 - progress * (1 - startingTransparency);
+        } else {
+            // Out of bounds, default to starting transparency
+            return startingTransparency;
+        }
+    }
+
+    // Function to handle mouse wheel scrolling
+    const HandleMouseWheel = (actionName: string, inputState: Enum.UserInputState, inputObject: InputObject) => {
+        // Only handle the input when it's a MouseWheel scroll change
+        if (inputObject.UserInputType === Enum.UserInputType.MouseWheel && inputState === Enum.UserInputState.Change) {
+            if (isMouseOverScroll) {
+                // Calculate the scroll delta based on the mouse wheel input
+                const delta = inputObject.Position.Z * CustomScrollSpeed;
+                
+                // Accumulate the pending scroll
+                pendingScroll += -delta; // Negative to invert the scroll direction if necessary
+                print(`Mouse wheel scrolled. Added ${-delta} to pendingScroll. New pendingScroll: ${pendingScroll}`);
+                
+                // Prevent the default camera zoom by consuming the input
+                return Enum.ContextActionResult.Sink;
+            }
+        }
+
+        // Allow the input to propagate if not over the scroll frame
+        return Enum.ContextActionResult.Pass;
+    };
     
+    // Function called every frame to handle scrolling and image transitions
+    const OnUpdate = (deltaTime: number) => {
+        // Apply pending scroll smoothly
+        if (pendingScroll !== 0) {
+            // Calculate the amount to scroll this frame
+            const scrollDelta = ScrollSpeed * deltaTime;
+            
+            // Determine the direction of the scroll
+            const scrollDirection = pendingScroll > 0 ? 1 : -1;
+            
+            // Calculate the actual scroll amount for this frame
+            const actualScroll = math.min(math.abs(pendingScroll), scrollDelta) * scrollDirection;
+            
+            // Update the CanvasPosition
+            MainScroll.CanvasPosition = new Vector2(
+                MainScroll.CanvasPosition.X,
+                math.clamp(MainScroll.CanvasPosition.Y + actualScroll, 0, MainScroll.AbsoluteCanvasSize.Y - MainScroll.AbsoluteSize.Y)
+            );
+            
+            // Decrease the pendingScroll
+            pendingScroll -= actualScroll;
+            print(`Applied scroll: ${actualScroll}. Remaining pendingScroll: ${pendingScroll}`);
+        }
+        
+        // Continue with other updates
+        ScrollBackground(deltaTime);
+        UpdateBackgroundImageBasedOnScroll();
+    };
+    
+    // Function to handle background scrolling based on speed and direction
+    const ScrollBackground = (deltaTime: number) => {
+        // Calculate the position change based on speed and direction
+        const moveSpeed = deltaTime * (1 / Speed); // How much to move per frame (scaled by deltaTime)
+        Position = Position.add(ScrollDirection.mul(moveSpeed)); // Update position in both X and Y
+
+        // Wrap the position based on direction to create a continuous scrolling effect
+        if (ScrollDirection.X !== 0 && math.abs(Position.X) >= 1) {
+            Position = new Vector2(0, Position.Y); // Reset X position
+        }
+        if (ScrollDirection.Y !== 0 && math.abs(Position.Y) >= 1) {
+            Position = new Vector2(Position.X, 0); // Reset Y position
+        }
+
+        // Update the background's position
+        Background.Position = UDim2.fromScale(Position.X, Position.Y);
+    };
+
+    // Function to update the tile size of the background image to maintain a consistent look
+    const UpdateTileSize = () => {
+        const ParentSize = (Background.Parent as Frame).AbsoluteSize; // Get the parent size
+
+        // Calculate the smallest tile dimension based on the parent size and the number of tiles
+        const MinTileSize = math.min(ParentSize.X / TilesAcross, ParentSize.Y / TilesDown);
+
+        // Update the tile size on the ImageLabel to keep it square
+        Background.TileSize = UDim2.fromOffset(MinTileSize, MinTileSize);
+
+        // Optional: print(`Tile Size Updated: ${MinTileSize}`);
+    };
+    
+    // Function to update the background image and handle fade-in and fade-out transitions based on scroll position
+    const UpdateBackgroundImageBasedOnScroll = () => {
+        if (ImageZones.size() === 0) return; // No zones defined
+        
+        const ScrollPosition = MainScroll.CanvasPosition.Y;
+
+        // Determine which zone the current scroll position falls into
+        for (const zone of ImageZones) {
+            if (ScrollPosition >= zone.start && ScrollPosition < zone.endPos) {
+                // Calculate the normalized scroll position within the zone (0 to 1)
+                const p = (ScrollPosition - zone.start) / (zone.endPos - zone.start);
+
+                // Calculate the transparency based on the normalized position and thresholds
+                const transparency = CalculateTransparency(p, FadeStartPercentage, FadeEndPercentage, StartingTransparency);
+                
+                // Update the background image transparency
+                Background.ImageTransparency = transparency;
+
+                // Determine which image should be displayed based on the zone index
+                const zoneIndex = ImageZones.indexOf(zone);
+                if (Background.Image !== ImageOrder[zoneIndex].Texture) {
+                    Background.Image = ImageOrder[zoneIndex].Texture;
+                }
+
+                return; // Current zone handled, no need to check further
+            }
+        }
+
+        // Handle scroll position beyond all defined zones (loop back to the first image)
+        const lastZone = ImageZones[ImageZones.size() - 1];
+        if (ScrollPosition >= lastZone.endPos) {
+            // Loop back to the first image
+            Background.Image = ImageZones[0].image;
+            Background.ImageTransparency = StartingTransparency; // Ensure it starts fully visible
+            MainScroll.CanvasPosition = new Vector2(MainScroll.CanvasPosition.X, 0); // Reset scroll position
+            // Optional: print("Looped back to first image.");
+        }
+    };
+
     // Function to initialize Image Zones with fade boundaries
     const InitializeImageZones = () => {
         ImageZones = []; // Clear existing zones if any
@@ -202,172 +355,5 @@ export namespace BGScroll {
 
         // Optional: Handle additional zones if needed
         // For example, if you want the last image to extend beyond the last frame
-    };
-
-    export const IsActive = () => Active;
-    
-    export const Deactivate = () => {
-        if (!Active) return;
-
-        Active = false;
-
-        MainFrame.Visible = false; // Hide the MainFrame to prevent rendering
-
-        // Disconnect all connections to prevent memory leaks
-        Connections.ForEach((Conn) => Conn.Disconnect());
-        Connections.Clear();
-
-        // Unbind the mouse wheel action
-        ContextActionService.UnbindAction("MouseWheelAction");
-
-        print("BGScroll Deactivated");
-    };
-    
-    // Function to handle mouse wheel scrolling
-    const HandleMouseWheel = (actionName: string, inputState: Enum.UserInputState, inputObject: InputObject) => {
-        // Only handle the input when it's a MouseWheel scroll change
-        if (inputObject.UserInputType === Enum.UserInputType.MouseWheel && inputState === Enum.UserInputState.Change) {
-            if (isMouseOverScroll) {
-                // Calculate the scroll delta
-                const delta = inputObject.Position.Z * CustomScrollSpeed;
-
-                // Update the CanvasPosition accordingly
-                MainScroll.CanvasPosition = new Vector2(
-                    MainScroll.CanvasPosition.X,
-                    MainScroll.CanvasPosition.Y - delta,
-                );
-
-                // Prevent the default camera zoom by consuming the input
-                return Enum.ContextActionResult.Sink;
-            }
-        }
-
-        // Allow the input to propagate if not over the scroll frame
-        return Enum.ContextActionResult.Pass;
-    };
-    
-    // Function called every frame to handle scrolling and image transitions
-    const OnUpdate = (deltaTime: number) => {
-        ScrollBackground(deltaTime);
-        UpdateBackgroundImageBasedOnScroll();
-    };
-    
-    // Function to handle background scrolling based on speed and direction
-    const ScrollBackground = (deltaTime: number) => {
-        // Calculate the position change based on speed and direction
-        const moveSpeed = deltaTime * (1 / Speed); // How much to move per frame (scaled by deltaTime)
-        Position = Position.add(ScrollDirection.mul(moveSpeed)); // Update position in both X and Y
-
-        // Wrap the position based on direction to create a continuous scrolling effect
-        if (ScrollDirection.X !== 0 && math.abs(Position.X) >= 1) {
-            Position = new Vector2(0, Position.Y); // Reset X position
-        }
-        if (ScrollDirection.Y !== 0 && math.abs(Position.Y) >= 1) {
-            Position = new Vector2(Position.X, 0); // Reset Y position
-        }
-
-        // Update the background's position
-        Background.Position = UDim2.fromScale(Position.X, Position.Y);
-    };
-    
-    // Function to update the tile size of the background image to maintain a consistent look
-    const UpdateTileSize = () => {
-        const ParentSize = (Background.Parent as Frame).AbsoluteSize; // Get the parent size
-
-        // Calculate the smallest tile dimension based on the parent size and the number of tiles
-        const MinTileSize = math.min(ParentSize.X / TilesAcross, ParentSize.Y / TilesDown);
-
-        // Update the tile size on the ImageLabel to keep it square
-        Background.TileSize = UDim2.fromOffset(MinTileSize, MinTileSize);
-
-        // Optional: print(`Tile Size Updated: ${MinTileSize}`);
-    };
-    
-    // Function to update the background image and handle fade-in and fade-out transitions based on scroll position
-    const UpdateBackgroundImageBasedOnScroll = () => {
-        if (ImageZones.size() === 0) return; // No zones defined
-        
-        const FrameHeight = Frames[0]?.Page.AbsoluteSize.Y || 100; // Default to 100 if undefined
-        const ScrollPosition = MainScroll.CanvasPosition.Y;
-
-        // Iterate through ImageZones to find the current zone based on ScrollPosition
-        for (const zone of ImageZones) {
-            if (ScrollPosition >= zone.start && ScrollPosition < zone.fadeEnd) {
-                // Determine if we are in display zone or fade-out zone
-                if (ScrollPosition < zone.fadeStart) {
-                    // In display zone: Image is fully visible
-                    if (Background.Image !== zone.image) {
-                        Background.Image = zone.image;
-                        Background.ImageTransparency = StartingTransparency; // Ensure fully visible
-                        // Optional: print(`Image set to ${zone.image} at ScrollPosition ${ScrollPosition}`);
-                    }
-                } else if (ScrollPosition >= zone.fadeStart && ScrollPosition < zone.fadeEnd) {
-                    // In fade-out zone: Increase transparency from StartingTransparency to 1
-                    if (Background.Image !== zone.image) {
-                        Background.Image = zone.image;
-                        Background.ImageTransparency = StartingTransparency; // Start fade-out
-                        // Optional: print(`Starting fade-out for ${zone.image} at ScrollPosition ${ScrollPosition}`);
-                    }
-                    
-                    // Calculate fade-out progress (0 to 1)
-                    const fadeOutProgress = (ScrollPosition - zone.fadeStart) / (zone.fadeEnd - zone.fadeStart);
-                    let newTransparency = StartingTransparency + fadeOutProgress * (1 - StartingTransparency);
-                    newTransparency = math.clamp(newTransparency, StartingTransparency, 1);
-                    
-                    // Ensure transparency reaches 1 at the end of fade-out
-                    if (fadeOutProgress >= 1) {
-                        newTransparency = 1;
-                    }
-                    
-                    if (Background.ImageTransparency !== newTransparency) {
-                        Background.ImageTransparency = newTransparency;
-                        // Optional: print(`Fading out: ${Background.ImageTransparency}`);
-                    }
-                }
-
-                return; // Current zone handled, no need to check further
-            }
-        }
-
-        // Handle fade-in for the next image in the new zone
-        for (const zone of ImageZones) {
-            if (ScrollPosition >= zone.fadeEnd && ScrollPosition < zone.endPos) {
-                const nextZoneIndex = ImageZones.indexOf(zone) + 1;
-                const nextZone = ImageZones[nextZoneIndex < ImageZones.size() ? nextZoneIndex : 0];
-
-                if (nextZone) {
-                    // Set the next image and start fade-in
-                    Background.Image = nextZone.image;
-                    Background.ImageTransparency = 1; // Start fully transparent
-
-                    // Calculate fade-in progress (0 to 1)
-                    const fadeInProgress = (ScrollPosition - zone.fadeEnd) / (nextZone.endPos - zone.fadeEnd);
-                    let newTransparency = 1 - fadeInProgress * (1 - StartingTransparency);
-                    newTransparency = math.clamp(newTransparency, StartingTransparency, 1);
-
-                    // Ensure transparency reaches StartingTransparency at the end of fade-in
-                    if (fadeInProgress >= 1 || ScrollPosition < zone.endPos) {
-                        newTransparency = StartingTransparency;
-                    }
-
-                    if (Background.ImageTransparency !== newTransparency) {
-                        Background.ImageTransparency = newTransparency;
-                        // Optional: print(`Fading in: ${Background.ImageTransparency}`);
-                    }
-                }
-
-                return; // Next zone handled
-            }
-        }
-
-        // Handle scroll position beyond all defined zones (loop back to the first image)
-        const lastZone = ImageZones[ImageZones.size() - 1];
-        if (ScrollPosition >= lastZone.endPos) {
-            // Loop back to the first image
-            Background.Image = ImageZones[0].image;
-            Background.ImageTransparency = StartingTransparency; // Ensure it starts fully visible
-            MainScroll.CanvasPosition = new Vector2(MainScroll.CanvasPosition.X, 0); // Reset scroll position
-            // Optional: print("Looped back to first image.");
-        }
     };
 }

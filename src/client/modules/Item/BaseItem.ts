@@ -4,6 +4,8 @@ import { Plot } from "../Plot/Plot";
 import { ItemFacingDirection } from "./Common";
 import { BuildModes, Grid } from "../Grid/Grid";
 
+//https://www.desmos.com/calculator/6ihiapwpgw
+
 export abstract class BaseItem implements BaseItemType {
     public readonly ClickDetector: BaseItemData["ClickDetector"];
     public readonly CollisionHitbox: BaseItemData["CollisionHitbox"];
