@@ -24,7 +24,7 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
         Bindings.Set(id, Config);
 
         Input.Instance().Events.OnBind.Fire(Config);
-
+        _G.Log(`Binding for ${this.Control.Name} has been added.`, "Input");
         return Config;
     }
 
@@ -38,6 +38,8 @@ class ControlData<T extends UniqueInputTypes> implements iControlData<T> {
             Binding.ForEach(C => C.Disconnect());
             IBindings.Delete(K);
         });
+
+        _G.Log(`All bindings for ${this.Control.Name} have been disconnected.`, "Input");
     }
 
     public IsDown(ignoreGui: boolean = false, Gamepad = Enum.UserInputType.Gamepad1): boolean {
@@ -126,7 +128,7 @@ export class Input {
         this.Bindings.Clear();
         this.Connections.ForEach(C => C.Disconnect());
         this.Connections.Clear();
-
+        _G.Log("Input has been destroyed.", "Input");
         Input._instance = undefined;
     }
 
@@ -213,6 +215,7 @@ class BindConfig implements RBXScriptConnection {
         }
 
         Input.Instance().Events.OnBindRemove.Fire(Target);
+        _G.Log(`Binding for ${this.key.Name} has been removed.`, "Input");
     }
 
     public GetCallback(): Callback {

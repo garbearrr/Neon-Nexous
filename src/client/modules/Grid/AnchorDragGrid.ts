@@ -52,6 +52,7 @@ export class AnchorDragGrid extends BaseGrid {
             if (Child.Name === "Template") return;
             Child.Destroy();
         });
+        _G.Log("Destroyed all anchors", "AnchorDragGrid");
     }
 
     private DestroyAnchorsWithIndex(Index: number): void {
@@ -62,6 +63,7 @@ export class AnchorDragGrid extends BaseGrid {
 
             if (Index <= Idx) Child.Destroy();
         });
+        _G.Log("Destroyed anchors with index " + Index, "AnchorDragGrid");
     }
 
     private GenerateLShapeOrLineItems(Start: Vector2, End: Vector2): void {
@@ -198,6 +200,7 @@ export class AnchorDragGrid extends BaseGrid {
                 this.Drag.Set(Key, CF);
             });
         });
+        _G.Log("Merged anchors", "AnchorDragGrid");
     }
     
 
@@ -238,5 +241,6 @@ export class AnchorDragGrid extends BaseGrid {
     private PlaceAnchor(): void {
         if (!this.IsPlaceButtonDown()) return;
         this.PendingAnchor = true;
+        _G.Log("Placing anchor", "AnchorDragGrid");
     }
 }

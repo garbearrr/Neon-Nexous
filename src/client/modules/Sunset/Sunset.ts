@@ -46,27 +46,34 @@ export namespace Sunset {
         }, UPDATE_INTERVAL);
 
         Connections.Set("Cycle", cleanup);
+        _G.Log("Day/Night cycle started", "Sunset");
     }
 
     // Stop the cycle
-    export const Stop = () => {
+    export const Stop = (DestroyEvents = false) => {
         if (!State.IsRunning) return;
 
         State.IsRunning = false;
         Connections.ForEach((cleanup) => cleanup());
         Connections.Clear();
 
-        Events.TimeChanged.Destroy();
+        if (DestroyEvents) {
+            Events.TimeChanged.Destroy();
+        }
+
+        _G.Log("Day/Night cycle stopped", "Sunset");
     }
 
     // Pause the cycle
     export const Pause = () => {
         Stop();
+        _G.Log("Day/Night cycle paused", "Sunset");
     }
 
     // Resume the cycle
     export const Resume = () => {
         Start();
+        _G.Log("Day/Night cycle resumed", "Sunset");
     }
 
     // Set the current time
@@ -74,6 +81,7 @@ export namespace Sunset {
         const ClampedTime = ClampTime(Time);
         Lighting.ClockTime = ClampedTime;
         Events.TimeChanged.Fire(ClampedTime);
+        _G.Log(`Time set to ${ClampedTime}`, "Sunset");
     }
 
     /**
@@ -81,7 +89,9 @@ export namespace Sunset {
      * @param Time Between 0 and 1
      */
     export const SetTimeNormalized = (Time: number) => {
-        SetTime(Lerp(0, 24, Time));
+        const LerpedTime = Lerp(0, 24, Time);
+        SetTime(LerpedTime);
+        _G.Log(`Time set to ${LerpedTime}`, "Sunset");
     }
 
     // Get the current time
@@ -92,11 +102,13 @@ export namespace Sunset {
     // Skip to day (6 AM)
     export const SkipToDay = (duration: number = 2) => {
         TweenToTime(6, duration);
+        _G.Log("Skipping to day", "Sunset");
     }
 
     // Skip to night (18 PM)
     export const SkipToNight = (duration: number = 2) => {
         TweenToTime(18, duration);
+        _G.Log("Skipping to night", "Sunset");
     }
 
     /**
@@ -105,6 +117,7 @@ export namespace Sunset {
      */
     export const SetCycleSpeed = (speed: number) => {
         State.CycleSpeed = Lerp(MIN_CYCLE_SPEED, MAX_CYCLE_SPEED, speed);
+        _G.Log(`Cycle speed set to ${State.CycleSpeed}`, "Sunset");
     }
 
     // Get the current cycle speed

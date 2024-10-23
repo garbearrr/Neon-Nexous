@@ -18,6 +18,7 @@ export class Ore implements IOre {
 
     public AddValue(Value: BigNumber): void {
         this.Value = this.Value.Add(Value);
+        _G.Log(`Added ${Value} to ${this.OreId}`, "Ore");
     }
 
     public GetValue(): BigNumber {
@@ -27,15 +28,18 @@ export class Ore implements IOre {
     public Process(): void {
         // TODO: Implement money system
         Money.AddMoney(this.Value);
+        _G.Log(`Processed ${this.Value} from ${this.OreId}`, "Ore");
         this.Destroy();
     }
 
     public SetValue(Value: BigNumber): void {
         this.Value = Value;
+        _G.Log(`Set value of ${this.OreId} to ${Value}`, "Ore");
     }
 
     public Destroy(): void {
         OreManager.Remove(this.OreId);
+        _G.Log(`Destroyed ${this.OreId}`, "Ore");
         this.Ore.Destroy();
     }
 }

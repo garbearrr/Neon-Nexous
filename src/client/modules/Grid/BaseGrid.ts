@@ -65,12 +65,14 @@ export abstract class BaseGrid {
      */
     public AddFireSignal(Signal: FireSignal): this {
         this.FireSignals.Set(Signal.Name, Signal);
+        _G.Log(`Added signal: ${Signal.Name}`, "BaseGrid");
         return this;
     }
 
     public CleanUp(): void {
         //super.CleanUp();
         this.Reset();
+        _G.Log("Cleaned up BaseGrid", "BaseGrid");
     };
 
     protected ConfigureCastBehavior(): FastCastBehavior {
@@ -83,6 +85,7 @@ export abstract class BaseGrid {
             this.PState.ParentGridPart
         ];
     
+        _G.Log("Configured CastBehavior", "BaseGrid");
         return Behavior;
     }
 
@@ -102,6 +105,7 @@ export abstract class BaseGrid {
         Extension.CanTouch      = false;
         Extension.Anchored      = true;
 
+        _G.Log("Configured ExtensionPart", "BaseGrid");
         return Extension;
     }
 
@@ -124,6 +128,7 @@ export abstract class BaseGrid {
 
         BaseGrid.OriginalGridTransparency = Texture.Transparency;
 
+        _G.Log("Configured GridTexture", "BaseGrid");
         return Texture;
     }
 
@@ -334,12 +339,14 @@ export abstract class BaseGrid {
     public LockDragHorizontal(): this {
         this.DragLockedHorizontal = true;
         this.DragLockedVertical = false;
+        _G.Log("Locked Drag Horizontal", "BaseGrid");
         return this;
     }
 
     public LockDragVertical(): this {
         this.DragLockedVertical = true;
         this.DragLockedHorizontal = false;
+        _G.Log("Locked Drag Vertical", "BaseGrid");
         return this;
     }
 
@@ -442,6 +449,7 @@ export abstract class BaseGrid {
 
         this.Drag.Clear();
         this.DragStart = undefined;
+        _G.Log("Placed item", "BaseGrid");
     }
 
     /**
@@ -459,6 +467,8 @@ export abstract class BaseGrid {
 
         this.Connections.ForEach((Connection) => Connection.Disconnect());
         this.Connections.Clear();
+        this.Drag.Clear();
+        _G.Log("Reset BaseGrid", "BaseGrid");
     }
 
     protected Rotate(rotation: number = 90): void {
@@ -479,6 +489,7 @@ export abstract class BaseGrid {
         this.Events.OnRotate.Fire(this.PState.Rotation);
         
         this.FireCast();
+        _G.Log(`Rotated item to ${this.PState.Rotation} degrees`, "BaseGrid");
     }
 
     /**
@@ -520,6 +531,7 @@ export abstract class BaseGrid {
 
         this.FireCast();
 
+        _G.Log("Started casting", "BaseGrid");
         return this;
     }
 
@@ -530,6 +542,7 @@ export abstract class BaseGrid {
 
         this.GridTexture.Transparency = on ? BaseGrid.OriginalGridTransparency : 1;
 
+        _G.Log(`Toggled grid ${on ? "on" : "off"}`, "BaseGrid");
         return this;
     }
 }

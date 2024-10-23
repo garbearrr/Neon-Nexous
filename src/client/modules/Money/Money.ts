@@ -15,11 +15,13 @@ export namespace Money {
         const Final = State.Money.Add(Value);
         UI.Currency.TweenMoney(State.Money, Final);
         State.Money = Final;
+        _G.Log(`Added ${Value} to Money.`, "Money");
     }
 
     export const RemoveMoney = (Value: BigNumber) => {
         const Final = State.Money.Subtract(Value);
         UI.Currency.TweenMoney(State.Money, Final);
         State.Money = Final;
+        _G.Log(`Removed ${Value} from Money.`, "Money");
     }
 }

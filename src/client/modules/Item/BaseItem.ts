@@ -56,6 +56,7 @@ export abstract class BaseItem implements BaseItemType {
         this.Connections.Set("cd_click", this.ClickDetector.MouseClick.Connect((Player) => this.CDMouseClick(Player)));
         this.Connections.Set("cd_enter", this.ClickDetector.MouseHoverEnter.Connect((Player) => this.CDMouseHoverEnter(Player)));
         this.Connections.Set("cd_leave", this.ClickDetector.MouseHoverLeave.Connect((Player) => this.CDMouseHoverLeave(Player)));
+        _G.Log(`Click Detector activated for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     public AsModel(): Model {
@@ -74,6 +75,7 @@ export abstract class BaseItem implements BaseItemType {
         this.IsActionClicked = true;
         this.CDMouseHoverEnter(Player);
         ItemActions.ShowActionsUI(this, () => this.ActionClickUndo());
+        _G.Log(`Click detected for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     protected CDMouseHoverEnter(Player: Player): void {
@@ -84,6 +86,7 @@ export abstract class BaseItem implements BaseItemType {
 
         if (ItemActions.IsActionUIOpen()) return;
         ItemActions.ShowBasicUI(this.Stats.ItemName.Value);
+        _G.Log(`Hover detected for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     protected CDMouseHoverLeave(Player: Player): void {
@@ -94,6 +97,7 @@ export abstract class BaseItem implements BaseItemType {
 
         if (ItemActions.IsActionUIOpen()) return;
         ItemActions.HideUI();
+        _G.Log(`Hover leave detected for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     protected ChangeBoxColor(): void {
@@ -112,11 +116,13 @@ export abstract class BaseItem implements BaseItemType {
         this.Connections.Get("cd_click")?.Disconnect();
         this.IsActionClicked = false;
         ItemActions.HideUI();
+        _G.Log(`Click Detector deactivated for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     public Destroy(DestroyPart = true): void {
         this.Connections.ForEach((Connection) => Connection.Disconnect());
-        if (DestroyPart) this.Part.Destroy();
+        _G.Log(`Destroyed ${this.Stats.ItemName.Value} ${this.PlacementId} Part Destroyed: ${DestroyPart}`, "BaseItem");
+        if (DestroyPart) this.Part.Destroy(); 
     }
 
     public GetBuildModeType(): keyof BuildModes {
@@ -150,6 +156,7 @@ export abstract class BaseItem implements BaseItemType {
         this.CollisionHitbox.SelectionBox.Transparency = 1;
         this.CollisionHitbox.SelectionBox.SurfaceTransparency = 1;
         this.CollisionHitbox.SelectionBox.Color3 = this.NormalBoxColor;
+        _G.Log(`Hitbox hidden for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     /** Fires when the item is being dragged during placement. */
@@ -188,10 +195,13 @@ export abstract class BaseItem implements BaseItemType {
 
         this.CollisionHitbox.SelectionBox.Color3 = this.NormalBoxColor;
         this.ShowHitbox(false);
+        _G.Log(`Placed ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
     /** Fires when the item is selected for placement and casting begins. */
-    public OnSetup(): void {}
+    public OnSetup(): void {
+        _G.Log(`Setup for ${this.Stats.ItemName.Value}`, "BaseItem");
+    }
 
     /** Fires when the item is removed from a drag. */
     public OnUndragged(): void {
@@ -208,5 +218,6 @@ export abstract class BaseItem implements BaseItemType {
         this.CollisionHitbox.SelectionBox.Transparency = withBorder ? this.BoxTransparency : this.NoBorderTransparency;
         this.CollisionHitbox.SelectionBox.SurfaceTransparency = this.SurfaceTransparency;
         this.CollisionHitbox.SelectionBox.Adornee = this.CollisionHitbox;
+        _G.Log(`Hitbox shown for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 }

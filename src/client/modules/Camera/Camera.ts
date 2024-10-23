@@ -104,6 +104,8 @@ export class Camera {
             "render_stepped",
             RunService.PreRender.Connect((dt) => this.Update(dt))
         );
+
+        _G.Log("Camera initialized.", "Camera");
     }
 
     private InitCamGuide(): void {
@@ -119,6 +121,8 @@ export class Camera {
         Guide.Name = "CameraBoundGuide";
 
         Camera.InsideGuide = Guide;
+
+        _G.Log("Camera guide initialized.", "Camera");
     }
 
     private ConstrainToContainer(Position: Vector3): Vector3 {
@@ -167,6 +171,8 @@ export class Camera {
                     .IgnoreGameProcessedEvent(true)
         );
 
+        _G.Log(`Mouse buttons flipped to ${FlipTo === Enum.UserInputType.MouseButton1 ? "MouseButton1" : "MouseButton2"}.`, "Camera");
+
         return this;
     }
 
@@ -213,6 +219,7 @@ export class Camera {
         }
 
         this.InvertCamLR = !this.InvertCamLR;
+        _G.Log(`Camera left-right inversion set to ${this.InvertCamLR ? "true" : "false"}.`, "Camera");
         return this;
     }
 
@@ -223,6 +230,7 @@ export class Camera {
         }
 
         this.InvertCamUD = !this.InvertCamUD;
+        _G.Log(`Camera up-down inversion set to ${this.InvertCamUD ? "true" : "false"}.`, "Camera");
         return this;
     }
 
@@ -232,16 +240,19 @@ export class Camera {
 
     public LockLookDirections(...dirs: ViewDirection[]): this {
         dirs.forEach(d => this.LookLocks.set(d, true));
+        _G.Log(`Camera look directions locked: ${dirs.map(d => ViewDirection[d]).join(", ")}.`, "Camera");
         return this;
     }
 
     public LockMoveDirections(...dirs: MoveDirection[]): this {
         dirs.forEach(d => this.MovementLocks.set(d, true));
+        _G.Log(`Camera move directions locked: ${dirs.map(d => MoveDirection[d]).join(", ")}.`, "Camera");
         return this;
     }
 
     public LockZoomDirections(...dirs: ZoomDirection[]): this {
         dirs.forEach(d => this.ScrollLocks.set(d, true));
+        _G.Log(`Camera zoom directions locked: ${dirs.map(d => ZoomDirection[d]).join(", ")}.`, "Camera");
         return this;
     }
 
@@ -327,11 +338,13 @@ export class Camera {
         this.Connections.Clear();
 
         Camera._instance = undefined;
+        _G.Log("Camera reset.", "Camera");
     }
 
     public SetCameraContainer(part: Part): this {
         this.CameraContainer = part;
         Camera.InsideGuide!.Parent = part;
+        _G.Log("Camera container set.", "Camera");
         return this;
     }
 
@@ -342,11 +355,13 @@ export class Camera {
      */
     public SetCameraSpeed(speed: number): this {
         this.MovementSpeed = Util.Lerp(this.MovementSpeedBounds[0], this.MovementSpeedBounds[1], speed);
+        _G.Log(`Camera speed set to ${speed}.`, "Camera");
         return this;
     }
 
     public SetContainerDisregard(yes?: boolean): this {
         this.DisregardContainer = yes === undefined ? !this.DisregardContainer : yes;
+        _G.Log(`Camera container disregard set to ${this.DisregardContainer ? "true" : "false"}.`, "Camera");
         return this;
     }
 
@@ -357,6 +372,7 @@ export class Camera {
      */
     public SetKeyRotationSpeed(speed: number): this {
         this.KeyRotationSpeed = Util.Lerp(this.KeyRotationSpeedBounds[0], this.KeyRotationSpeedBounds[1], speed);
+        _G.Log(`Camera rotation speed set to ${speed}.`, "Camera");
         return this;
     }
 
@@ -367,11 +383,13 @@ export class Camera {
      */
     public SetKeyScrollSpeed(speed: number): this {
         this.KeyScrollSpeed = Util.Lerp(this.KeyScrollSpeedBounds[0], this.KeyScrollSpeedBounds[1], speed);
+        _G.Log(`Camera scroll speed set to ${speed}.`, "Camera");
         return this;
     }
 
     public SetLookVectors(...v: Look[]): this {
         v.forEach(v => this.LookVectors.set(v, true));
+        _G.Log(`Camera look vectors set: ${v.map(v => Look[v]).join(", ")}.`, "Camera");
         return this;
     }
 
@@ -383,6 +401,7 @@ export class Camera {
     public SetOrientation(pitch_rad: number, yaw_rad: number): this {
         this.CurrentPitch = math.clamp(pitch_rad, math.rad(-89), math.rad(89));
         this.CurrentYaw = yaw_rad;
+        _G.Log(`Camera orientation set to pitch: ${pitch_rad}, yaw: ${yaw_rad}.`, "Camera");
         return this;
     }
 
@@ -393,6 +412,7 @@ export class Camera {
      */
     public SetRotationSmoothness(smoothness: number): this {
         this.RotationSmoothness = Util.Lerp(this.RotationSmoothnessBounds[0], this.RotationSmoothnessBounds[1], smoothness);
+        _G.Log(`Camera rotation smoothness set to ${smoothness}.`, "Camera");
         return this;
     }
 
@@ -403,6 +423,7 @@ export class Camera {
      */
     public SetRotationSpeed(speed: number): this {
         this.RotationSpeed = Util.Lerp(this.RotationSpeedBounds[0], this.RotationSpeedBounds[1], speed);
+        _G.Log(`Camera rotation speed set to ${speed}.`, "Camera");
         return this;
     }
 
@@ -413,6 +434,7 @@ export class Camera {
      */
     public SetScrollSmoothness(smoothness: number): this {
         this.ScrollSmoothness = Util.Lerp(this.ScrollSmoothnessBounds[0], this.ScrollSmoothnessBounds[1], smoothness);
+        _G.Log(`Camera scroll smoothness set to ${smoothness}.`, "Camera");
         return this;
     }
 
@@ -423,26 +445,31 @@ export class Camera {
      */
     public SetScrollSpeed(speed: number): this {
         this.ScrollSpeed = Util.Lerp(this.ScrollSpeedBounds[0], this.ScrollSpeedBounds[1], speed);
+        _G.Log(`Camera scroll speed set to ${speed}.`, "Camera");
         return this;
     }
 
     public UnLockLookDirections(...dirs: ViewDirection[]): this {
         dirs.forEach(d => this.LookLocks.set(d, false));
+        _G.Log(`Camera look directions unlocked: ${dirs.map(d => ViewDirection[d]).join(", ")}.`, "Camera");
         return this;
     }
 
     public UnLockMoveDirections(...dirs: MoveDirection[]): this {
         dirs.forEach(d => this.MovementLocks.set(d, false));
+        _G.Log(`Camera move directions unlocked: ${dirs.map(d => MoveDirection[d]).join(", ")}.`, "Camera");
         return this;
     }
 
     public UnLockZoomDirections(...dirs: ZoomDirection[]): this {
         dirs.forEach(d => this.ScrollLocks.set(d, false));
+        _G.Log(`Camera zoom directions unlocked: ${dirs.map(d => ZoomDirection[d]).join(", ")}.`, "Camera");
         return this;
     }
 
     public UnSetLookVectors(...v: Look[]): this {
         v.forEach(v => this.LookVectors.set(v, false));
+        _G.Log(`Camera look vectors unset: ${v.map(v => Look[v]).join(", ")}.`, "Camera");
         return this;
     }
 

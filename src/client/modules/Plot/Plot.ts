@@ -22,11 +22,14 @@ export namespace Plot {
         PlacedFolder = Plot.PlacedItems;
         PlotItem = Plot.BuildModulePlot;
         TempFolder = Plot.Temp;
+
+        _G.Log(`Assigned plot ${Random}`, "Plot");
     }
 
     export const TeleportPlayerOverPlot = () => {
         const Character = Players.LocalPlayer.Character;
         Character?.MoveTo(PlotItem.Position.add(new Vector3(0, 10, 0)));
+        _G.Log("Teleported player over plot", "Plot");
     }
 
     AssignRandomPlot();

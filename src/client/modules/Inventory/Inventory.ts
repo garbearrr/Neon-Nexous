@@ -10,6 +10,7 @@ export namespace Inventory {
         } else {
             Inv.Set(ItemID, Amount);
         }
+        _G.Log(`Added ${Amount} of ${ItemID} to inventory`, "Inventory");
     }
 
     export const HasItem = (ItemID: string, Amount = 1) => {
@@ -23,5 +24,6 @@ export namespace Inventory {
         if (Inv.Get(ItemID)! <= 0) {
             Inv.Delete(ItemID);
         }
+        _G.Log(`Removed ${Amount} of ${ItemID} from inventory`, "Inventory");
     }
 }
