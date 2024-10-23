@@ -10,6 +10,7 @@ interface Workspace extends Model {
 					ItemId: IntValue;
 				};
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -45,6 +46,7 @@ interface Workspace extends Model {
 				};
 				ConveyA2: Attachment;
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -82,6 +84,7 @@ interface Workspace extends Model {
 				};
 				["Ore Gate"]: Folder;
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -121,6 +124,7 @@ interface Workspace extends Model {
 					Add: NumberValue;
 				};
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -175,6 +179,7 @@ interface Workspace extends Model {
 					ItemId: IntValue;
 				};
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -213,6 +218,7 @@ interface Workspace extends Model {
 					ItemId: IntValue;
 				};
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -251,6 +257,7 @@ interface Workspace extends Model {
 					ItemId: IntValue;
 				};
 				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
 				Model: Folder & {
@@ -300,49 +307,14 @@ interface Workspace extends Model {
 			};
 		};
 	};
-	GuiPart: Part & {
-		SurfaceGui: SurfaceGui & {
-			UIPadding: UIPadding;
-			Frame: Frame & {
-				UICorner: UICorner;
-				UIStroke: UIStroke;
-				Scanlines: ImageLabel & {
-					UICorner: UICorner;
-					Shop: Frame & {
-						["1_TopBar"]: Frame & {
-							Title: TextLabel;
-							X_Close: TextButton;
-							UIPadding: UIPadding;
-						};
-						UIListLayout: UIListLayout;
-						UICorner: UICorner;
-						["3_Content"]: Frame;
-						["2_Divider"]: Frame;
-					};
-					Settings: Frame & {
-						["1_TopBar"]: Frame & {
-							Title: TextLabel;
-							UIPadding: UIPadding;
-						};
-						UIListLayout: UIListLayout;
-						UICorner: UICorner;
-						["3_Content"]: Frame;
-						["2_Divider"]: Frame;
-					};
-					Inventory: Frame & {
-						["1_TopBar"]: Frame & {
-							Title: TextLabel;
-							UIPadding: UIPadding;
-						};
-						UIListLayout: UIListLayout;
-						UICorner: UICorner;
-						["3_Content"]: Frame;
-						["2_Divider"]: Frame;
-					};
-				};
-			};
+	ItemImaging: Folder & {
+		ItemImageLoc: Part & {
+			WeldConstraint: WeldConstraint;
 		};
+		CamFollow: Part;
+		PlayerStand: Part;
 	};
+	GuiPart: Part;
 	Map: Model & {
 		DesertedIsland: Model;
 		VolcanoIsland: Model & {
@@ -360,6 +332,5 @@ interface Workspace extends Model {
 			Folliage: Model;
 		};
 	};
-	SpawnLocation: SpawnLocation;
 	Grid: Decal;
 }

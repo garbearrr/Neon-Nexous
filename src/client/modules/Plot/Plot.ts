@@ -24,11 +24,10 @@ export namespace Plot {
         TempFolder = Plot.Temp;
     }
 
-    const TeleportPlayerOverPlot = () => {
+    export const TeleportPlayerOverPlot = () => {
         const Character = Players.LocalPlayer.Character;
         Character?.MoveTo(PlotItem.Position.add(new Vector3(0, 10, 0)));
     }
 
     AssignRandomPlot();
-    TeleportPlayerOverPlot();
 }

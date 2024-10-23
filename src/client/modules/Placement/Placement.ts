@@ -10,11 +10,10 @@ import { Upgrader } from "../Item/Upgrader";
 import { Collection } from "shared/modules/Collection/Collection";
 import { Grid } from "../Grid/Grid";
 import { ObjectCache } from "shared/modules/ObjectCache/ObjectCache";
+import { PlacedItems } from "./PlacedItems";
 
 const ROT_SMOOTH = 0.75;
 const CAM_TILT_PITCH = -45;
-
-// TODO: When dragging, hide item guide and make the grid look like retail tycoon 2 drag grid.
 
 let pid = 0;
 
@@ -34,6 +33,7 @@ export namespace Placement {
         Item: undefined as unknown as PossibleItems,
         ItemId: 0,
         ItemModule: undefined as unknown as BaseItem,
+        ManagerMode: false,
         ObjectCache: undefined as unknown as IObjectCache,
         SimpleDrag: false,
         SimplePlace: false,
@@ -49,6 +49,8 @@ export namespace Placement {
     export const Activate = (ItemId: number) => {
         const ItemData = Common.GetItemById(ItemId);
         if (ItemData === undefined) return;
+
+        State.ManagerMode = false;
 
         if (State.Active) {
             UpdateItem(ItemData, ItemId);
@@ -74,6 +76,26 @@ export namespace Placement {
         Conn.Set("grid_on_place", G.Events.OnPlace.Connect(({ CF }) => OnPlace(CF)));
         Conn.Set("grid_on_update", G.Events.OnUpdate.Connect(({ CF }) => OnUpdate(CF)));
 
+        CamSetup();
+        
+        G.ToggleGrid(true);
+        G.StartCasting(State.Item, ItemId);
+
+        PlacedItems.ShowHitboxes();
+        State.ItemModule.ShowHitbox();
+
+        State.Active = true;
+    }
+
+    export const ActivateManager = () => {
+        CamSetup();
+
+        PlacedItems.ActivateHover();
+
+        State.ManagerMode = true;
+    }
+
+    const CamSetup = () => {
         Camera.Instance().GetCamera().CFrame = Plot.CameraContainer.CFrame;
         
         Camera.Instance()
@@ -84,10 +106,6 @@ export namespace Placement {
             .SetLookVectors(Look.X, Look.Z)
             .UnSetLookVectors(Look.Y)
             .SetRotationSmoothness(ROT_SMOOTH);
-        
-        G.StartCasting(State.Item, ItemId);
-
-        State.Active = true;
     }
 
     const ClassifyItem = (Item: PossibleItems): BaseItem => {
@@ -123,6 +141,15 @@ export namespace Placement {
      */
     export const Deactivate = (destoyTweenInstant = false) => {
         Camera.Instance().Reset();
+
+        PlacedItems.DeactivateHover();
+
+        if (State.ManagerMode) {
+            PlacedItems.HideHitboxes();
+            State.ManagerMode = false;
+            return;
+        }
+
         Grid.GetGlobalInstance().CleanUp();
 
         // Item will be destroyed by ItemModule.Destroy()
@@ -149,6 +176,8 @@ export namespace Placement {
         State.ObjectCache.Destroy();
         State.ObjectCache = undefined as unknown as IObjectCache;
 
+        PlacedItems.HideHitboxes();
+
         State.Active = false;
     }
 
@@ -163,7 +192,7 @@ export namespace Placement {
             Clone.Name = tostring(placementId);
             
             const Mod = ClassifyItem(Clone);
-    
+            Mod.ShowHitbox();
             Mod.OnPlaced();
     
             Clone.CFrame = Cframe;
@@ -204,7 +233,8 @@ export namespace Placement {
                 // Create a new item since it doesn't exist at this position.
                 const Clone = State.ObjectCache.GetPart() as PossibleItems;
                 Mod = ClassifyItem(Clone);
-    
+                Mod.ShowHitbox();
+
                 Clone.CFrame = CF;
     
                 Mod.OnSetup();

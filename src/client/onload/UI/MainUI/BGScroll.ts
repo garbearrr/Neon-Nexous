@@ -1,7 +1,7 @@
 import { Players, RunService, ContextActionService, TweenService } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 import { MainUIPage } from "./MainUIPage";
-
+//https://www.desmos.com/calculator/6ihiapwpgw
 // Define the type for Image Zones with Fade-In and Fade-Out boundaries
 type ImageZone = {
     start: number;         // Starting scroll position of the zone
@@ -175,6 +175,8 @@ export namespace BGScroll {
 
         print("BGScroll Deactivated");
     };
+
+    export const IsActive = () => Active;
 
     /**
      * Calculates the transparency based on normalized scroll position and thresholds.

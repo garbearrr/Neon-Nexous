@@ -4,13 +4,14 @@ import { Event } from "shared/modules/Event/Event";
 import { FireSignal } from "./FireSignal";
 import { OnMove, OnPlace, OnUpdate } from "./EventClasses";
 import { Input } from "../Input/Input";
+import { Grid } from "./Grid";
 
 export abstract class BaseGrid {
     protected PState: {ParentGridPart: Part, Rotation: number};
 
     protected ExtensionPart: Part;
     protected GridTexture: Texture;
-    protected OriginalGridTransparency: number;
+    protected static OriginalGridTransparency: number = 0;
     protected Mouse = Players.LocalPlayer.GetMouse();
 
     protected FastCast = require(ReplicatedStorage.WaitForChild("FastCastRedux") as ModuleScript) as FastCast;
@@ -45,7 +46,6 @@ export abstract class BaseGrid {
         this.CastBehavior = this.ConfigureCastBehavior();
         this.ExtensionPart = this.ConfigureExtensionPart();
         this.GridTexture = this.ConfigureGridTexture();
-        this.OriginalGridTransparency = this.ExtensionPart.Transparency;
         // Ray fires on mouse move
         //const DefMouseSignal = new FireSignal("Mouse", this.Mouse.Move);
         // Caster setup
@@ -121,6 +121,8 @@ export abstract class BaseGrid {
         Texture.Texture         = TextureURL;
         Texture.Parent          = Parent;
         Texture.Name            = TextureName;
+
+        BaseGrid.OriginalGridTransparency = Texture.Transparency;
 
         return Texture;
     }
@@ -447,7 +449,7 @@ export abstract class BaseGrid {
      * @param forgetParent If true, the texture and extension part will be destroyed. You will have to pass another parent next time Grid.Instance is called.
      */
     public Reset(forgetParent = false): void {
-        this.GridTexture.Transparency = this.OriginalGridTransparency;
+        this.GridTexture.Transparency = BaseGrid.OriginalGridTransparency;
 
         if (forgetParent) {
             //BaseGrid.ParentGridPart = undefined;
@@ -523,10 +525,10 @@ export abstract class BaseGrid {
 
     public ToggleGrid(on?: boolean): this {
         if(on === undefined) {
-            on = this.GridTexture.Transparency === this.OriginalGridTransparency;
+            on = this.GridTexture.Transparency === BaseGrid.OriginalGridTransparency;
         }
 
-        this.GridTexture.Transparency = on ? this.OriginalGridTransparency : 1;
+        this.GridTexture.Transparency = on ? BaseGrid.OriginalGridTransparency : 1;
 
         return this;
     }

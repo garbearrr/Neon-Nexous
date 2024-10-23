@@ -21,7 +21,7 @@ export class Conveyor extends BaseItem implements ConveyorData {
         this.Stats = Item.Stats;
 
         const C = Grid.GetGlobalInstance().Events.OnRotate.Connect((Rot) => this.OnRotated(Rot));
-        this.Connections.push(C);
+        this.Connections.Set("OnRotate", C);
     }
 
     public override GetBuildModeType(): keyof BuildModes {

@@ -44,7 +44,7 @@ export class Upgrader extends BaseItem implements UpgraderData {
             // TODO: Implement tagging system.
         });
 
-        this.Connections.push(Conn);
+        this.Connections.Set("upgrade_touched", Conn);
     }
 
     public override OnSetup(): void {

@@ -1,5 +1,6 @@
 import { Players } from "@rbxts/services";
 import { BaseActionButton } from "./BaseActionButton";
+import { Placement } from "client/modules/Placement/Placement";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -9,6 +10,26 @@ const BuildButton = MainUI.Top["2_Actions"]["1_Build"];
 class BuildActionButton extends BaseActionButton {
     public constructor(Button: typeof BuildButton) {
         super(Button);
+    }
+
+    public override OnActivated(): void {
+        const Active = this.IsActivated();
+        super.OnActivated();
+
+        if (Active) {
+            Placement.Deactivate();
+            return;
+        } else {
+            Placement.ActivateManager();
+        }
+    }
+
+    public SetOn(): void {
+        this.ToggleOn();
+    }
+
+    public ToggleWithEffect(): void {
+        this.OnActivated();
     }
 }
 

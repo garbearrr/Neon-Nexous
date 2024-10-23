@@ -1,7 +1,31 @@
 import { Workspace } from "@rbxts/services";
+import { Collection } from "../Collection/Collection";
 
 
 export namespace Common {
+    export const GetAllItems = (): Collection<string, PossibleItems> => {
+        const FoundItems = new Collection<string, PossibleItems>();
+        const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];
+        const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
+
+        for (const Folder of TypeFolders) {
+            const Items = Folder.GetChildren() as PossibleItems[];
+
+            for (const Item of Items) {
+                const ID = Item.Name;
+                FoundItems.Set(ID, Item);
+            }
+        }
+
+        return FoundItems;
+    }
+
+    export const GetItemCategoryById = (ItemId: number): string | undefined => {
+        const IStr = tostring(ItemId);
+        const CatNum = IStr.sub(1, 1);
+        return ItemCategories[CatNum];
+    }
+    
     export const GetItemById = (ItemId: number): PossibleItems | undefined => {
         const IStr = tostring(ItemId);
         const CatNum = IStr.sub(1, 1);

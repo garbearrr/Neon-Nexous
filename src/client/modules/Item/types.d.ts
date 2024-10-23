@@ -2,6 +2,7 @@ interface BaseItemData {
     readonly ClickDetector: ClickDetector;
     readonly CollisionHitbox: Part & {
         WeldConstraint: WeldConstraint;
+        SelectionBox: SelectionBox;
     };
     readonly Model: Folder;
     readonly Stats: Folder & {
@@ -12,8 +13,13 @@ interface BaseItemData {
 }
 
 interface IBaseItem {
+    ActivateClickDetector(): void
+    AsModel(): Model
+    DeactivateClickDetector(): void
     Destroy(): void
+    GetCategory(): string
     GetPID(): number
+    HideHitbox(): void
     /** Fires when the item is being dragged during placement. */
     OnDragged(): void
     /** Fires when the items is moved during placement. */
@@ -24,6 +30,7 @@ interface IBaseItem {
     OnSetup(): void
     /** Fires when the item is removed from a drag. */
     OnUndragged(): void
+    ShowHitbox(withBorder?: boolean): void
 }
 
 interface BaseItemType extends BaseItemData, IBaseItem {}

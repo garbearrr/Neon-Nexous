@@ -28,6 +28,10 @@ export abstract class BaseActionButton {
         this.TweenYScale(1);
     }
 
+    protected IsActivated(): boolean {
+        return this.Button.BackgroundColor3 === this.ActiveColor;
+    }
+
     protected OnActivated(): void {
         this.Toggle();
     };

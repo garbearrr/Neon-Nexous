@@ -36,6 +36,6 @@ export class Furnace extends BaseItem implements FurnaceData {
             Ore.Process();
         });
 
-        this.Connections.push(Conn);
+        this.Connections.Set("receiver_touch", Conn);
     }
 }

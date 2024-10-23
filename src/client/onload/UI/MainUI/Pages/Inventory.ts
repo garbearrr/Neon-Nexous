@@ -6,6 +6,7 @@ import { BGScroll } from "../BGScroll";
 import { Money } from "client/modules/Money/Money";
 import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 import { Placement } from "client/modules/Placement/Placement";
+import BuildActionButton from "../../ActionButtons/BuildActionButton";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -47,6 +48,7 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
     private OnPlace(ID: string) {
         if (Placement.IsActive()) Placement.Deactivate();
         Placement.Activate(tonumber(ID) || 10000);
+        BuildActionButton.SetOn();
         BGScroll.Deactivate();
     }
 
