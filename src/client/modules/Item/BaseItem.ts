@@ -5,6 +5,7 @@ import { ItemFacingDirection } from "./Common";
 import { BuildModes, Grid } from "../Grid/Grid";
 import { Common } from "shared/modules/Common/Common";
 import { Collection } from "shared/modules/Collection/Collection";
+import { ItemActions } from "./ItemActions";
 
 
 
@@ -29,6 +30,7 @@ export abstract class BaseItem implements BaseItemType {
     protected readonly ReplaceBoxColor = Color3.fromRGB(255, 255, 0);
 
     protected readonly HoverCursor = "http://www.roblox.com/asset/?id=133120883849698";
+    protected IsActionClicked = false;
 
     // Typically, this would be a collection, but there may be many instances
     // of an item, so we will save some memory by using an array.
@@ -43,9 +45,15 @@ export abstract class BaseItem implements BaseItemType {
         this.PlacementId = -1;
     }
 
+    protected ActionClickUndo(): void {
+        this.IsActionClicked = false;
+        this.HideHitbox();
+    }
+
     public ActivateClickDetector(): void {
         this.ClickDetector.MaxActivationDistance = 1000;
         this.ClickDetector.CursorIcon = this.HoverCursor;
+        this.Connections.Set("cd_click", this.ClickDetector.MouseClick.Connect((Player) => this.CDMouseClick(Player)));
         this.Connections.Set("cd_enter", this.ClickDetector.MouseHoverEnter.Connect((Player) => this.CDMouseHoverEnter(Player)));
         this.Connections.Set("cd_leave", this.ClickDetector.MouseHoverLeave.Connect((Player) => this.CDMouseHoverLeave(Player)));
     }
@@ -58,17 +66,33 @@ export abstract class BaseItem implements BaseItemType {
         return Model;
     }
 
+    protected CDMouseClick(Player: Player): void {
+        if (Player === undefined) return;
+        if (Player.Name !== Players.LocalPlayer.Name) return;
+        if (this.IsActionClicked) return;
+
+        this.IsActionClicked = true;
+        ItemActions.ShowActionsUI(this.Stats.ItemName.Value, () => this.ActionClickUndo());
+    }
+
     protected CDMouseHoverEnter(Player: Player): void {
         // if player is not the local player return
         if (Player === undefined) return;
         if (Player.Name !== Players.LocalPlayer.Name) return;
         this.ShowHitbox();
+
+        if (ItemActions.IsActionUIOpen()) return;
+        ItemActions.ShowBasicUI(this.Stats.ItemName.Value);
     }
 
     protected CDMouseHoverLeave(Player: Player): void {
         if (Player === undefined) return;
         if (Player.Name !== Players.LocalPlayer.Name) return;
+        if (this.IsActionClicked) return;
         this.HideHitbox();
+
+        if (ItemActions.IsActionUIOpen()) return;
+        ItemActions.HideUI();
     }
 
     protected ChangeBoxColor(): void {
@@ -84,6 +108,9 @@ export abstract class BaseItem implements BaseItemType {
         this.ClickDetector.MaxActivationDistance = 0;
         this.Connections.Get("cd_enter")?.Disconnect();
         this.Connections.Get("cd_leave")?.Disconnect();
+        this.Connections.Get("cd_click")?.Disconnect();
+        this.IsActionClicked = false;
+        ItemActions.HideUI();
     }
 
     public Destroy(DestroyPart = true): void {

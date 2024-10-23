@@ -489,13 +489,18 @@ interface StarterGui extends BasePlayerGui {
 			UIGradient: UIGradient;
 			UICorner: UICorner;
 			ScrollingBG: ImageLabel & {
+				["MH-Boxes-Padded"]: Decal;
 				UICorner: UICorner;
+				["MH-Cog-Padded"]: Decal;
+				["MH-Shop-Padded"]: Decal;
 			};
 			Content: Frame & {
 				TopBar: Frame & {
 					UICorner: UICorner;
+					Close: TextButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
 					FillBotCorners: Frame;
-					Close: TextButton;
 				};
 				ScrollingFrame: ScrollingFrame & {
 					Inventory: Frame & {
@@ -516,7 +521,9 @@ interface StarterGui extends BasePlayerGui {
 										UIAspectRatioConstraint: UIAspectRatioConstraint;
 									};
 								};
-								["3_Buy"]: TextButton;
+								["3_Buy"]: TextButton & {
+									UICorner: UICorner;
+								};
 								UIPadding: UIPadding;
 								UIListLayout: UIListLayout;
 							};
@@ -549,6 +556,11 @@ interface StarterGui extends BasePlayerGui {
 							UIListLayout: UIListLayout;
 							Desc: Frame & {
 								["2_Name"]: TextLabel;
+								UIPadding: UIPadding;
+								UIListLayout: UIListLayout;
+								["3_Buy"]: TextButton & {
+									UICorner: UICorner;
+								};
 								["1_ItemImg"]: TextButton & {
 									UIPadding: UIPadding;
 									UIStroke: UIStroke;
@@ -559,9 +571,6 @@ interface StarterGui extends BasePlayerGui {
 										UIAspectRatioConstraint: UIAspectRatioConstraint;
 									};
 								};
-								["3_Buy"]: TextButton;
-								UIPadding: UIPadding;
-								UIListLayout: UIListLayout;
 							};
 							Divider: Frame;
 							ItemFrame: ScrollingFrame & {
@@ -609,26 +618,26 @@ interface StarterGui extends BasePlayerGui {
 			};
 			["2_Actions"]: Frame & {
 				["4_Settings"]: TextButton & {
-					Page: ObjectValue;
+					UIGradient: UIGradient;
 					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
 					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					UIGradient: UIGradient;
 				};
 				["00_Menu"]: Frame & {
 					UICorner: UICorner;
 					UIAspectRatioConstraint: UIAspectRatioConstraint;
 				};
 				["3_Shop"]: TextButton & {
-					Page: ObjectValue;
+					UIGradient: UIGradient;
 					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
 					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					UIGradient: UIGradient;
 				};
 				["0_Expand"]: Frame & {
 					UICorner: UICorner;
@@ -636,22 +645,23 @@ interface StarterGui extends BasePlayerGui {
 				};
 				UIListLayout: UIListLayout;
 				["1_Build"]: TextButton & {
+					UIGradient: UIGradient;
 					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
 					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					UIGradient: UIGradient;
 				};
 				Expand: LocalScript;
 				["2_Inventory"]: TextButton & {
-					Page: ObjectValue;
+					UIGradient: UIGradient;
 					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
 					Icon: ImageButton & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					UIGradient: UIGradient;
 				};
 			};
 			["3_Currency"]: Frame & {
@@ -843,6 +853,59 @@ interface StarterGui extends BasePlayerGui {
 					};
 				};
 				UICorner: UICorner;
+			};
+			ItemActionInfo: Frame & {
+				UIPadding: UIPadding;
+				UIListLayout: UIListLayout;
+				UICorner: UICorner;
+				Info: Frame & {
+					UIListLayout: UIListLayout;
+					Actions: Frame & {
+						UIGridLayout: UIGridLayout;
+						Move: TextButton & {
+							UIPadding: UIPadding;
+							ActionText: TextLabel;
+							UICorner: UICorner;
+							ActionIcon: ImageLabel & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+							};
+							UIListLayout: UIListLayout;
+						};
+						Sell: TextButton & {
+							UIPadding: UIPadding;
+							ActionText: TextLabel;
+							UICorner: UICorner;
+							ActionIcon: ImageLabel & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+							};
+							UIListLayout: UIListLayout;
+						};
+						Store: TextButton & {
+							UIPadding: UIPadding;
+							ActionText: TextLabel;
+							UICorner: UICorner;
+							ActionIcon: ImageLabel & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+							};
+							UIListLayout: UIListLayout;
+						};
+						Buy: TextButton & {
+							UIPadding: UIPadding;
+							ActionText: TextLabel;
+							UICorner: UICorner;
+							ActionIcon: ImageLabel & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+							};
+							UIListLayout: UIListLayout;
+						};
+					};
+					ItemName: TextLabel;
+				};
+				UIAspectRatioConstraint: UIAspectRatioConstraint;
+				ItemIcon: ImageLabel & {
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					UIStroke: UIStroke;
+				};
 			};
 		};
 	};

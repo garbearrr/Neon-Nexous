@@ -82,6 +82,7 @@ export namespace Placement {
         G.StartCasting(State.Item, ItemId);
 
         PlacedItems.ShowHitboxes();
+        PlacedItems.DeactivateHover();
         State.ItemModule.ShowHitbox();
 
         State.Active = true;
