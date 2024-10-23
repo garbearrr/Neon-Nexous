@@ -47,7 +47,7 @@ export abstract class BaseItem implements BaseItemType {
 
     protected ActionClickUndo(): void {
         this.IsActionClicked = false;
-        this.HideHitbox();
+        this.CDMouseHoverLeave(Players.LocalPlayer);
     }
 
     public ActivateClickDetector(): void {
@@ -72,7 +72,8 @@ export abstract class BaseItem implements BaseItemType {
         if (this.IsActionClicked) return;
 
         this.IsActionClicked = true;
-        ItemActions.ShowActionsUI(this.Stats.ItemName.Value, () => this.ActionClickUndo());
+        this.CDMouseHoverEnter(Player);
+        ItemActions.ShowActionsUI(this, () => this.ActionClickUndo());
     }
 
     protected CDMouseHoverEnter(Player: Player): void {
@@ -155,7 +156,7 @@ export abstract class BaseItem implements BaseItemType {
     public OnDragged(): void {
         this.CellsOccupied = Grid.GetGlobalInstance().GetCellsTakenUp(this.Part.Position);
         this.CanPlace = PlacedItems.CanPlace(this.CellsOccupied);
-        this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied);
+        this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied, this.GetCategory());
 
         if (!this.CanPlace && this.DragCell !== undefined) {
             this.DragCell.Visible = false;
@@ -169,7 +170,7 @@ export abstract class BaseItem implements BaseItemType {
     public OnMoved(): void {
         this.CellsOccupied = Grid.GetGlobalInstance().GetCellsTakenUp(this.Part.Position);
         this.CanPlace = PlacedItems.CanPlace(this.CellsOccupied);
-        this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied);
+        this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied, this.GetCategory());
         this.ChangeBoxColor();
     }
 
@@ -178,7 +179,7 @@ export abstract class BaseItem implements BaseItemType {
         // This needs to be recalculated again for some reason or else it will always be false.
         this.CellsOccupied = Grid.GetGlobalInstance().GetCellsTakenUp(this.Part.Position);
         this.CanPlace = PlacedItems.CanPlace(this.CellsOccupied);
-        this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied);
+        this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied, this.GetCategory());
 
         if (!this.CanPlace) return;
         if (this.CellsOccupied.size() === 0) return;

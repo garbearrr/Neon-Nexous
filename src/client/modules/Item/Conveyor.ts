@@ -24,6 +24,32 @@ export class Conveyor extends BaseItem implements ConveyorData {
         this.Connections.Set("OnRotate", C);
     }
 
+    protected override ActionClickUndo(): void {
+        super.ActionClickUndo();
+        this.DirectionIndicator.Enabled = false;
+    }
+
+    protected override CDMouseClick(Player: Player): void {
+        super.CDMouseClick(Player);
+        this.DirectionIndicator.Enabled = true;
+    }
+
+    protected override CDMouseHoverEnter(Player: Player): void {
+        super.CDMouseHoverEnter(Player);
+        this.DirectionIndicator.Enabled = true;
+    }
+
+    protected override CDMouseHoverLeave(Player: Player): void {
+        super.CDMouseHoverLeave(Player);
+        if (this.IsActionClicked) return;
+        this.DirectionIndicator.Enabled = false;
+    }
+
+    public override DeactivateClickDetector(): void {
+        super.DeactivateClickDetector();
+        this.DirectionIndicator.Enabled = false;
+    }
+
     public override GetBuildModeType(): keyof BuildModes {
         return "AnchorDragGrid";
     }

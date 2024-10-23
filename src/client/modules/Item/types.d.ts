@@ -13,6 +13,12 @@ interface BaseItemData {
 }
 
 interface IBaseItem {
+    readonly ClickDetector: BaseItemData["ClickDetector"];
+    readonly CollisionHitbox: BaseItemData["CollisionHitbox"];
+    readonly Model: BaseItemData["Model"];
+    readonly Stats: BaseItemData["Stats"];
+    readonly Part: BaseItemData & Part;
+
     ActivateClickDetector(): void
     AsModel(): Model
     DeactivateClickDetector(): void

@@ -3,3 +3,5 @@
 /include
 *.tsbuildinfo
 Game.rbxl.lock
+workflow.txt
+package-lock.json

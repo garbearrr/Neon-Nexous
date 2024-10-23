@@ -4,6 +4,7 @@ export namespace PlacedItems {
     // Using the interface to avoid circular imports
     /** "CellX_CellY" -> ItemModule */
     const PlacedItemCache = new Collection<string, BaseItemType>();
+    const PIDItemCache = new Collection<number, BaseItemType>();
     let pid = 0;
 
     /**
@@ -21,7 +22,12 @@ export namespace PlacedItems {
      * @param Item The item to add
      */
     export const AddItem = (Cells: Vector2[], Item: BaseItemType): number => {
+        if (Cells.size() === 0) {
+            error("Cells must have at least one element. " + Item.Part.Name);
+        }
+
         Cells.forEach(C => PlacedItemCache.Set(C.X + "_" + C.Y, Item));
+        PIDItemCache.Set(pid, Item);
         return pid++;
     }
 
@@ -37,19 +43,18 @@ export namespace PlacedItems {
      * Checks if an item can replace another item.
      * This is only true if the item is of the same type and the new item is completely contained within the old item.
      * @param Cells The cells that the item occupies
+     * @param PlacingCat The category of the item being placed
      * @returns 
      */
-    export const CanReplace = (Cells: Vector2[]): boolean => {
+    export const CanReplace = (Cells: Vector2[], PlacingCat: string): boolean => {
         const PIDCache = new Set<number>();
-        let category: string | undefined;
         return Cells.every(C => {
             const Item = PlacedItemCache.Get(C.X + "_" + C.Y);
             if (Item === undefined) return false;
             if (PIDCache.size() > 0 && !PIDCache.has(Item.GetPID())) return false;
-            if (category !== undefined && Item.GetCategory() !== category) return false;
+            if (Item.GetCategory() !== PlacingCat) return false;
 
             PIDCache.add(Item.GetPID());
-            category = Item.GetCategory();
             return true;
         });
     }
@@ -64,13 +69,8 @@ export namespace PlacedItems {
     }
 
     /** Get unique items in cache */
-    export const GetUniqueItems = (): ICollection<string, BaseItemType> => {
-        const PIDs = new Set<number>();
-        return PlacedItemCache.Filter((Item, _) => {
-            if (PIDs.has(Item.GetPID())) return false;
-            PIDs.add(Item.GetPID());
-            return true;
-        });
+    export const GetUniqueItems = (): ICollection<number, BaseItemType> => {
+        return PIDItemCache;
     };
 
     export const HideHitboxes = (): void => {
@@ -87,6 +87,7 @@ export namespace PlacedItems {
             return false;
         });
 
+        PIDItemCache.Delete(PID);
         if (!Keys) return;
 
         const Mod = PlacedItemCache.Get(Keys[0]);

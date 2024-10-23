@@ -50,8 +50,6 @@ export namespace Placement {
         const ItemData = Common.GetItemById(ItemId);
         if (ItemData === undefined) return;
 
-        State.ManagerMode = false;
-
         if (State.Active) {
             UpdateItem(ItemData, ItemId);
             return;
@@ -76,13 +74,17 @@ export namespace Placement {
         Conn.Set("grid_on_place", G.Events.OnPlace.Connect(({ CF }) => OnPlace(CF)));
         Conn.Set("grid_on_update", G.Events.OnUpdate.Connect(({ CF }) => OnUpdate(CF)));
 
-        CamSetup();
+        if (!State.ManagerMode) {
+            CamSetup();
+        }
+
+        State.ManagerMode = false;
         
         G.ToggleGrid(true);
         G.StartCasting(State.Item, ItemId);
 
-        PlacedItems.ShowHitboxes();
         PlacedItems.DeactivateHover();
+        PlacedItems.ShowHitboxes();
         State.ItemModule.ShowHitbox();
 
         State.Active = true;
@@ -101,6 +103,7 @@ export namespace Placement {
         
         Camera.Instance()
             .SetCameraContainer(Plot.CameraContainer)
+            .SetContainerDisregard(false)
             .SetOrientation(math.rad(CAM_TILT_PITCH), 0)
             .FlipMouseButtons(Enum.UserInputType.MouseButton2)
             .LockLookDirections(ViewDirection.Up, ViewDirection.Down)

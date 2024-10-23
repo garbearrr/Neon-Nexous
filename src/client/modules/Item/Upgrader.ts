@@ -16,6 +16,32 @@ export class Upgrader extends BaseItem implements UpgraderData {
         this.Upgrade = Item.Upgrade;
     }
 
+    protected override ActionClickUndo(): void {
+        super.ActionClickUndo();
+        this.Conveyor.DirectionIndicator.Enabled = false;
+    }
+
+    protected override CDMouseClick(Player: Player): void {
+        super.CDMouseClick(Player);
+        this.Conveyor.DirectionIndicator.Enabled = true;
+    }
+
+    protected override CDMouseHoverEnter(Player: Player): void {
+        super.CDMouseHoverEnter(Player);
+        this.Conveyor.DirectionIndicator.Enabled = true;
+    }
+
+    protected override CDMouseHoverLeave(Player: Player): void {
+        super.CDMouseHoverLeave(Player);
+        if (this.IsActionClicked) return;
+        this.Conveyor.DirectionIndicator.Enabled = false;
+    }
+
+    public override DeactivateClickDetector(): void {
+        super.DeactivateClickDetector();
+        this.Conveyor.DirectionIndicator.Enabled = false;
+    }
+
     public override OnPlaced(): void {
         super.OnPlaced();
 

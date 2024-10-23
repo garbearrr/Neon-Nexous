@@ -21,6 +21,8 @@ declare global {
             Furnaces: {vp: string, id: string}[];
             Upgraders: {vp: string, id: string}[];
         }*/
+
+        Log: (Message: string, Prefix?: string) => void;
     }
 }
 
