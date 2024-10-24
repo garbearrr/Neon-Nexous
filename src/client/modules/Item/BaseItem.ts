@@ -116,7 +116,7 @@ export abstract class BaseItem implements BaseItemType {
         this.Connections.Get("cd_click")?.Disconnect();
         this.IsActionClicked = false;
         ItemActions.HideUI();
-        _G.Log(`Click Detector deactivated for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
+        _G.Log(`Click Detector deactivated for ${this.PlacementId}`, "BaseItem");
     }
 
     public Destroy(DestroyPart = true): void {
