@@ -13,6 +13,11 @@ export class Util {
         return a + (b - a) * math.clamp(t, 0, 1);
     }
 
+    static ToFixed(num: number, fixed: number): number {
+        const fixedMultiplier = 10 ** fixed;
+        return math.floor(num * fixedMultiplier) / fixedMultiplier;
+    }
+
     static Slice<T extends defined>(array: T[], start: number, ending: number): T[] {
         const newArray: T[] = [];
         for (let i = start; i < ending; i++) {

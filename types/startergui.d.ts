@@ -602,6 +602,47 @@ interface StarterGui extends BasePlayerGui {
 						};
 					};
 					UIListLayout: UIListLayout;
+					Debug: Frame & {
+						Button: ObjectValue;
+						Img: StringValue;
+						Divider: Frame;
+						Content: Frame & {
+							SettingsFrame: Frame & {
+								ScrollingFrame: ScrollingFrame & {
+									TemplateDragBar: Frame & {
+										DragBar: Frame & {
+											TextButton: TextButton;
+											Under: Frame;
+											Dec: ImageButton & {
+												UIAspectRatioConstraint: UIAspectRatioConstraint;
+												LowerBound: TextLabel;
+											};
+											ManualEntry: TextBox;
+											Inc: ImageButton & {
+												UIAspectRatioConstraint: UIAspectRatioConstraint;
+												UpperBound: TextLabel;
+											};
+											Bar: Frame & {
+												Handle: TextLabel & {
+													UIAspectRatioConstraint: UIAspectRatioConstraint;
+													UIDragDetector: UIDragDetector;
+												};
+												UIGradient: UIGradient;
+											};
+										};
+										UIPadding: UIPadding;
+										Desc: TextLabel;
+									};
+								};
+							};
+							List: Frame & {
+								ScrollingFrame: ScrollingFrame & {
+									TemplateListEntry: TextButton;
+									UIListLayout: UIListLayout;
+								};
+							};
+						};
+					};
 				};
 			};
 			UIStroke: UIStroke;
@@ -617,15 +658,6 @@ interface StarterGui extends BasePlayerGui {
 				};
 			};
 			["2_Actions"]: Frame & {
-				["4_Settings"]: TextButton & {
-					UIGradient: UIGradient;
-					UICorner: UICorner;
-					Page: ObjectValue;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Icon: ImageButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
 				["00_Menu"]: Frame & {
 					UICorner: UICorner;
 					UIAspectRatioConstraint: UIAspectRatioConstraint;
@@ -639,11 +671,26 @@ interface StarterGui extends BasePlayerGui {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
 				};
-				["0_Expand"]: Frame & {
-					UICorner: UICorner;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-				};
 				UIListLayout: UIListLayout;
+				Expand: LocalScript;
+				["2_Inventory"]: TextButton & {
+					UIGradient: UIGradient;
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				["99_Debug"]: TextButton & {
+					UIGradient: UIGradient;
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
 				["1_Build"]: TextButton & {
 					UIGradient: UIGradient;
 					UICorner: UICorner;
@@ -653,8 +700,11 @@ interface StarterGui extends BasePlayerGui {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
 				};
-				Expand: LocalScript;
-				["2_Inventory"]: TextButton & {
+				["0_Expand"]: Frame & {
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+				};
+				["4_Settings"]: TextButton & {
 					UIGradient: UIGradient;
 					UICorner: UICorner;
 					Page: ObjectValue;
@@ -860,6 +910,9 @@ interface StarterGui extends BasePlayerGui {
 				UICorner: UICorner;
 				Info: Frame & {
 					UIListLayout: UIListLayout;
+					ItemName: TextLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
 					Actions: Frame & {
 						UIGridLayout: UIGridLayout;
 						Move: TextButton & {
@@ -899,7 +952,6 @@ interface StarterGui extends BasePlayerGui {
 							UIListLayout: UIListLayout;
 						};
 					};
-					ItemName: TextLabel;
 				};
 				UIAspectRatioConstraint: UIAspectRatioConstraint;
 				ItemIcon: ImageLabel & {

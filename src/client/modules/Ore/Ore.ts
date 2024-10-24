@@ -100,3 +100,6 @@ export class Ore implements IOre {
         }, OreStuckInterval);
     }
 }
+
+// TODO: Reevaluate ore stuck algorithm.
+// TODO: Perhaps check if stuck if ore hasn't been pinged in a while and is not on a gate (add tags to gates).

@@ -67,6 +67,7 @@ export class AnchorDragGrid extends BaseGrid {
     }
 
     private GenerateLShapeOrLineItems(Start: Vector2, End: Vector2): void {
+        _G.Log("Generating L shape or line items", "AnchorDragGrid");
         const MinX = math.min(Start.X, End.X);
         const MaxX = math.max(Start.X, End.X);
         const MinY = math.min(Start.Y, End.Y);
@@ -75,6 +76,11 @@ export class AnchorDragGrid extends BaseGrid {
         const ItemSize = this.GetItemSizeInCellsXY();
         const StepX = ItemSize.X * this.GridTexture.StudsPerTileU;
         const StepY = ItemSize.Y * this.GridTexture.StudsPerTileV;
+
+        // If the start and end are within half a cell return (single placement)
+        if (math.abs(Start.X - End.X) <= StepX / 2 && math.abs(Start.Y - End.Y) <= StepY / 2) {
+            return;
+        }
     
         // Determine the drag direction
         const isDraggingLeft = Start.X > End.X;
