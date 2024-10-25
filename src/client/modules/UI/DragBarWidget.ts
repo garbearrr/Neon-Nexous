@@ -16,8 +16,8 @@ export class DragBarWidget extends BaseWidget<TemplateDragBar, number> {
     private IncDecAmount = 0.1;
     private ToFixed = 2;
 
-    constructor(WidgetName: string, Parent=Template.Parent) {
-        super(WidgetName, Template, Parent as GuiObject);
+    constructor(WidgetName: string) {
+        super(WidgetName, Template);
         this.SetWidgetName(WidgetName);
     }
 

@@ -7,3 +7,4 @@ boxes.png - https://www.flaticon.com/authors/pixel-perfect
 plus.png - https://www.flaticon.com/authors/srip
 engineering.png - https://www.flaticon.com/authors/prosymbols-premium
 bug.png - apien flaticon.com
+x.png - https://www.flaticon.com/authors/ariefstudio

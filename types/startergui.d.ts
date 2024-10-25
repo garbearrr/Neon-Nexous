@@ -489,18 +489,22 @@ interface StarterGui extends BasePlayerGui {
 			UIGradient: UIGradient;
 			UICorner: UICorner;
 			ScrollingBG: ImageLabel & {
-				["MH-Boxes-Padded"]: Decal;
-				UICorner: UICorner;
 				["MH-Cog-Padded"]: Decal;
+				["MH-Bug-Padded"]: Decal;
+				UICorner: UICorner;
+				["MH-Boxes-Padded"]: Decal;
 				["MH-Shop-Padded"]: Decal;
 			};
 			Content: Frame & {
 				TopBar: Frame & {
 					UICorner: UICorner;
-					Close: TextButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					FillBotCorners: Frame & {
+						Title: TextLabel;
+						UIPadding: UIPadding;
+						Close: ImageButton & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+						};
 					};
-					FillBotCorners: Frame;
 				};
 				ScrollingFrame: ScrollingFrame & {
 					Inventory: Frame & {

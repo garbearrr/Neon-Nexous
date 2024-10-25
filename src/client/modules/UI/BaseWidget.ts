@@ -9,12 +9,11 @@ export abstract class BaseWidget<TemplateWidget extends GuiObject, T> {
     protected ActionCallback?: (Value: T) => void;
     protected UpdateCallback?: () => T;
 
-    constructor(WidgetName: string, WidgetTemplate: TemplateWidget, Parent: GuiObject) {
+    constructor(WidgetName: string, WidgetTemplate: TemplateWidget) {
         this.Name = WidgetName;
 
         this.Widget = WidgetTemplate.Clone();
         this.Widget.Name = this.Name;
-        this.Widget.Parent = Parent;
         this.Widget.Visible = true;
 
         this.BindEvents();
@@ -42,12 +41,21 @@ export abstract class BaseWidget<TemplateWidget extends GuiObject, T> {
         this.Widget.Destroy();
     }
 
+    public GetName(): string {
+        return this.Name;
+    }
+
     /**
      * Sets the action callback that is called when the widget is interacted with
      * @param Callback
      */
     public SetActionCallback(Callback: (Value: T) => void): this {
         this.ActionCallback = Callback;
+        return this;
+    }
+
+    public SetParent(Parent: GuiObject): this {
+        this.Widget.Parent = Parent;
         return this;
     }
 

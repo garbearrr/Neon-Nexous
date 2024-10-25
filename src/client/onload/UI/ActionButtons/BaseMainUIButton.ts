@@ -18,7 +18,7 @@ export abstract class BaseMainUIActionButton extends BaseActionButton {
     protected override ToggleOff(): void {}
 
     protected override ToggleOn(): void {
-        BGScroll.FocusOnFrame(this.Page);
+        BGScroll.ScrollToFrame(this.Page);
         if (!BGScroll.IsActive()) BGScroll.Activate();
     }
 }
