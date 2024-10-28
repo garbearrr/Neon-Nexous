@@ -94,6 +94,7 @@ export namespace Placement {
         CamSetup();
 
         PlacedItems.ActivateHover();
+        Grid.GetGlobalInstance().ToggleGrid(true);
 
         State.ManagerMode = true;
     }
@@ -147,6 +148,8 @@ export namespace Placement {
         Camera.Instance().Reset();
 
         PlacedItems.DeactivateHover();
+
+        Grid.GetGlobalInstance().ToggleGrid(false);
 
         if (State.ManagerMode) {
             PlacedItems.HideHitboxes();
