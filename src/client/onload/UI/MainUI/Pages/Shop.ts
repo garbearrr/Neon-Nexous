@@ -26,7 +26,7 @@ class ShopMenuGrid extends BaseItemMenuGrid {
     }
 
     protected ItemSource() {
-        const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part}>();
+        const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>();
         const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];
         const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
 
@@ -36,7 +36,8 @@ class ShopMenuGrid extends BaseItemMenuGrid {
             for (const Item of Items) {
                 const ID = Item.Name;
                 const Name = Item.Stats.ItemName.Value;
-                FoundItems.Set(ID, {ItemId: ID, Name: Name, Item});
+                const Img = Item.Stats.Icon.Value;
+                FoundItems.Set(ID, {ItemId: ID, Name: Name, Item, Img});
             }
         }
 

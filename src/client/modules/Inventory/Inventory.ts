@@ -13,6 +13,14 @@ export namespace Inventory {
         _G.Log(`Added ${Amount} of ${ItemID} to inventory`, "Inventory");
     }
 
+    export const GetAllItems = () => {
+        return Inv;
+    }
+
+    export const GetItem = (ItemID: string) => {
+        return Inv.Get(ItemID);
+    }
+
     export const HasItem = (ItemID: string, Amount = 1) => {
         return Inv.Has(ItemID) && Inv.Get(ItemID)! >= Amount;
     }

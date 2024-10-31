@@ -125,6 +125,10 @@ export class Camera {
         _G.Log("Camera guide initialized.", "Camera");
     }
 
+    public AreMBFlipped(): boolean {
+        return this.CurrentMB === Enum.UserInputType.MouseButton2;
+    }
+
     private ConstrainToContainer(Position: Vector3): Vector3 {
         if (!this.CameraContainer) return Position;
 
@@ -234,8 +238,36 @@ export class Camera {
         return this;
     }
 
+    public IsContainerDisregarded(): boolean {
+        return this.DisregardContainer;
+    }
+
+    public IsLookVectorSet(v: Look): boolean {
+        return this.LookVectors.get(v) || false;
+    }
+
     public static IsInstanced(): boolean {
         return Camera._instance !== undefined;
+    }
+
+    public IsInvertedCamLeftRight(): boolean {
+        return this.InvertCamLR;
+    }
+
+    public IsInvertedCamUpDown(): boolean {
+        return this.InvertCamUD;
+    }
+
+    public IsMoveDirectionLocked(dir: MoveDirection): boolean {
+        return this.MovementLocks.get(dir) || false;
+    }
+
+    public IsViewDirectionLocked(dir: ViewDirection): boolean {
+        return this.LookLocks.get(dir) || false;
+    }
+
+    public IsZoomDirectionLocked(dir: ZoomDirection): boolean {
+        return this.ScrollLocks.get(dir) || false;
     }
 
     public LockLookDirections(...dirs: ViewDirection[]): this {

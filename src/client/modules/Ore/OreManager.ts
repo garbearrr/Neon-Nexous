@@ -14,6 +14,12 @@ export namespace OreManager {
         return OreCache.Get(OreId);
     }
 
+    export const FreezeOre = (): void => {
+        OreCache.ForEach((Ore) => {
+            Ore.Ore.Anchored = true;
+        });
+    }
+
     export const Remove = (OreId: number): boolean => {
         return OreCache.Delete(OreId);
     }
@@ -24,6 +30,12 @@ export namespace OreManager {
             const OID = Other.Name;
             OreManager.Get(tonumber(OID) || -1)?.Destroy();
             _G.Log(`Ore hit plot ${OID}`, "Plot|Ore");
+        });
+    }
+
+    export const UnfreezeOre = (): void => {
+        OreCache.ForEach((Ore) => {
+            Ore.Ore.Anchored = false;
         });
     }
 

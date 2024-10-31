@@ -510,7 +510,6 @@ interface StarterGui extends BasePlayerGui {
 					Inventory: Frame & {
 						Button: ObjectValue;
 						Img: StringValue;
-						Divider: Frame;
 						Content: Frame & {
 							UIListLayout: UIListLayout;
 							Desc: Frame & {
@@ -545,6 +544,7 @@ interface StarterGui extends BasePlayerGui {
 											UIStroke: UIStroke;
 											UIAspectRatioConstraint: UIAspectRatioConstraint;
 										};
+										Amount: TextLabel;
 									};
 								};
 								UIGridLayout: UIGridLayout;
@@ -555,7 +555,6 @@ interface StarterGui extends BasePlayerGui {
 					Shop: Frame & {
 						Button: ObjectValue;
 						Img: StringValue;
-						Divider: Frame;
 						Content: Frame & {
 							UIListLayout: UIListLayout;
 							Desc: Frame & {
@@ -600,7 +599,6 @@ interface StarterGui extends BasePlayerGui {
 					Settings: Frame & {
 						Button: ObjectValue;
 						Img: StringValue;
-						Divider: Frame;
 						Content: Frame & {
 							TextLabel: TextLabel;
 						};
@@ -609,11 +607,53 @@ interface StarterGui extends BasePlayerGui {
 					Debug: Frame & {
 						Button: ObjectValue;
 						Img: StringValue;
-						Divider: Frame;
 						Content: Frame & {
 							SettingsFrame: Frame & {
 								ScrollingFrame: ScrollingFrame & {
+									TemplateMultiButton: Frame & {
+										ButtonArea: Frame & {
+											UIListLayout: UIListLayout;
+											TemplateButton: TextButton & {
+												UICorner: UICorner;
+											};
+											UIPadding: UIPadding;
+										};
+										UIPadding: UIPadding;
+										TextArea: Frame & {
+											UIListLayout: UIListLayout;
+											Update: TextButton & {
+												UIAspectRatioConstraint: UIAspectRatioConstraint;
+											};
+											Info: TextLabel;
+											Desc: TextLabel;
+										};
+									};
+									TemplateMultiToggle: Frame & {
+										ButtonArea: Frame & {
+											UIListLayout: UIListLayout;
+											TemplateButton: TextButton & {
+												UICorner: UICorner;
+											};
+											UIPadding: UIPadding;
+										};
+										UIPadding: UIPadding;
+										TextArea: Frame & {
+											UIListLayout: UIListLayout;
+											Update: TextButton & {
+												UIAspectRatioConstraint: UIAspectRatioConstraint;
+											};
+											Info: TextLabel;
+											Desc: TextLabel;
+										};
+									};
 									TemplateDragBar: Frame & {
+										TextArea: Frame & {
+											UIListLayout: UIListLayout;
+											Update: TextButton & {
+												UIAspectRatioConstraint: UIAspectRatioConstraint;
+											};
+											Desc: TextLabel;
+										};
 										DragBar: Frame & {
 											TextButton: TextButton;
 											Under: Frame;
@@ -635,15 +675,16 @@ interface StarterGui extends BasePlayerGui {
 											};
 										};
 										UIPadding: UIPadding;
-										Desc: TextLabel;
 									};
+									UIListLayout: UIListLayout;
 								};
 							};
 							List: Frame & {
 								ScrollingFrame: ScrollingFrame & {
-									TemplateListEntry: TextButton;
+									TemplateButton: TextButton;
 									UIListLayout: UIListLayout;
 								};
+								UICorner: UICorner;
 							};
 						};
 					};

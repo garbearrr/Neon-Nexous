@@ -15,8 +15,6 @@ export abstract class BaseWidget<TemplateWidget extends GuiObject, T> {
         this.Widget = WidgetTemplate.Clone();
         this.Widget.Name = this.Name;
         this.Widget.Visible = true;
-
-        this.BindEvents();
     }
 
     protected Action(Value: T) {
@@ -44,6 +42,8 @@ export abstract class BaseWidget<TemplateWidget extends GuiObject, T> {
     public GetName(): string {
         return this.Name;
     }
+
+    public abstract MakeUpdateVisible(): this;
 
     /**
      * Sets the action callback that is called when the widget is interacted with

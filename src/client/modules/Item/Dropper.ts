@@ -21,12 +21,17 @@ export class Dropper extends BaseItem implements DropperData {
     public readonly Stats: DropperData["Stats"];
 
     private DropLink?: DropLink;
+    private static AllPaused = false;
 
     public constructor(Item: DropperData & Part) {
         super(Item);
         this.Drop = Item.Drop;
         this.Ore = Item.Ore;
         this.Stats = Item.Stats;
+    }
+
+    public static AreDroppersPaused(): boolean {
+        return Dropper.AllPaused;
     }
 
     public override AsModel(): Model {
@@ -72,6 +77,8 @@ export class Dropper extends BaseItem implements DropperData {
     }
 
     private static DropOre(Link: DropLink): void {
+        if (Dropper.AllPaused) return;
+
         const Clone = Link.Dropper.Ore.Clone();
         Clone.WeldConstraint.Destroy();
         Clone.Parent = Plot.OreFolder;
@@ -91,6 +98,14 @@ export class Dropper extends BaseItem implements DropperData {
     public override OnPlaced(): void {
         super.OnPlaced();
         this.DropLink = new DropLink(this, (TimingCache, Timing) => Dropper.BeginDropInterval(TimingCache, Timing));
+    }
+
+    public static PauseAllDroppers(): void {
+        Dropper.AllPaused = true;
+    }
+
+    public static ResumeAllDroppers(): void {
+        Dropper.AllPaused = false;
     }
 }
 

@@ -43,6 +43,10 @@ export namespace BGScroll {
 
         UpdateTileSize();
 
+        for (const Frame of Frames) {
+            Frame.OnOpen();
+        }
+
         // Connect to size changes to update tile size dynamically
         const SizeChangeConn = (Background.Parent as Frame)
             .GetPropertyChangedSignal("AbsoluteSize")
@@ -103,6 +107,10 @@ export namespace BGScroll {
         // Disconnect all connections to prevent memory leaks
         Connections.ForEach((Conn) => Conn.Disconnect());
         Connections.Clear();
+
+        for (const Frame of Frames) {
+            Frame.OnClose();
+        }
 
         _G.Log("Deactivated BGScroll", "BGScroll");
     };

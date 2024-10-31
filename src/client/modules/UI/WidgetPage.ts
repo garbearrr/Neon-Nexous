@@ -6,7 +6,10 @@ export class WidgetPage {
     private readonly Parent: GuiObject;
     private readonly Widgets = new Collection<string, BaseWidget<GuiObject, any>>();
 
-    public constructor(Parent: GuiObject) {
+    private PageName: string;
+
+    public constructor(PageName: string, Parent: GuiObject) {
+        this.PageName = PageName;
         this.Parent = Parent;
     }
 
@@ -14,6 +17,10 @@ export class WidgetPage {
         this.Widgets.Set(Widget.GetName(), Widget);
         Widget.SetParent(this.Parent);
         return this;
+    }
+
+    public GetName(): string {
+        return this.PageName;
     }
 
     public GetWidget<T extends BaseWidget<GuiObject, any>>(Name: string): T {
@@ -41,6 +48,13 @@ export class WidgetPage {
         this.Widgets.ForEach((Widget) => {
             Widget.SetWidgetVisibility(true);
             Widget.BindEvents();
+        });
+        return this;
+    }
+
+    public UpdateAll(): this {
+        this.Widgets.ForEach((Widget) => {
+            Widget.Update();
         });
         return this;
     }

@@ -8,6 +8,7 @@ interface Workspace extends Model {
 					Add: NumberValue;
 					Multiplier: NumberValue;
 					ItemId: IntValue;
+					Icon: StringValue;
 				};
 				CollisionHitbox: Part & {
 					SelectionBox: SelectionBox;
@@ -39,6 +40,7 @@ interface Workspace extends Model {
 					ItemName: StringValue;
 					ItemId: IntValue;
 					Cost: NumberValue;
+					Icon: StringValue;
 				};
 				BeamA1: Attachment;
 				DirectionIndicator: Beam & {
@@ -122,6 +124,7 @@ interface Workspace extends Model {
 					MinOreValue: NumberValue;
 					Multiplier: NumberValue;
 					Add: NumberValue;
+					Icon: StringValue;
 				};
 				CollisionHitbox: Part & {
 					SelectionBox: SelectionBox;
@@ -177,6 +180,7 @@ interface Workspace extends Model {
 					DropSpeed: NumberValue;
 					OreValue: NumberValue;
 					ItemId: IntValue;
+					Icon: StringValue;
 				};
 				CollisionHitbox: Part & {
 					SelectionBox: SelectionBox;

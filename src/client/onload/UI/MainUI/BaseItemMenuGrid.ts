@@ -21,7 +21,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
     private readonly TemplateRow: TemplatePage["Content"]["ItemFrame"]["TemplateRow"];
 
     protected ActivationTI = new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0);
-    protected CellsPerRow = 5;
+    protected CellsPerRow = 6;
     protected CellTag = "ShopCell";
     protected RowTag = "ShopRow";
 
@@ -56,14 +56,17 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
 
     private GenerateCells() {
         const FoundItems = this.ItemSource();
+        const Sorted = FoundItems.Sort((a, b) => (tonumber(a.ItemId) || 0) - (tonumber(b.ItemId) || 0));
 
         const NewCells = [];
-        for (const {ItemId, Name, Item} of FoundItems.Values()) {
+        for (const {ItemId, Name, Item, Img} of Sorted.Values()) {
             const CellClone = this.TemplateRow.TemplateItem.Clone();
             CellClone.Parent = this.ContentFrame;
             CollectionService.AddTag(CellClone, this.CellTag);
 
             CellClone.Visible = true;
+            CellClone.ImageButton.Image = Img;
+            CellClone.LayoutOrder = tonumber(ItemId) || 0;
             NewCells.push(CellClone);
 
             this.OnCellAdded([CellClone, CellClone.ImageButton], ItemId, Name, Item);
@@ -72,7 +75,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
         return NewCells;
     }
 
-    protected abstract ItemSource(): Collection<string, {ItemId: string, Name: string, Item: Part}>;
+    protected abstract ItemSource(): Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>;
 
     protected OnCellAdded(Buttons: GuiButton[], ItemId: string, Name: string, Item: Part): void {
 
@@ -91,6 +94,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
         if (ExistingCells.size() <= 0) {
             ExistingCells = this.GenerateCells();
         }
+        ExistingCells.sort((a, b) => a.LayoutOrder < b.LayoutOrder);
 
         const TemplateRowWidth = this.TemplateRow.AbsoluteSize.X;
         const CellsInRow = TemplateRowWidth / this.OGCellSize;
@@ -125,6 +129,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
                     CellClone.Visible = true;
                     CellClone.ImageButton.Visible = false;
                     CellClone.UIStroke.Enabled = false;
+                    CellClone.LayoutOrder = 999999;
                 }
             }
         }

@@ -40,6 +40,10 @@ export class DragBarWidget extends BaseWidget<TemplateDragBar, number> {
             this.OnIncrement();
         }));
 
+        this.Connections.Set("Update", this.Widget.TextArea.Update.Activated.Connect(() => {
+            this.Update();
+        }));
+
         return this;
     }
 
@@ -52,6 +56,11 @@ export class DragBarWidget extends BaseWidget<TemplateDragBar, number> {
         const Value = tonumber(this.Widget.DragBar.ManualEntry.Text);
         if (Value === undefined) return this.LowerBound;
         return this.FixNumber(Value);
+    }
+
+    public MakeUpdateVisible() {
+        this.Widget.TextArea.Update.Visible = true;
+        return this;
     }
 
     private OnDecrement() {
@@ -123,7 +132,7 @@ export class DragBarWidget extends BaseWidget<TemplateDragBar, number> {
 
     public override SetWidgetName(WidgetName: string): this {
         super.SetWidgetName(WidgetName);
-        this.Widget.Desc.Text = WidgetName;
+        this.Widget.TextArea.Desc.Text = WidgetName;
         return this;
     }
 
@@ -160,6 +169,7 @@ export class DragBarWidget extends BaseWidget<TemplateDragBar, number> {
     }
 
     protected UpdateWidget(Value: number): this {
+        Value = Util.ToFixed(Value, this.ToFixed);
         this.UpdateManualEntry(Value);
         this.UpdateHandlePosition(Value);
         return this

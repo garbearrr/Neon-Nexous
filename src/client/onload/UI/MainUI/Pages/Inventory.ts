@@ -1,18 +1,19 @@
-import { Players, Workspace } from "@rbxts/services";
+import { Players } from "@rbxts/services";
 import { BaseItemMenuGrid } from "../BaseItemMenuGrid";
 import { Collection } from "shared/modules/Collection/Collection";
 
 import { BGScroll } from "../BGScroll";
-import { Money } from "client/modules/Money/Money";
-import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 import { Placement } from "client/modules/Placement/Placement";
 import BuildActionButton from "../../ActionButtons/BuildActionButton";
+import { Inventory } from "client/modules/Inventory/Inventory";
+import { Common } from "shared/modules/Common/Common";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
 
 const InvFrame = MainUI.MainFrame.Content.ScrollingFrame.Inventory;
+const TemplateInvCell = InvFrame.Content.ItemFrame.TemplateRow.TemplateItem;
 
 class InventoryMenuGrid extends BaseItemMenuGrid {
     protected DescFrame: typeof InvFrame["Content"]["Desc"];
@@ -28,18 +29,15 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
     }
 
     protected ItemSource() {
-        const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part}>();
-        const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];
-        const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
+        const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>();
+        const InventoryItems = Inventory.GetAllItems();
 
-        for (const Folder of TypeFolders) {
-            const Items = Folder.GetChildren() as PossibleItems[];
-
-            for (const Item of Items) {
-                const ID = Item.Name;
-                const Name = Item.Stats.ItemName.Value;
-                FoundItems.Set(ID, {ItemId: ID, Name: Name, Item});
-            }
+        for (const [ID, _Amount] of InventoryItems.Entries()) {
+            const Item = Common.GetItemById(tonumber(ID) || 10000);
+            if (Item === undefined) continue;
+            const Name = Item.Stats.ItemName.Value;
+            const Img = Item.Stats.Icon.Value;
+            FoundItems.Set(ID, {ItemId: ID, Name: Name, Item, Img});
         }
 
         return FoundItems;
@@ -62,6 +60,10 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
             this.Connections.Set(ItemId + "click" + Cell.Name, ClickConnection);
             this.Connections.Set(ItemId + "unhover" + Cell.Name, UnhoverConnection);
         }
+
+        const [TButton, _IButton] = Cells as [typeof TemplateInvCell, GuiButton];
+        TButton.Amount.Text = Inventory.GetItem(ItemId) ? tostring(Inventory.GetItem(ItemId)) : "0";
+        if (TButton.Amount.Text.size() > 3) TButton.Amount.Text = "99+";
     }
 
     private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
@@ -91,6 +93,11 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         //this.Connections.ForEach(Conn => Conn.Disconnect());
         this.DescFrame.Visible = false;
         this.Clicked = undefined;
+    }
+
+    public override OnOpen() {
+        super.OnOpen();
+        this.PopulateMenu();
     }
 
     private UpdateDesc(Name: string, ID: string, ConnectBuy=false) {

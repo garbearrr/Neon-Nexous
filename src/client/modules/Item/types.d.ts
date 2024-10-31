@@ -9,6 +9,7 @@ interface BaseItemData {
         ItemId: IntValue;
         Cost: NumberValue;
         ItemName: StringValue;
+        Icon: StringValue;
     };
 }
 
@@ -51,6 +52,7 @@ interface ConveyorData extends BaseItemData {
         Speed: NumberValue;
         ItemId: IntValue;
         Cost: NumberValue;
+        Icon: StringValue;
         ItemName: StringValue;
     };
 }
@@ -65,6 +67,7 @@ interface DropperData extends BaseItemData {
         DropSpeed: NumberValue;
         OreValue: NumberValue;
         Cost: NumberValue;
+        Icon: StringValue;
         ItemName: StringValue;
     };
 }
@@ -76,6 +79,7 @@ interface FurnaceData extends BaseItemData {
         Cost: NumberValue;
         Multiplier: NumberValue;
         ItemId: IntValue;
+        Icon: StringValue;
         ItemName: StringValue;
     }
 }
@@ -97,6 +101,7 @@ interface UpgraderData extends BaseItemData {
         MaxOreValue: NumberValue;
         Multiplier: NumberValue;
         ItemName: StringValue;
+        Icon: StringValue;
         ItemId: IntValue;
     }
     Upgrade: Part & {

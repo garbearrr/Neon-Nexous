@@ -99,6 +99,11 @@ export namespace Sunset {
         return Lighting.ClockTime;
     }
 
+    export const SkipTo = (Time: number, duration: number = 2) => {
+        TweenToTime(Time, duration);
+        _G.Log(`Skipping to ${Time}`, "Sunset");
+    }
+
     // Skip to day (6 AM)
     export const SkipToDay = (duration: number = 2) => {
         TweenToTime(6, duration);
@@ -134,6 +139,10 @@ export namespace Sunset {
     // Check if it's currently night
     export const IsNight = (): boolean => {
         return !IsDay();
+    }
+
+    export const IsRunning = (): boolean => {
+        return State.IsRunning;
     }
 
     // Listen for time changes

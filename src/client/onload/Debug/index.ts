@@ -1,1 +1,1 @@
-import("./debug");
+import("./Pages/index");
