@@ -1,6 +1,8 @@
+import { Collection } from "../Collection/Collection";
+
 class Node<T> {
-    Value: T;
-    Next: Node<T> | undefined;
+    public Value: T;
+    public Next: Node<T> | undefined;
 
     constructor(Value: T) {
         this.Value = Value;
@@ -9,14 +11,18 @@ class Node<T> {
 }
 
 export class LinkedList<T> {
-    private Head: Node<T> | undefined;
-    private Tail: Node<T> | undefined;
-    private Size: number;
+    protected Head: Node<T> | undefined;
+    protected Tail: Node<T> | undefined;
+    protected Size: number;
 
-    constructor() {
+    constructor(...values: T[]) {
         this.Head = undefined;
         this.Tail = undefined;
         this.Size = 0;
+
+        for (const value of values) {
+            this.Add(value);
+        }
     }
 
     // Add a value to the end of the list
@@ -179,5 +185,58 @@ export class LinkedList<T> {
             current = current.Next;
             count++;
         }
+    }
+}
+
+export class LinkedListCollection<KeyType extends defined, T extends defined> extends LinkedList<T> {
+    public readonly Collection = new Collection<KeyType, T>();
+
+    constructor(...values: T[]) {
+        super(...values);
+    }
+
+    public override Clear(): void {
+        super.Clear();
+        this.Collection.Clear();
+    }
+
+    public ForEachWithKey(callback: (value: T, key: KeyType, index: number) => void): void {
+        let current = this.Head;
+        let index = 0;
+
+        while (current) {
+            const Key = this.Collection.FindKey((V, K) => V === current?.Value);
+            if (Key !== undefined) callback(current.Value, Key, index);
+            current = current.Next;
+            index++;
+        }
+    }
+
+    public override Remove(value: T): boolean {
+        const Key = this.Collection.FindKey((V, _K) => V === value);
+        if (Key !== undefined) return this.Collection.Delete(Key);
+        return super.Remove(value);
+    }
+
+    public override RemoveAt(index: number): boolean {
+        const Value = this.Get(index);
+        if (Value !== undefined) return this.Remove(Value);
+        return false;
+    }
+
+    public RemoveViaKey(key: KeyType): boolean {
+        const Value = this.Collection.Get(key);
+        if (Value !== undefined) return this.Remove(Value);
+        return false;
+    }
+
+    public SetAdd(key: KeyType, value: T): void {
+        super.Add(value);
+        this.Collection.Set(key, value);
+    }
+
+    public SetAddFront(key: KeyType, value: T): void {
+        super.AddFront(value);
+        this.Collection.Set(key, value);
     }
 }

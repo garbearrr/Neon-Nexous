@@ -1,10 +1,12 @@
 import { AnchorDragGrid } from "./AnchorDragGrid";
 import { ContextualDragGrid } from "./ContextualDragGrid";
+import { LineDragGrid } from "./LineDragGrid";
 import { SquareDragGrid } from "./SquareDragGrid";
 
 export interface BuildModes {
     "AnchorDragGrid": AnchorDragGrid;
     "ContextualDragGrid": ContextualDragGrid;
+    "LineDragGrid": LineDragGrid;
     "SquareDragGrid": SquareDragGrid;
 }
 
@@ -55,6 +57,9 @@ export namespace Grid {
                 break;
             case "ContextualDragGrid":
                 _Instance = new ContextualDragGrid(PState as DefinedPState, []);
+                break;
+            case "LineDragGrid":
+                _Instance = new LineDragGrid(PState as DefinedPState);
                 break;
             case "SquareDragGrid":
                 _Instance = new SquareDragGrid(PState as DefinedPState);

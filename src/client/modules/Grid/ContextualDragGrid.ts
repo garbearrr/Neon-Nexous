@@ -51,7 +51,7 @@ export class ContextualDragGrid extends BaseGrid {
     
     protected override Place(): void {
         // Place the item at the calculated position and orientation
-        this.Events.OnPlace.Fire(new OnPlace(this.ItemId, [this.LastTargetCFrame]));
+        //this.Events.OnPlace.Fire(new OnPlace(this.ItemId, [this.LastTargetCFrame]));
         //this.Drag = [];
     }
     

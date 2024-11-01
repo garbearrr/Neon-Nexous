@@ -89,7 +89,7 @@ export class AnchorDragGrid extends BaseGrid {
         let VertXAlign;
         let LastCF: CFrame | undefined;
 
-        const Connection = this.Drag.Events.OnAdd.Connect(({Key, Value}) => LastCF = Value);
+        const Connection = this.Drag.Collection.Events.OnAdd.Connect(({Key, Value}) => LastCF = Value);
     
         // Handle horizontal line first
         if (isDraggingLeft) {
@@ -100,12 +100,12 @@ export class AnchorDragGrid extends BaseGrid {
                     // Final horizontal item, rotate it upwards or downwards
                     const FinalCF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(isDraggingUp ? 0 : 180), 0));
                     VertXAlign = FinalCF.Position.X;
-                    this.Drag.Set(FinalCF.Position.X + "," + FinalCF.Position.Z, FinalCF);
+                    this.Drag.SetAdd(FinalCF.Position.X + "," + FinalCF.Position.Z, FinalCF);
                 } else {
                     // Regular horizontal item, rotate along the drag direction
                     const CF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(90), 0));
                     VertXAlign = CF.Position.X;
-                    this.Drag.Set(CF.Position.X + "," + CF.Position.Z, CF);
+                    this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
                 }
             }
         } else {
@@ -116,12 +116,12 @@ export class AnchorDragGrid extends BaseGrid {
                     // Final horizontal item, rotate it upwards or downwards
                     const FinalCF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(isDraggingUp ? 0 : 180), 0));
                     VertXAlign = FinalCF.Position.X;
-                    this.Drag.Set(FinalCF.Position.X + "," + FinalCF.Position.Z, FinalCF);
+                    this.Drag.SetAdd(FinalCF.Position.X + "," + FinalCF.Position.Z, FinalCF);
                 } else {
                     // Regular horizontal item, rotate along the drag direction
                     const CF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(-90), 0));
                     VertXAlign = CF.Position.X;
-                    this.Drag.Set(CF.Position.X + "," + CF.Position.Z, CF);
+                    this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
                 }
             }
         }
@@ -132,14 +132,14 @@ export class AnchorDragGrid extends BaseGrid {
                 const x = VertXAlign; //(isDraggingLeft ? MinX : MaxX); 
                 const Position = new Vector3(x, this.LastTargetCFrame.Position.Y, y);
                 const CF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(0), 0));
-                this.Drag.Set(CF.Position.X + "," + CF.Position.Z, CF);
+                this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
             }
         } else {
             for (let y = MinY + StepY; y <= MaxY; y += StepY) { // Start from MinY + StepY to avoid duplicating the corner
                 const x = VertXAlign; //(isDraggingLeft ? MinX : MaxX);
                 const Position = new Vector3(x, this.LastTargetCFrame.Position.Y, y);
                 const CF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(180), 0));
-                this.Drag.Set(CF.Position.X + "," + CF.Position.Z, CF);
+                this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
             }
         }
 
@@ -183,7 +183,7 @@ export class AnchorDragGrid extends BaseGrid {
         }
 
         const Save = new Collection<string, CFrame>();
-        this.Drag.ForEach((CF, Key) => {
+        this.Drag.ForEachWithKey((CF, Key, _Index) => {
             Save.Set(Key, CF);
         });
 
@@ -203,7 +203,7 @@ export class AnchorDragGrid extends BaseGrid {
     private MergeAnchors(): void {
         this.AnchorLink.ForEach((Link) => {
             Link.SaveItems.ForEach((CF, Key) => {
-                this.Drag.Set(Key, CF);
+                this.Drag.SetAdd(Key, CF);
             });
         });
         _G.Log("Merged anchors", "AnchorDragGrid");

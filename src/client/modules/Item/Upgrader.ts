@@ -44,6 +44,7 @@ export class Upgrader extends BaseItem implements UpgraderData {
 
     public override OnPlaced(): void {
         super.OnPlaced();
+        if (this.Destroyed) return;
 
         this.Conveyor.DirectionIndicator.Enabled = false;
 

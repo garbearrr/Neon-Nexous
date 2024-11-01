@@ -4,7 +4,7 @@ import { Event } from "shared/modules/Event/Event";
 import { FireSignal } from "./FireSignal";
 import { OnMove, OnPlace, OnUpdate } from "./EventClasses";
 import { Input } from "../Input/Input";
-import { Grid } from "./Grid";
+import { LinkedListCollection } from "shared/modules/LinkedList/LinkedList";
 
 export abstract class BaseGrid {
     protected PState: {ParentGridPart: Part, Rotation: number};
@@ -22,7 +22,7 @@ export abstract class BaseGrid {
     protected CellOffset: Vector2 = new Vector2(0, 0);
     protected CellSkip: Vector2 = new Vector2(0, 0);
     protected Connections: Collection<string, RBXScriptConnection> = new Collection();
-    protected Drag: Collection<string, CFrame> = new Collection();
+    protected Drag: LinkedListCollection<string, CFrame> = new LinkedListCollection();
     protected DragLockedHorizontal: boolean = false;
     protected DragLockedVertical: boolean = false;
     protected DragStart?: Vector3;
@@ -434,7 +434,7 @@ export abstract class BaseGrid {
         this.Events.OnUpdate.Fire(
             new OnUpdate(
                 this.ItemId,
-                this.Drag.Values()
+                this.Drag
             )
         );
     }
@@ -443,7 +443,7 @@ export abstract class BaseGrid {
         this.Events.OnPlace.Fire(
             new OnPlace(
                 this.ItemId, 
-                this.Drag.Size() > 0 ? this.Drag.Values() : [this.LastTargetCFrame]
+                this.Drag.Collection.Size() > 0 ? this.Drag : new LinkedListCollection<string, CFrame>(this.LastTargetCFrame)
             )
         );
 
@@ -546,4 +546,3 @@ export abstract class BaseGrid {
         return this;
     }
 }
-

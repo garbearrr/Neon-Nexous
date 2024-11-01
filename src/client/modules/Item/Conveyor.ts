@@ -56,6 +56,7 @@ export class Conveyor extends BaseItem implements ConveyorData {
 
     public override OnPlaced(): void {
         super.OnPlaced();
+        if (this.Destroyed) return;
 
         this.DirectionIndicator.Enabled = false;
         

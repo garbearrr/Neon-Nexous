@@ -1,3 +1,5 @@
+import { LinkedListCollection } from "shared/modules/LinkedList/LinkedList";
+
 export class OnMove {
     public ItemId: number;
     public Pos: Vector3;
@@ -12,19 +14,19 @@ export class OnMove {
 
 export class OnPlace {
     public ItemId: number;
-    public CF: CFrame[];
+    public CF: LinkedListCollection<string, CFrame>;
 
-    public constructor(ItemId: number, CF: CFrame[]) {
+    public constructor(ItemId: number, CF: LinkedListCollection<string, CFrame>) {
         this.ItemId = ItemId;
         this.CF = CF;
     }
 }
 
 export class OnUpdate {
-    public CF: CFrame[];
+    public CF: LinkedListCollection<string, CFrame>;
     public ItemId: number;
 
-    public constructor(ItemId: number, CF: CFrame[]) {
+    public constructor(ItemId: number, CF: LinkedListCollection<string, CFrame>) {
         this.ItemId = ItemId;
         this.CF = CF;
     }   

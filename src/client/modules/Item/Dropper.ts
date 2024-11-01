@@ -71,9 +71,9 @@ export class Dropper extends BaseItem implements DropperData {
         }
     }
 
-    public override Destroy(): void {
+    public override Destroy(DestroyPart = true): void {
         this.DropLink?.Stop();
-        super.Destroy();
+        super.Destroy(DestroyPart);
     }
 
     private static DropOre(Link: DropLink): void {
@@ -97,6 +97,7 @@ export class Dropper extends BaseItem implements DropperData {
 
     public override OnPlaced(): void {
         super.OnPlaced();
+        if (this.Destroyed) return;
         this.DropLink = new DropLink(this, (TimingCache, Timing) => Dropper.BeginDropInterval(TimingCache, Timing));
     }
 

@@ -6,6 +6,7 @@ import { BuildModes, Grid } from "../Grid/Grid";
 import { Common } from "shared/modules/Common/Common";
 import { Collection } from "shared/modules/Collection/Collection";
 import { ItemActions } from "./ItemActions";
+import { Inventory } from "../Inventory/Inventory";
 
 
 
@@ -19,13 +20,16 @@ export abstract class BaseItem implements BaseItemType {
     protected CanPlace: boolean = false;
     protected CanReplace: boolean = false;
     protected CellsOccupied: Array<Vector2> = [];
+    protected Destroyed = false;
     protected DragCell: GuiObject | undefined;
+    protected OutOfItems = false;
     protected PlacementId: number;
 
     protected readonly BoxTransparency: number = 0;
     protected readonly SurfaceTransparency: number = 0.5;
     protected readonly NoBorderTransparency: number = 0.6;
     protected readonly NormalBoxColor = Color3.fromRGB(0, 0, 0);
+    protected readonly OutOfItemsBoxColor = Color3.fromRGB(255, 90, 0);
     protected readonly OverlapBoxColor = Color3.fromRGB(255, 0, 0);
     protected readonly ReplaceBoxColor = Color3.fromRGB(255, 255, 0);
 
@@ -100,9 +104,11 @@ export abstract class BaseItem implements BaseItemType {
         _G.Log(`Hover leave detected for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
-    protected ChangeBoxColor(): void {
-        this.CollisionHitbox.SelectionBox.Color3 = 
-            this.CanPlace 
+    public ChangeBoxColor(): void {
+        this.CollisionHitbox.SelectionBox.Color3 =
+            this.OutOfItems
+            ? this.OutOfItemsBoxColor
+            : this.CanPlace 
             ? this.NormalBoxColor
             : this.CanReplace
             ? this.ReplaceBoxColor
@@ -123,10 +129,11 @@ export abstract class BaseItem implements BaseItemType {
         this.Connections.ForEach((Connection) => Connection.Disconnect());
         _G.Log(`Destroyed ${this.Stats.ItemName.Value} ${this.PlacementId} Part Destroyed: ${DestroyPart}`, "BaseItem");
         if (DestroyPart) this.Part.Destroy(); 
+        this.Destroyed = true;
     }
 
     public GetBuildModeType(): keyof BuildModes {
-        return "SquareDragGrid";
+        return "LineDragGrid";
     }
 
     public GetCategory(): string {
@@ -183,18 +190,23 @@ export abstract class BaseItem implements BaseItemType {
 
     /** Fires when the item is placed. */
     public OnPlaced(): void {
+        const InvAmount = Inventory.GetItem(this.Stats.ItemId.Value + "");
+        if (InvAmount === undefined) return this.Destroy(true);
+
         // This needs to be recalculated again for some reason or else it will always be false.
         this.CellsOccupied = Grid.GetGlobalInstance().GetCellsTakenUp(this.Part.Position);
         this.CanPlace = PlacedItems.CanPlace(this.CellsOccupied);
         this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied, this.GetCategory());
 
-        if (!this.CanPlace) return;
-        if (this.CellsOccupied.size() === 0) return;
+        if (!this.CanPlace) return this.Destroy(true);
+        if (this.CellsOccupied.size() === 0) return this.Destroy(true);
         this.PlacementId = PlacedItems.AddItem(this.CellsOccupied, this);
         this.Part.Parent = Plot.PlacedFolder;
 
         this.CollisionHitbox.SelectionBox.Color3 = this.NormalBoxColor;
         this.ShowHitbox(false);
+        Inventory.RemoveItem(this.Stats.ItemId.Value + "");
+        this.OutOfItems = false;
         _G.Log(`Placed ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
@@ -212,6 +224,10 @@ export abstract class BaseItem implements BaseItemType {
 
     public SetDragCell(Cell: GuiObject): void {
         this.DragCell = Cell;
+    }
+
+    public SetOutOfItems(OutOfItems: boolean): void {
+        this.OutOfItems = OutOfItems;
     }
 
     public ShowHitbox(withBorder = true): void {

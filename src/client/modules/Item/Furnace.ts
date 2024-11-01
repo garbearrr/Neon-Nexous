@@ -20,6 +20,7 @@ export class Furnace extends BaseItem implements FurnaceData {
 
     public override OnPlaced(): void {
         super.OnPlaced();
+        if (this.Destroyed) return;
         
         const Conn = this.Receiver.Touched.Connect((HitPart) => {
             if (!CollectionService.HasTag(HitPart, "Ore")) return;

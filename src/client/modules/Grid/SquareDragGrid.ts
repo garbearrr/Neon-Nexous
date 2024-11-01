@@ -22,7 +22,7 @@ export class SquareDragGrid extends BaseGrid {
                     CFrame.Angles(0, math.rad(this.PState.Rotation), 0)
                 );
     
-                this.Drag.Set(CF.Position.X + "," + CF.Position.Z, CF);
+                this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
             }
         }
     }

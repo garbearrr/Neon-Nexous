@@ -1,4 +1,4 @@
-import { TweenService } from "@rbxts/services";
+import { TweenService, Workspace } from "@rbxts/services";
 import { Camera, Look, ViewDirection } from "../Camera/Camera";
 import { Common } from "shared/modules/Common/Common";
 import { Plot } from "../Plot/Plot";
@@ -11,6 +11,8 @@ import { Collection } from "shared/modules/Collection/Collection";
 import { Grid } from "../Grid/Grid";
 import { ObjectCache } from "shared/modules/ObjectCache/ObjectCache";
 import { PlacedItems } from "./PlacedItems";
+import { LinkedListCollection } from "shared/modules/LinkedList/LinkedList";
+import { Inventory } from "../Inventory/Inventory";
 
 const ROT_SMOOTH = 0.75;
 const CAM_TILT_PITCH = -45;
@@ -58,6 +60,9 @@ export namespace Placement {
         State.Item = SetupClone(ItemData);
 
         State.ObjectCache = new ObjectCache(ItemData, Grid.GetGlobalInstance().MaxItemsPossible(State.Item));
+        Workspace.FindFirstChild("ObjectCache")!.ChildRemoved.Connect((child) => {
+            print("ObjectCache child removed " + child.Name);
+        });
 
         State.ItemModule = ClassifyItem(State.Item);
 
@@ -88,6 +93,7 @@ export namespace Placement {
         State.ItemModule.ShowHitbox();
 
         State.Active = true;
+        State.ItemId = ItemId;
     }
 
     export const ActivateManager = () => {
@@ -145,6 +151,7 @@ export namespace Placement {
      * @param destoyTweenInstant Destroy the current tween instantly (optional)
      */
     export const Deactivate = (destoyTweenInstant = false) => {
+        _G.Log("Deactivating placement mode", "Placement");
         Camera.Instance().Reset();
 
         PlacedItems.DeactivateHover();
@@ -190,8 +197,8 @@ export namespace Placement {
 
     export const IsActive = () => State.Active;
 
-    const OnPlace = (CF: CFrame[]) => {
-        for (const Cframe of CF) {
+    const OnPlace = (CF: LinkedListCollection<string, CFrame>) => {
+        CF.ForEachWithKey((Cframe, _Key, _Index) => {
             const Clone = State.Item.Clone();
             Clone.CFrame = Cframe;
     
@@ -204,7 +211,7 @@ export namespace Placement {
     
             Clone.CFrame = Cframe;
             Clone.Transparency = 1;
-        }
+        });
     
         State.DragCache.ForEach((Part) => {
             Part.Destroy(false);
@@ -220,11 +227,14 @@ export namespace Placement {
         //State.InspectMod.UpdateBehavior();
     }
 
-    const OnUpdate = (CFrames: CFrame[]) => {
+    const OnUpdate = (CFrames: LinkedListCollection<string, CFrame>) => {
+        if (CFrames.GetSize() === State.DragCache.Size()) return;
+
+        const InvAmount = Inventory.GetItem(State.ItemId + "");
         const FrameCache = new Collection<string, BaseItem>();
         const CellSize = Grid.GetGlobalInstance().GetCellSize();
-    
-        for (const CF of CFrames) {
+
+        CFrames.ForEachWithKey((CF, _Key, Index) => {
             const position = CF.Position;
             const GridX = math.floor(position.X / CellSize + 0.5); // Round to nearest integer
             const GridZ = math.floor(position.Z / CellSize + 0.5);
@@ -239,6 +249,7 @@ export namespace Placement {
             } else {
                 // Create a new item since it doesn't exist at this position.
                 const Clone = State.ObjectCache.GetPart() as PossibleItems;
+                // Sometimes is destroyed?
                 Mod = ClassifyItem(Clone);
                 Mod.ShowHitbox();
 
@@ -248,8 +259,14 @@ export namespace Placement {
                 Mod.OnDragged();
             }
     
+            print("Index: " + Index + " InvAmount: " + InvAmount);
+            if (InvAmount === undefined || Index >= InvAmount) {
+                Mod.SetOutOfItems(true);
+                Mod.ChangeBoxColor();
+            }
+
             FrameCache.Set(Key, Mod);
-        }
+        });
     
         // Clean up any parts that are no longer needed.
         State.DragCache.ForEach((Mod, Key) => {
