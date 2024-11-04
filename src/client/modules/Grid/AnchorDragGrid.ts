@@ -1,4 +1,4 @@
-import { LinkedList } from "shared/modules/LinkedList/LinkedList";
+import { LinkedList, LinkedListCollection } from "shared/modules/LinkedList/LinkedList";
 import { BaseGrid } from "./BaseGrid";
 import { Collection } from "shared/modules/Collection/Collection";
 import { Input } from "../Input/Input";
@@ -9,10 +9,10 @@ import { Plot } from "../Plot/Plot";
 
 class AnchorData {
     public DragStart: Vector3;
-    public SaveItems: Collection<string, CFrame>;
+    public SaveItems: LinkedListCollection<string, CFrame>;
     public Icon: Part | undefined;
 
-    public constructor(DragStart: Vector3, SaveItems: Collection<string, CFrame>, Icon?: Part) {
+    public constructor(DragStart: Vector3, SaveItems: LinkedListCollection<string, CFrame>, Icon?: Part) {
         this.DragStart = DragStart;
         this.SaveItems = SaveItems;
         this.Icon = Icon;
@@ -67,7 +67,7 @@ export class AnchorDragGrid extends BaseGrid {
     }
 
     private GenerateLShapeOrLineItems(Start: Vector2, End: Vector2): void {
-        _G.Log("Generating L shape or line items", "AnchorDragGrid");
+        //_G.Log("Generating L shape or line items", "AnchorDragGrid");
         const MinX = math.min(Start.X, End.X);
         const MaxX = math.max(Start.X, End.X);
         const MinY = math.min(Start.Y, End.Y);
@@ -85,6 +85,9 @@ export class AnchorDragGrid extends BaseGrid {
         // Determine the drag direction
         const isDraggingLeft = Start.X > End.X;
         const isDraggingUp = Start.Y > End.Y;
+        const IgnoreVertDrag = math.abs(Start.Y - End.Y) < (this.GridTexture.StudsPerTileV * 2);
+
+        print(Start.Y, End.Y, IgnoreVertDrag)
 
         let VertXAlign;
         let LastCF: CFrame | undefined;
@@ -96,7 +99,7 @@ export class AnchorDragGrid extends BaseGrid {
             for (let x = MaxX; x >= MinX; x -= StepX) {
                 const Position = new Vector3(x, this.LastTargetCFrame.Position.Y, isDraggingUp ? MaxY : MinY);
                 // Check if this is the final item in the horizontal loop
-                if (x === MinX || x - StepX < MinX) {
+                if ((x === MinX || x - StepX < MinX) && !IgnoreVertDrag) {
                     // Final horizontal item, rotate it upwards or downwards
                     const FinalCF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(isDraggingUp ? 0 : 180), 0));
                     VertXAlign = FinalCF.Position.X;
@@ -108,11 +111,25 @@ export class AnchorDragGrid extends BaseGrid {
                     this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
                 }
             }
+
+            // Rotating last anchor correctly
+            const LastAD = this.AnchorLink.GetTail();
+            if (LastAD !== undefined) {
+                const LastCF = LastAD.SaveItems.GetTail();
+
+                if (LastCF !== undefined) {
+                    // Create a new CFrame with the same position but set the orientation to 90 degrees
+                    const NewCF = new CFrame(LastCF.Position).mul(CFrame.Angles(0, math.rad(90), 0));
+                    LastAD.SaveItems.Update(NewCF, LastAD.SaveItems.GetSize() - 1);
+                }
+            }
+
+
         } else {
             for (let x = MinX; x <= MaxX; x += StepX) {
                 const Position = new Vector3(x, this.LastTargetCFrame.Position.Y, isDraggingUp ? MaxY : MinY);
                 // Check if this is the final item in the horizontal loop
-                if (x === MaxX || x + StepX > MaxX) {
+                if ((x === MaxX || x + StepX > MaxX) && !IgnoreVertDrag) {
                     // Final horizontal item, rotate it upwards or downwards
                     const FinalCF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(isDraggingUp ? 0 : 180), 0));
                     VertXAlign = FinalCF.Position.X;
@@ -122,6 +139,18 @@ export class AnchorDragGrid extends BaseGrid {
                     const CF = new CFrame(Position).mul(CFrame.Angles(0, math.rad(-90), 0));
                     VertXAlign = CF.Position.X;
                     this.Drag.SetAdd(CF.Position.X + "," + CF.Position.Z, CF);
+                }
+            }
+
+            // Rotating last anchor correctly
+            const LastAD = this.AnchorLink.GetTail();
+            if (LastAD !== undefined) {
+                const LastCF = LastAD.SaveItems.GetTail();
+
+                if (LastCF !== undefined) {
+                    // Create a new CFrame with the same position but set the orientation to 90 degrees
+                    const NewCF = new CFrame(LastCF.Position).mul(CFrame.Angles(0, math.rad(-90), 0));
+                    LastAD.SaveItems.Update(NewCF, LastAD.SaveItems.GetSize() - 1);
                 }
             }
         }
@@ -182,9 +211,9 @@ export class AnchorDragGrid extends BaseGrid {
             return;
         }
 
-        const Save = new Collection<string, CFrame>();
+        const Save = new LinkedListCollection<string, CFrame>();
         this.Drag.ForEachWithKey((CF, Key, _Index) => {
-            Save.Set(Key, CF);
+            Save.SetAdd(Key, CF);
         });
 
         const Clone = Plot.AnchorFolder.Template.Clone();
@@ -201,12 +230,12 @@ export class AnchorDragGrid extends BaseGrid {
     }
 
     private MergeAnchors(): void {
-        this.AnchorLink.ForEach((Link) => {
-            Link.SaveItems.ForEach((CF, Key) => {
-                this.Drag.SetAdd(Key, CF);
+        this.AnchorLink.ForEachReverse((Link) => {
+            Link.SaveItems.ForEachWithKeyReverse((CF, Key, _Index) => {
+                this.Drag.SetAddFront(Key, CF);
             });
         });
-        _G.Log("Merged anchors", "AnchorDragGrid");
+        //_G.Log("Merged anchors", "AnchorDragGrid");
     }
     
 
@@ -222,7 +251,7 @@ export class AnchorDragGrid extends BaseGrid {
 
         if (this.DragStart === undefined) {
             this.DragStart = LastPos.Position;
-            this.AnchorLink.Add(new AnchorData(LastPos.Position, new Collection()));
+            this.AnchorLink.AddFront(new AnchorData(LastPos.Position, new LinkedListCollection()));
             this.AnchorIndexes.Set(this.DragStart.X + "," + this.DragStart.Z, this.AnchorIndexes.Size());
         }
 

@@ -50,10 +50,10 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         BGScroll.Deactivate();
     }
 
-    protected override OnCellAdded(Cells: GuiButton[], ItemId: string, Name: string, Item: PossibleItems): void {
+    protected override OnCellAdded(Cells: GuiButton[], ItemId: string, Name: string, Item: PossibleItems, Img: string): void {
         for (const Cell of Cells) {
-            const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item));
-            const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item));
+            const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item, Img));
+            const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item, Img));
             const UnhoverConnection = Cell.MouseLeave.Connect(() => this.OnCellUnhovered(Cell, ItemId, Name, Item));
 
             this.Connections.Set(ItemId + "hover" + Cell.Name, HoverConnection);
@@ -66,7 +66,7 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         if (TButton.Amount.Text.size() > 3) TButton.Amount.Text = "99+";
     }
 
-    private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
+    private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined && this.Clicked === ItemId) {
             this.DescFrame.Visible = false;
             this.Clicked = undefined;
@@ -74,12 +74,12 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         }
 
         this.Clicked = ItemId;
-        this.UpdateDesc(Name, ItemId, true);
+        this.UpdateDesc(Name, ItemId, Img, true);
     }
 
-    private OnCellHovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
+    private OnCellHovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined) return;
-       this.UpdateDesc(Name, ItemId, false);
+       this.UpdateDesc(Name, ItemId, Img, false);
        this.DescFrame.Visible = true;
     }
 
@@ -93,6 +93,7 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         //this.Connections.ForEach(Conn => Conn.Disconnect());
         this.DescFrame.Visible = false;
         this.Clicked = undefined;
+        this.DestroyAllCells();
     }
 
     public override OnOpen() {
@@ -100,8 +101,9 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         this.PopulateMenu();
     }
 
-    private UpdateDesc(Name: string, ID: string, ConnectBuy=false) {
+    private UpdateDesc(Name: string, ID: string, Img: string, ConnectBuy=false) {
         this.DescFrame["2_Name"].Text = Name;
+        this.DescFrame["1_ItemImg"].ImageButton.Image = Img;
 
         if (ConnectBuy) {
             this.Connections.Get("Buy")?.Disconnect();

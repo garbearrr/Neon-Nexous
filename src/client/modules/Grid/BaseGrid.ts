@@ -443,7 +443,7 @@ export abstract class BaseGrid {
         this.Events.OnPlace.Fire(
             new OnPlace(
                 this.ItemId, 
-                this.Drag.Collection.Size() > 0 ? this.Drag : new LinkedListCollection<string, CFrame>(this.LastTargetCFrame)
+                this.Drag.Collection.Size() > 0 ? this.Drag : new LinkedListCollection<string, CFrame>(["lastTargetCFrame", this.LastTargetCFrame])
             )
         );
 

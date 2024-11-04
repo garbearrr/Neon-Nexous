@@ -61,6 +61,15 @@ export class LineDragGrid extends BaseGrid {
         const dx = math.abs(EndIndex.X - StartIndex.X);
         const dy = math.abs(EndIndex.Y - StartIndex.Y);
 
+        // If the start and end are withing a half cell return (single placement)
+        if (dx < 0.5 && dy < 0.5) {
+            //const Position = this.GridIndexToWorldPosition(StartIndex);
+            //const CF = new CFrame(Position);
+            //const Key = CF.Position.X + "," + CF.Position.Z;
+            //this.Drag.SetAdd(Key, CF);
+            return;
+        }
+
         // Determine the primary direction (horizontal or vertical)
         if (dx >= dy) {
             // Horizontal line

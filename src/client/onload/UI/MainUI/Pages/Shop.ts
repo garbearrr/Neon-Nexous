@@ -48,10 +48,10 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         Money.RemoveMoney(new BigNumber(Price));
     }
 
-    protected override OnCellAdded(Cells: GuiButton[], ItemId: string, Name: string, Item: PossibleItems): void {
+    protected override OnCellAdded(Cells: GuiButton[], ItemId: string, Name: string, Item: PossibleItems, Img: string): void {
         for (const Cell of Cells) {
-            const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item));
-            const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item));
+            const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item, Img));
+            const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item, Img));
             const UnhoverConnection = Cell.MouseLeave.Connect(() => this.OnCellUnhovered(Cell, ItemId, Name, Item));
 
             this.Connections.Set(ItemId + "hover" + Cell.Name, HoverConnection);
@@ -60,7 +60,7 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         }
     }
 
-    private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
+    private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined && this.Clicked === ItemId) {
             this.DescFrame.Visible = false;
             this.Clicked = undefined;
@@ -68,12 +68,12 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         }
 
         this.Clicked = ItemId;
-        this.UpdateDesc(Name, Item.Stats.Cost.Value + "", true);
+        this.UpdateDesc(Name, Item.Stats.Cost.Value + "", Img, true);
     }
 
-    private OnCellHovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
+    private OnCellHovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined) return;
-       this.UpdateDesc(Name, Item.Stats.Cost.Value + "", false);
+       this.UpdateDesc(Name, Item.Stats.Cost.Value + "", Img, false);
        this.DescFrame.Visible = true;
     }
 
@@ -89,9 +89,10 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         this.Clicked = undefined;
     }
 
-    private UpdateDesc(Name: string, Price: string, ConnectBuy=false) {
+    private UpdateDesc(Name: string, Price: string, Img: string, ConnectBuy=false) {
         this.DescFrame["2_Name"].Text = Name;
         this.DescFrame["3_Buy"].Text = Price;
+        this.DescFrame["1_ItemImg"].ImageButton.Image = Img;
 
         if (ConnectBuy) {
             this.Connections.Get("Buy")?.Disconnect();

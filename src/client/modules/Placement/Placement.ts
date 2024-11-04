@@ -309,7 +309,10 @@ export namespace Placement {
     }
 
     const StartOrUpdateTween = (Pos: Vector3, Rot: Vector3) => {
-        if (!State.DragCache.IsEmpty()) return;
+        if (!State.DragCache.IsEmpty()) {
+            State.Item.CFrame = new CFrame(State.Item.Position.X, -50, State.Item.Position.Z);
+            return;
+        };
 
         if (State.CurrentTween)
             State.CurrentTween.Cancel();

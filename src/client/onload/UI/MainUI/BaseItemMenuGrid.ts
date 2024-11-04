@@ -54,6 +54,13 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
         });
     }
 
+    protected DestroyAllCells() {
+        const ExistingCells = this.ContentFrame.GetDescendants().filter(c => CollectionService.HasTag(c, this.CellTag)) as (typeof this.TemplateRow.TemplateItem)[];
+        for (const Cell of ExistingCells) {
+            Cell.Destroy();
+        }
+    }
+
     private GenerateCells() {
         const FoundItems = this.ItemSource();
         const Sorted = FoundItems.Sort((a, b) => (tonumber(a.ItemId) || 0) - (tonumber(b.ItemId) || 0));
@@ -69,7 +76,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
             CellClone.LayoutOrder = tonumber(ItemId) || 0;
             NewCells.push(CellClone);
 
-            this.OnCellAdded([CellClone, CellClone.ImageButton], ItemId, Name, Item);
+            this.OnCellAdded([CellClone, CellClone.ImageButton], ItemId, Name, Item, Img);
         }
 
         return NewCells;
@@ -77,7 +84,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
 
     protected abstract ItemSource(): Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>;
 
-    protected OnCellAdded(Buttons: GuiButton[], ItemId: string, Name: string, Item: Part): void {
+    protected OnCellAdded(Buttons: GuiButton[], ItemId: string, Name: string, Item: Part, Img: string): void {
 
     }
 

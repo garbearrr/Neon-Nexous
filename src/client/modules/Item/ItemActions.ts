@@ -3,6 +3,7 @@ import { Collection } from "shared/modules/Collection/Collection";
 import { Money } from "../Money/Money";
 import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 import { PlacedItems } from "../Placement/PlacedItems";
+import { Inventory } from "../Inventory/Inventory";
 
 // TODO: Generalize to groups of items instead of a single item.
 export namespace ItemActions {
@@ -39,6 +40,7 @@ export namespace ItemActions {
         PlacedItems.RemoveItem(Target.GetPID());
         // Cir import fix
         const Mod = await import("../Placement/Placement");
+        Inventory.AddItem(ItemID + "");
         Mod.Placement.Activate(ItemID);
         HideUI();
     }
@@ -46,8 +48,15 @@ export namespace ItemActions {
     const SellAction = () => {
         SelectedItems.ForEach((Item) => {
             Money.AddMoney(new BigNumber(Item.Stats.Cost.Value));
-            Item.HideHitbox();
-            Item.Destroy();
+            PlacedItems.RemoveItem(Item.GetPID());
+        });
+        HideUI();
+    }
+
+    const StoreAction = () => {
+        SelectedItems.ForEach((Item) => {
+            Inventory.AddItem(Item.Stats.ItemId.Value + "");
+            PlacedItems.RemoveItem(Item.GetPID());
         });
         HideUI();
     }
@@ -64,6 +73,7 @@ export namespace ItemActions {
         UndoCb = UndoCallback;
 
         Connections.Set("sell", ActionUI.Info.Actions.Sell.Activated.Connect(() => SellAction()));
+        Connections.Set("store", ActionUI.Info.Actions.Store.Activated.Connect(() => StoreAction()));
         Connections.Set("move", ActionUI.Info.Actions.Move.Activated.Connect(() => MoveAction()));
     }
 
