@@ -17,4 +17,8 @@ export abstract class MainUIPage {
     public abstract OnOpen(): void;
 
     public abstract OnClose(): void;
+
+    public OnFrameChange(): void {
+
+    }
 }

@@ -4,7 +4,6 @@ import { Collection } from "shared/modules/Collection/Collection";
 
 import { BGScroll } from "../BGScroll";
 import { Money } from "client/modules/Money/Money";
-import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -15,7 +14,7 @@ const ShopFrame = MainUI.MainFrame.Content.ScrollingFrame.Shop;
 class ShopMenuGrid extends BaseItemMenuGrid {
     protected DescFrame: typeof ShopFrame["Content"]["Desc"];
 
-    private Clicked: string | undefined;
+    private Clicked: number | undefined;
     private Connections: Collection<string, RBXScriptConnection> = new Collection();
 
     public constructor(Frame: typeof ShopFrame) {
@@ -26,7 +25,7 @@ class ShopMenuGrid extends BaseItemMenuGrid {
     }
 
     protected ItemSource() {
-        const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>();
+        const FoundItems = new Collection<number, {ItemId: number, Name: string, Item: Part, Img: string}>();
         const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];
         const TypeFolders = Items.GetChildren().filter(c => c.IsA("Folder")) as Folder[];
 
@@ -34,7 +33,7 @@ class ShopMenuGrid extends BaseItemMenuGrid {
             const Items = Folder.GetChildren() as PossibleItems[];
 
             for (const Item of Items) {
-                const ID = Item.Name;
+                const ID = Item.Stats.ItemId.Value;
                 const Name = Item.Stats.ItemName.Value;
                 const Img = Item.Stats.Icon.Value;
                 FoundItems.Set(ID, {ItemId: ID, Name: Name, Item, Img});
@@ -44,11 +43,11 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         return FoundItems;
     }
 
-    private OnBuy(Price: string) {
-        Money.RemoveMoney(new BigNumber(Price));
+    private OnBuy(ID: number) {
+        Money.BuyItem(ID);
     }
 
-    protected override OnCellAdded(Cells: GuiButton[], ItemId: string, Name: string, Item: PossibleItems, Img: string): void {
+    protected override OnCellAdded(Cells: GuiButton[], ItemId: number, Name: string, Item: PossibleItems, Img: string): void {
         for (const Cell of Cells) {
             const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item, Img));
             const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item, Img));
@@ -60,7 +59,7 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         }
     }
 
-    private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
+    private OnCellClicked(Cells: GuiButton, ItemId: number, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined && this.Clicked === ItemId) {
             this.DescFrame.Visible = false;
             this.Clicked = undefined;
@@ -68,16 +67,16 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         }
 
         this.Clicked = ItemId;
-        this.UpdateDesc(Name, Item.Stats.Cost.Value + "", Img, true);
+        this.UpdateDesc(Name, Item.Stats.Cost.Value + "", Img, ItemId, true);
     }
 
-    private OnCellHovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
+    private OnCellHovered(Cells: GuiButton, ItemId: number, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined) return;
-       this.UpdateDesc(Name, Item.Stats.Cost.Value + "", Img, false);
+       this.UpdateDesc(Name, Item.Stats.Cost.Value + "", Img, ItemId, false);
        this.DescFrame.Visible = true;
     }
 
-    private OnCellUnhovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
+    private OnCellUnhovered(Cells: GuiButton, ItemId: number, Name: string, Item: PossibleItems) {
         if (this.Clicked !== undefined) return;
         this.DescFrame.Visible = false
     }
@@ -89,14 +88,14 @@ class ShopMenuGrid extends BaseItemMenuGrid {
         this.Clicked = undefined;
     }
 
-    private UpdateDesc(Name: string, Price: string, Img: string, ConnectBuy=false) {
+    private UpdateDesc(Name: string, Price: string, Img: string, ID: number, ConnectBuy=false) {
         this.DescFrame["2_Name"].Text = Name;
         this.DescFrame["3_Buy"].Text = Price;
         this.DescFrame["1_ItemImg"].ImageButton.Image = Img;
 
         if (ConnectBuy) {
             this.Connections.Get("Buy")?.Disconnect();
-            const BuyConnection = this.DescFrame["3_Buy"].Activated.Connect(() => this.OnBuy(Price));
+            const BuyConnection = this.DescFrame["3_Buy"].Activated.Connect(() => this.OnBuy(ID));
             this.Connections.Set("Buy", BuyConnection);
         }
     }

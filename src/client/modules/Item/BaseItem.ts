@@ -190,7 +190,7 @@ export abstract class BaseItem implements BaseItemType {
 
     /** Fires when the item is placed. */
     public OnPlaced(): void {
-        const InvAmount = Inventory.GetItem(this.Stats.ItemId.Value + "");
+        const InvAmount = Inventory.GetItem(this.Stats.ItemId.Value);
         if (InvAmount === undefined) return this.Destroy(true);
 
         // This needs to be recalculated again for some reason or else it will always be false.
@@ -205,7 +205,7 @@ export abstract class BaseItem implements BaseItemType {
 
         this.CollisionHitbox.SelectionBox.Color3 = this.NormalBoxColor;
         this.ShowHitbox(false);
-        Inventory.RemoveItem(this.Stats.ItemId.Value + "");
+        Inventory.RemoveItem(this.Stats.ItemId.Value);
         this.OutOfItems = false;
         _G.Log(`Placed ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }

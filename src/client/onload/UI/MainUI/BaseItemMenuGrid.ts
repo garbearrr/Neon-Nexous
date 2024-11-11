@@ -82,9 +82,9 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
         return NewCells;
     }
 
-    protected abstract ItemSource(): Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>;
+    protected abstract ItemSource(): Collection<number, {ItemId: number, Name: string, Item: Part, Img: string}>;
 
-    protected OnCellAdded(Buttons: GuiButton[], ItemId: string, Name: string, Item: Part, Img: string): void {
+    protected OnCellAdded(Buttons: GuiButton[], ItemId: number, Name: string, Item: Part, Img: string): void {
 
     }
 

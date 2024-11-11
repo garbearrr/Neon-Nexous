@@ -168,6 +168,8 @@ export namespace BGScroll {
             return;
         }
 
+        Frames[Index].OnFrameChange();
+
         const FrameHeight = Frames[0].Page.AbsoluteSize.Y;
         const TargetCanvasPosY = Index * FrameHeight;
 

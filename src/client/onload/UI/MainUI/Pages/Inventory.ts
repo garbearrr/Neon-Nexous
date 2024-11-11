@@ -18,7 +18,7 @@ const TemplateInvCell = InvFrame.Content.ItemFrame.TemplateRow.TemplateItem;
 class InventoryMenuGrid extends BaseItemMenuGrid {
     protected DescFrame: typeof InvFrame["Content"]["Desc"];
 
-    private Clicked: string | undefined;
+    private Clicked: number | undefined;
     private Connections: Collection<string, RBXScriptConnection> = new Collection();
 
     public constructor(Frame: typeof InvFrame) {
@@ -29,7 +29,7 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
     }
 
     protected ItemSource() {
-        const FoundItems = new Collection<string, {ItemId: string, Name: string, Item: Part, Img: string}>();
+        const FoundItems = new Collection<number, {ItemId: number, Name: string, Item: Part, Img: string}>();
         const InventoryItems = Inventory.GetAllItems();
 
         for (const [ID, _Amount] of InventoryItems.Entries()) {
@@ -43,14 +43,14 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         return FoundItems;
     }
 
-    private OnPlace(ID: string) {
+    private OnPlace(ID: number) {
         if (Placement.IsActive()) Placement.Deactivate();
-        Placement.Activate(tonumber(ID) || 10000);
+        Placement.Activate(ID);
         BuildActionButton.SetOn();
         BGScroll.Deactivate();
     }
 
-    protected override OnCellAdded(Cells: GuiButton[], ItemId: string, Name: string, Item: PossibleItems, Img: string): void {
+    protected override OnCellAdded(Cells: GuiButton[], ItemId: number, Name: string, Item: PossibleItems, Img: string): void {
         for (const Cell of Cells) {
             const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item, Img));
             const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item, Img));
@@ -66,7 +66,7 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         if (TButton.Amount.Text.size() > 3) TButton.Amount.Text = "99+";
     }
 
-    private OnCellClicked(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
+    private OnCellClicked(Cells: GuiButton, ItemId: number, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined && this.Clicked === ItemId) {
             this.DescFrame.Visible = false;
             this.Clicked = undefined;
@@ -77,13 +77,13 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         this.UpdateDesc(Name, ItemId, Img, true);
     }
 
-    private OnCellHovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems, Img: string) {
+    private OnCellHovered(Cells: GuiButton, ItemId: number, Name: string, Item: PossibleItems, Img: string) {
         if (this.Clicked !== undefined) return;
        this.UpdateDesc(Name, ItemId, Img, false);
        this.DescFrame.Visible = true;
     }
 
-    private OnCellUnhovered(Cells: GuiButton, ItemId: string, Name: string, Item: PossibleItems) {
+    private OnCellUnhovered(Cells: GuiButton, ItemId: number, Name: string, Item: PossibleItems) {
         if (this.Clicked !== undefined) return;
         this.DescFrame.Visible = false
     }
@@ -98,10 +98,14 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
 
     public override OnOpen() {
         super.OnOpen();
+    }
+
+    public override OnFrameChange() {
+        super.OnFrameChange();
         this.PopulateMenu();
     }
 
-    private UpdateDesc(Name: string, ID: string, Img: string, ConnectBuy=false) {
+    private UpdateDesc(Name: string, ID: number, Img: string, ConnectBuy=false) {
         this.DescFrame["2_Name"].Text = Name;
         this.DescFrame["1_ItemImg"].ImageButton.Image = Img;
 

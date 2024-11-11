@@ -230,7 +230,7 @@ export namespace Placement {
     const OnUpdate = (CFrames: LinkedListCollection<string, CFrame>) => {
         if (CFrames.GetSize() === State.DragCache.Size()) return;
 
-        const InvAmount = Inventory.GetItem(State.ItemId + "");
+        const InvAmount = Inventory.GetItem(State.ItemId);
         const FrameCache = new Collection<string, BaseItem>();
         const CellSize = Grid.GetGlobalInstance().GetCellSize();
 
