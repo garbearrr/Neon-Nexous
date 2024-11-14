@@ -148,7 +148,7 @@ const Conn = ClientRemote.Event.Connect(() => {
     });
     MainUI.Enabled = true;
 
-    while (logoTween != undefined && logoTween.PlaybackState !== Enum.PlaybackState.Completed) wait();
+    while (logoTween !== undefined && logoTween.PlaybackState !== Enum.PlaybackState.Completed) wait();
 
     logoFade.Play();
     Conn.Disconnect();
