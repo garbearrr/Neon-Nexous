@@ -16,6 +16,8 @@ export namespace Plot {
         const Random = math.random(1, Open.size());
         const Plot = Workspace.Plots.FindFirstChild(tostring(Random)) as Workspace["Plots"]["1"];
 
+        Plot.WaitForChild("BuildModulePlot");
+
         AnchorFolder = Plot.Anchors;
         CameraContainer = Plot.BuildModulePlot.CameraContainer;
         OreFolder = Plot.Ore;

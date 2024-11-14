@@ -1,9 +1,20 @@
-import { Players } from "@rbxts/services";
+import { Players, ReplicatedFirst } from "@rbxts/services";
 
-_G.Log = (Message: string, Prefix: string = "") => {
-    print(`[LOG] |${Prefix}| ${Message}`);
+const ClientRemote = ReplicatedFirst.WaitForChild("BeginClient") as BindableEvent;
+const ClientRes = ReplicatedFirst.WaitForChild("ClientResponse") as BindableEvent;
+
+const StartClient = () => {
+    _G.Log = (Message: string, Prefix: string = "") => {
+        print(`[LOG] |${Prefix}| ${Message}`);
+    }
+
+    const _Wait = Players.LocalPlayer.Character || Players.LocalPlayer.CharacterAdded.Wait();
+
+    _G.Log("Client started!", "CLIENT");
+
+    import("./onload/index");
+    ClientRes.Fire();
 }
 
-Players.LocalPlayer.CharacterAdded.Wait();
 
-import("./onload/index");
+ClientRemote.Event.Connect(() => StartClient());

@@ -1,4 +1,3 @@
-import "./ui";
 import "./actionButtons";
 import "./currency";
 import "./MainUI/index";

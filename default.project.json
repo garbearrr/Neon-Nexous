@@ -27,6 +27,15 @@
 				"$path": "out/shared"
 			}
 		},
+		"StarterGui": {
+			"$className": "StarterGui",
+			"LoadingScreen": {
+				"$className": "ScreenGui",
+				"TS": {
+					"$path": "out/gui"
+				}
+			}
+		},
 		"StarterPlayer": {
 			"$className": "StarterPlayer",
 			"$properties": {
