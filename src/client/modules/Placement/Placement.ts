@@ -106,17 +106,18 @@ export namespace Placement {
     }
 
     const CamSetup = () => {
-        Camera.Instance().GetCamera().CFrame = Plot.CameraContainer.CFrame;
+        Camera.Instance().GetCamera().CFrame = Camera.PersistantCamCF || Plot.CameraContainer.CFrame;
+        const [Pitch, Yaw] = Camera.PersistantPitchYaw || [math.rad(CAM_TILT_PITCH), 0];
         
         Camera.Instance()
             .SetCameraContainer(Plot.CameraContainer)
             .SetContainerDisregard(false)
-            .SetOrientation(math.rad(CAM_TILT_PITCH), 0)
             .FlipMouseButtons(Enum.UserInputType.MouseButton2)
             .LockLookDirections(ViewDirection.Up, ViewDirection.Down)
             .SetLookVectors(Look.X, Look.Z)
             .UnSetLookVectors(Look.Y)
-            .SetRotationSmoothness(ROT_SMOOTH);
+            .SetRotationSmoothness(ROT_SMOOTH)
+            .SetOrientation(Pitch, Yaw);
     }
 
     const ClassifyItem = (Item: PossibleItems): BaseItem => {

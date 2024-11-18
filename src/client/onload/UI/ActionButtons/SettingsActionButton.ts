@@ -4,7 +4,7 @@ import { BaseMainUIActionButton } from "./BaseMainUIButton";
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
-const SettingsButton = MainUI.Top["2_Actions"]["4_Settings"];
+const SettingsButton = MainUI.Left["Actions"]["4_Settings"];
 
 class SettingsActionButton extends BaseMainUIActionButton {
     public constructor(Button: typeof SettingsButton) {

@@ -12,7 +12,10 @@ const StartClient = () => {
 
     _G.Log("Client started!", "CLIENT");
 
-    import("./onload/index");
+    import("./onload/Grid/index");
+    import("./onload/Plot/index");
+    import("./onload/Inventory/index");
+    import("./onload/Money/index");
     ClientRes.Fire();
 }
 

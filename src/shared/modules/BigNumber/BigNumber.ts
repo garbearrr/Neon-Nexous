@@ -17,6 +17,10 @@ export class BigNumber implements iBigNumber {
         }
     }
 
+    public Clone(): BigNumber {
+        return new BigNumberAltConstructor(this.mantissa, this.exponent);
+    }
+
     private Compare(other: BigNumber): number {
         // Compare exponents first
         if (this.exponent > other.exponent) {
@@ -80,6 +84,14 @@ export class BigNumber implements iBigNumber {
         }
 
         throw `Invalid string format for BigNumber: ${value}`;
+    }
+
+    public GetExponent(): number {
+        return this.exponent;
+    }
+
+    public GetMantissa(): number {
+        return this.mantissa;
     }
 
     private GetExponentFromAbbreviation(abbr: string): number | undefined {
@@ -248,6 +260,10 @@ export class BigNumber implements iBigNumber {
         return `${this.mantissa}e${this.exponent}`;
     }
 
+    public ToNumber(): number {
+        return this.mantissa * 10 ** this.exponent;
+    }
+
     public ToAbbreviatedString(noAbbrev: boolean = false, decimalPlaces: number = BigNumber.ToFixedPrecision): string {
         const abbrExponent = math.floor(this.exponent / 3) * 3;
         const abbreviation = this.GetAbbreviationFromExponent(abbrExponent);
@@ -283,7 +299,7 @@ export class BigNumber implements iBigNumber {
     
 }
 
-class BigNumberAltConstructor extends BigNumber {
+export class BigNumberAltConstructor extends BigNumber {
     constructor(mantissa: number, exponent: number) {
         super(0);
         this.mantissa = mantissa;

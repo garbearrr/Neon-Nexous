@@ -4,7 +4,7 @@ import { BaseMainUIActionButton } from "./BaseMainUIButton";
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
-const DebugButton = MainUI.Top["2_Actions"]["99_Debug"];
+const DebugButton = MainUI.Left["Actions"]["99_Debug"];
 
 class DebugActionButton extends BaseMainUIActionButton {
     public constructor(Button: typeof DebugButton) {

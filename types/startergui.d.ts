@@ -2,98 +2,51 @@ interface StarterGui extends BasePlayerGui {
 	MainUI: ScreenGui & {
 		Top: Frame & {
 			UIListLayout: UIListLayout;
-			["1_Message"]: Frame & {
-				Message: Frame & {
-					UICorner: UICorner;
-					["2_MoneyText"]: TextLabel;
-					UIGradient: UIGradient;
-					UIPadding: UIPadding;
-				};
-			};
-			["2_Actions"]: Frame & {
-				["00_Menu"]: Frame & {
-					UICorner: UICorner;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-				};
-				["3_Shop"]: TextButton & {
-					UIGradient: UIGradient;
-					UICorner: UICorner;
-					Page: ObjectValue;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Icon: ImageButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
-				UIListLayout: UIListLayout;
-				Expand: LocalScript;
-				["2_Inventory"]: TextButton & {
-					UIGradient: UIGradient;
-					UICorner: UICorner;
-					Page: ObjectValue;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Icon: ImageButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
-				["99_Debug"]: TextButton & {
-					UIGradient: UIGradient;
-					UICorner: UICorner;
-					Page: ObjectValue;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Icon: ImageButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
-				["1_Build"]: TextButton & {
-					UIGradient: UIGradient;
-					UICorner: UICorner;
-					Page: ObjectValue;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Icon: ImageButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
-				["0_Expand"]: Frame & {
-					UICorner: UICorner;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-				};
-				["4_Settings"]: TextButton & {
-					UIGradient: UIGradient;
-					UICorner: UICorner;
-					Page: ObjectValue;
-					UIAspectRatioConstraint: UIAspectRatioConstraint;
-					Icon: ImageButton & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
-			};
 			["3_Currency"]: Frame & {
 				UIListLayout: UIListLayout;
 				["1_Money"]: Frame & {
-					["2_MoneyText"]: TextLabel & {
-						Value: NumberValue;
-						AddUIGradient: UIGradient;
-						TakeUIGradient: UIGradient;
-					};
-					UIGradient: UIGradient;
-					UIListLayout: UIListLayout;
 					UICorner: UICorner;
-					UIPadding: UIPadding;
-					["1_CurrencyIcon"]: ImageLabel & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Container: Frame & {
+						["2_MoneyText"]: Frame & {
+							MoneyText: TextLabel & {
+								UIStroke: UIStroke;
+								UIGradient: UIGradient;
+								Mantissa: NumberValue;
+								Value: NumberValue;
+								AddUIGradient: UIGradient;
+								TakeUIGradient: UIGradient;
+								Exponent: NumberValue;
+							};
+						};
 						UIGradient: UIGradient;
+						UIListLayout: UIListLayout;
+						UIPadding: UIPadding;
+						["1_CurrencyIcon"]: ImageLabel & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+							UIGradient: UIGradient;
+						};
 					};
 				};
-				UIPadding: UIPadding;
+				UIAspectRatioConstraint: UIAspectRatioConstraint;
 				["2_AltCurrency"]: Frame & {
-					["2_MoneyText"]: TextLabel;
-					UIGradient: UIGradient;
-					UIListLayout: UIListLayout;
 					UICorner: UICorner;
-					UIPadding: UIPadding;
-					["1_CurrencyIcon"]: ImageLabel & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Container: Frame & {
+						["2_MoneyText"]: Frame & {
+							MoneyText: TextLabel & {
+								UIGradient: UIGradient;
+								Value: NumberValue;
+								AddUIGradient: UIGradient;
+								TakeUIGradient: UIGradient;
+								UIStroke: UIStroke;
+							};
+						};
 						UIGradient: UIGradient;
+						UIListLayout: UIListLayout;
+						UIPadding: UIPadding;
+						["1_CurrencyIcon"]: ImageLabel & {
+							UIAspectRatioConstraint: UIAspectRatioConstraint;
+							UIGradient: UIGradient;
+						};
 					};
 				};
 			};
@@ -314,34 +267,209 @@ interface StarterGui extends BasePlayerGui {
 			};
 		};
 		MainPadding: UIPadding;
-		Level: TextButton & {
-			FillSun: ImageLabel & {
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-				UIGradient: UIGradient;
-			};
-			Sun: ImageLabel & {
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-				UIGradient: UIGradient;
-			};
-			BorderOutline: Frame & {
-				UICorner: UICorner;
-				UIStroke: UIStroke;
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-			};
-			Border: Frame & {
-				UICorner: UICorner;
-				UIStroke: UIStroke;
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-			};
-			Skyline: ImageLabel & {
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-			};
-			BG: Frame & {
-				UICorner: UICorner;
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-			};
-			SkylineOutline: ImageLabel & {
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
+		Left: Frame & {
+			UIListLayout: UIListLayout;
+			Actions: Frame & {
+				["4_Settings"]: TextButton & {
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					Shadow: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIGradient: UIGradient;
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				["3_Shop"]: TextButton & {
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					Shadow: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIGradient: UIGradient;
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				UIListLayout: UIListLayout;
+				["99_Debug"]: TextButton & {
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					Shadow: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIGradient: UIGradient;
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				["2_Inventory"]: TextButton & {
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					Shadow: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIGradient: UIGradient;
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				Level: TextButton & {
+					FillSun: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					BorderOutline: Frame & {
+						UICorner: UICorner;
+						UIStroke: UIStroke;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					BG: Frame & {
+						UICorner: UICorner;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					Border: Frame & {
+						UICorner: UICorner;
+						UIStroke: UIStroke;
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					LevelText: TextLabel & {
+						UIGradient: UIGradient;
+						UIStroke: UIStroke;
+					};
+					Sun: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIGradient: UIGradient;
+					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Skyline: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					ExpandedInfo: Frame & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						LevelBarArea: Frame & {
+							UIListLayout: UIListLayout;
+							NextLevel: Frame & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								Level: TextLabel & {
+									UIGradient: UIGradient;
+									UIStroke: UIStroke;
+								};
+							};
+							BarArea: Frame & {
+								LevelReward: Frame & {
+									UIListLayout: UIListLayout;
+									Text: TextLabel & {
+										UIGradient: UIGradient;
+										UIStroke: UIStroke;
+									};
+									Icon: ImageLabel & {
+										UIAspectRatioConstraint: UIAspectRatioConstraint;
+										UIGradient: UIGradient;
+									};
+								};
+								EmptyBar: Frame & {
+									UICorner: UICorner;
+									ColorBar: Frame & {
+										UICorner: UICorner;
+										UIGradient: UIGradient;
+									};
+									Percentage: TextLabel & {
+										UIGradient: UIGradient;
+										UIStroke: UIStroke;
+									};
+								};
+								MoneyToGo: TextLabel & {
+									UIGradient: UIGradient;
+									UIStroke: UIStroke;
+								};
+							};
+							CurrentLevel: Frame & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								Level: TextLabel & {
+									UIGradient: UIGradient;
+									UIStroke: UIStroke;
+								};
+							};
+						};
+					};
+					SkylineOutline: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				["1_Build"]: TextButton & {
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					Shadow: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIGradient: UIGradient;
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
+				["0_Expand"]: Frame & {
+					UICorner: UICorner;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+				};
+				["00_Menu"]: Frame & {
+					UICorner: UICorner;
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+				};
 			};
 		};
 		MainFrame: Frame & {
@@ -556,36 +684,61 @@ interface StarterGui extends BasePlayerGui {
 		};
 	};
 	LoadingScreen: ScreenGui & {
-		BG: Frame & {
-			Container: Frame & {
-				Hint: TextLabel & {
-					UIStroke: UIStroke;
-				};
-				Level: TextButton & {
-					FillSun: ImageLabel & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-						UIGradient: UIGradient;
-					};
-					Sun: ImageLabel & {
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-						UIGradient: UIGradient;
-					};
-					Border: Frame & {
-						UICorner: UICorner;
-						UIStroke: UIStroke;
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-					BG: Frame & {
-						UICorner: UICorner;
-						UIAspectRatioConstraint: UIAspectRatioConstraint;
-					};
-				};
-				UIAspectRatioConstraint: UIAspectRatioConstraint;
-				Logo: ImageLabel;
-			};
-		};
 		TS: Folder & {
 			loading: LocalScript;
+		};
+		PauseEvery: NumberValue;
+		Main: CanvasGroup & {
+			BG: Frame & {
+				Container: Frame & {
+					FadeLevel: CanvasGroup & {
+						Level: TextButton & {
+							FillSun: ImageLabel & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								UIGradient: UIGradient;
+							};
+							Sun: ImageLabel & {
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+								UIGradient: UIGradient;
+							};
+							Border: Frame & {
+								UICorner: UICorner;
+								UIStroke: UIStroke;
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+							};
+							BG: Frame & {
+								UICorner: UICorner;
+								UIAspectRatioConstraint: UIAspectRatioConstraint;
+							};
+						};
+					};
+					Logo: ImageLabel;
+					FadeHint: CanvasGroup & {
+						Hint: TextLabel & {
+							UIGradient: UIGradient;
+							UIStroke: UIStroke;
+						};
+					};
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					PlayButton: CanvasGroup & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						Text: TextLabel & {
+							UIGradient: UIGradient;
+							UIStroke: UIStroke;
+						};
+						UIPadding: UIPadding;
+						MainButton: ImageButton & {
+							UICorner: UICorner;
+							UIStroke: UIStroke & {
+								UIGradient: UIGradient;
+							};
+						};
+					};
+				};
+			};
+			Blur: Frame & {
+				BlurController: LocalScript;
+			};
 		};
 	};
 }

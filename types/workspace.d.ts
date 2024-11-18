@@ -308,6 +308,10 @@ interface Workspace extends Model {
 			DragGridPart: Part;
 			BuildModulePlot: Part & {
 				CameraContainer: Part;
+				LightningBeam: Beam;
+				LightningStrike: Part & {
+					LightningPart: ParticleEmitter;
+				}
 			};
 		};
 	};

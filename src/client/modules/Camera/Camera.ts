@@ -7,6 +7,9 @@ export class Camera {
     private static _instance: Camera | undefined;
     private static InsideGuide: Part | undefined;
 
+    public static PersistantCamCF: CFrame | undefined;
+    public static PersistantPitchYaw: [number, number] | undefined;
+
     private readonly Humanoid = (Players.LocalPlayer.Character || Players.LocalPlayer.CharacterAdded.Wait()[0]).WaitForChild("Humanoid") as Humanoid;
     public readonly CurrentCamera = Workspace.CurrentCamera!;
 
@@ -362,6 +365,9 @@ export class Camera {
 
     /** Return to default camera */
     public Reset(): void {
+        Camera.PersistantCamCF = this.CurrentCamera.CFrame;
+        Camera.PersistantPitchYaw = [this.CurrentPitch, this.CurrentYaw];
+
         this.CurrentCamera.CameraType = this.OriginalCamType;
         this.Humanoid.JumpPower = this.OriginalJumpPower;
         this.Humanoid.WalkSpeed = this.OriginalWalkSpeed;

@@ -4,7 +4,7 @@ import { BaseMainUIActionButton } from "./BaseMainUIButton";
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
-const InvButton = MainUI.Top["2_Actions"]["2_Inventory"];
+const InvButton = MainUI.Left["Actions"]["2_Inventory"];
 
 class InventoryActionButton extends BaseMainUIActionButton {
     public constructor(Button: typeof InvButton) {

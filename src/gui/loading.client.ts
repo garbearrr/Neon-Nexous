@@ -1,6 +1,57 @@
 // StarterGui/LoadingScreen (ScreenGui)
 
-import { ContentProvider, ReplicatedFirst, StarterGui, TweenService, Workspace } from "@rbxts/services";
+import { ContentProvider, Lighting, Players, ReplicatedFirst, RunService, StarterGui, TweenService, Workspace } from "@rbxts/services";
+
+// HELP FUNCTIONS:
+
+const rotateCameraAroundPoint = (
+    target: Vector3,
+    rotationSpeed: number = math.rad(10), // radians per second
+    distanceX: number = 100,
+    distanceY: number = 175
+): () => void => {
+    const camera = Workspace.CurrentCamera;
+    if (!camera) {
+        warn("No current camera found.");
+        return () => {};
+    }
+
+    let angle = 0;
+
+    // Connection to RenderStepped
+    const connection = RunService.RenderStepped.Connect((deltaTime) => {
+        // Increment the angle based on rotation speed and elapsed time
+        angle += rotationSpeed * deltaTime;
+
+        // Calculate the new position in the XZ plane
+        const offsetX = math.cos(angle) * distanceX;
+        const offsetZ = math.sin(angle) * distanceX;
+
+        // Set Y position based on distanceY
+        const position = new Vector3(
+            target.X + offsetX,
+            target.Y + distanceY,
+            target.Z + offsetZ
+        );
+
+        // Update the camera's CFrame to look at the target
+        camera.CFrame = CFrame.lookAt(position, target);
+    });
+
+    // Return a disconnect function to stop the rotation when needed
+    return () => {
+        connection.Disconnect();
+    };
+}
+
+const clamp = (Value: number, Min: number, Max: number) => {
+    return math.min(math.max(Value, Min), Max);
+}
+
+// Lock Player Movement
+const Humanoid = Players.LocalPlayer.Character?.FindFirstChild("Humanoid") as Humanoid;
+Humanoid.WalkSpeed = 0;
+Humanoid.JumpPower = 0;
 
 ReplicatedFirst.RemoveDefaultLoadingScreen();
 StarterGui.SetCoreGuiEnabled(Enum.CoreGuiType.All, false);
@@ -13,19 +64,23 @@ Parent.Enabled = true;
 const MainUI = Parent.Parent!.WaitForChild("MainUI") as ScreenGui
 MainUI.Enabled = false;
 
-const BG = Parent.WaitForChild("BG") as typeof Parent["BG"];
+const Main = Parent.WaitForChild("Main") as CanvasGroup;
+const BG = Main.WaitForChild("BG") as typeof Parent["BG"];
+const Blur = Main.WaitForChild("Blur") as Frame;
 const Container = BG.WaitForChild("Container") as typeof Parent["BG"]["Container"];
 const Logo = Container.WaitForChild("Logo") as typeof Parent["BG"]["Container"]["Logo"];
 
 const PauseEvery = (Parent.WaitForChild("PauseEvery") as NumberValue).Value;
 
-const Sun = Container.WaitForChild("Level").WaitForChild("Sun") as typeof Container["Level"]["Sun"];
-const FillSun = Container.WaitForChild("Level").WaitForChild("FillSun") as typeof Container["Level"]["FillSun"];
-const Border = Container.WaitForChild("Level").WaitForChild("Border").WaitForChild("UIStroke") as typeof Container["Level"]["Border"]["UIStroke"];
-const LvlBG = Container.WaitForChild("Level").WaitForChild("BG") as typeof Container["Level"]["BG"];
-const SunGrad = FillSun.WaitForChild("UIGradient") as typeof Container["Level"]["FillSun"]["UIGradient"];
-const Hint = Container.WaitForChild("Hint") as typeof Container["Hint"];
-const HintStroke = Hint.WaitForChild("UIStroke") as typeof Container["Hint"]["UIStroke"];
+const PlayButton = Container.WaitForChild("PlayButton") as CanvasGroup;
+const FadeLevel = Container.WaitForChild("FadeLevel") as CanvasGroup;
+const FadeHint = Container.WaitForChild("FadeHint") as CanvasGroup;
+
+const FillSun = FadeLevel.WaitForChild("Level").WaitForChild("FillSun") as ImageLabel;
+const SunGrad = FillSun.WaitForChild("UIGradient") as UIGradient;
+const Hint = FadeHint.WaitForChild("Hint") as TextLabel;
+
+const MainPlayButton = PlayButton.WaitForChild("MainButton") as TextButton;
 
 const ClientRemote = ReplicatedFirst.WaitForChild("BeginClient") as BindableEvent;
 const ClientRes = ReplicatedFirst.WaitForChild("ClientResponse") as BindableEvent;
@@ -38,10 +93,6 @@ const AssetsToPreload = [
 ]
 
 const AssetCount = AssetsToPreload.size();
-
-const clamp = (Value: number, Min: number, Max: number) => {
-    return math.min(math.max(Value, Min), Max);
-}
 
 for (let i = 0; i < AssetCount; i++) {
     const Asset = AssetsToPreload[i];
@@ -72,56 +123,17 @@ const TI = new TweenInfo(
 );
 
 // Create tweens for each UI element to fade out
-const sunGradTween = TweenService.Create(
-    FillSun,
+const fadeLevelTween = TweenService.Create(
+    FadeLevel,
     TI,
-    { ImageTransparency: 1 } // Fully transparent
+    { GroupTransparency: 1 }
 );
 
-const sunTween = TweenService.Create(
-    Sun,
+const fadeHintTween = TweenService.Create(
+    FadeHint,
     TI,
-    { ImageTransparency: 1 } // Fully transparent
+    { GroupTransparency: 1 }
 );
-
-const hintTween = TweenService.Create(
-    Hint,
-    TI,
-    { TextTransparency: 1, TextStrokeTransparency: 1 } // Fully transparent text
-);
-
-const hintStrokeTween = TweenService.Create(
-    HintStroke,
-    TI,
-    { Transparency: 1 } // Fully transparent stroke
-);
-
-const bgTween = TweenService.Create(
-    BG,
-    TI,
-    { BackgroundTransparency: 1 } // Fully transparent background
-);
-
-const LvlBGTween = TweenService.Create(
-    LvlBG,
-    TI,
-    { BackgroundTransparency: 1 } // Fully transparent background
-);
-
-const borderTween = TweenService.Create(
-    Border,
-    TI,
-    { Transparency: 1 } // Fully transparent border
-);
-
-// Play all tweens
-sunGradTween.Play();
-sunTween.Play();
-hintTween.Play();
-hintStrokeTween.Play();
-borderTween.Play();
-LvlBGTween.Play();
-bgTween.Play();
 
 const logoTween = TweenService.Create(
     Logo,
@@ -129,27 +141,59 @@ const logoTween = TweenService.Create(
     { Size: new UDim2(0.8, 0, 0.8, 0) }
 );
 
-
-// Wait for all tweens to complete before proceeding
-bgTween.Completed.Connect(() => {
-    logoTween.Play();
-    ClientRemote.Fire();
-});
-
-const logoFade = TweenService.Create(
-    Logo,
+const bgTween = TweenService.Create(
+    BG,
     TI,
-    { ImageTransparency: 1 }
+    { Transparency: 1 }
 );
 
-const Conn = ClientRemote.Event.Connect(() => {
-    logoFade.Completed.Connect(() => {
+const PlayButtonTween = TweenService.Create(
+    PlayButton,
+    TI,
+    { GroupTransparency: 0 }
+);
+
+const mainFade = TweenService.Create(
+    Main,
+    TI,
+    { GroupTransparency: 1 }
+);
+
+let camDiscon: () => void;
+const OnPlayPress = () => {
+    mainFade.Completed.Connect(() => {
         Parent.Enabled = false;
+        MainUI.Enabled = true;
     });
-    MainUI.Enabled = true;
 
     while (logoTween !== undefined && logoTween.PlaybackState !== Enum.PlaybackState.Completed) wait();
 
-    logoFade.Play();
-    Conn.Disconnect();
+    mainFade.Play();
+    camDiscon();
+
+    Blur.Destroy();
+    // Stop blur
+    Lighting.FindFirstChild("DepthOfField")!.Destroy();
+
+    ClientRemote.Fire();
+};
+
+// Wait for all tweens to complete before proceeding
+fadeHintTween.Completed.Connect(() => {
+    logoTween.Play();
+    bgTween.Play();
+    PlayButtonTween.Play();
+
+    const Target = (Workspace.WaitForChild("Environment").WaitForChild("Base") as Model).WorldPivot.Position;
+    camDiscon = rotateCameraAroundPoint(Target);
+
+    const PlayConn = MainPlayButton.Activated.Connect(() => {
+        PlayConn.Disconnect();
+        while (PlayButtonTween !== undefined && PlayButtonTween.PlaybackState !== Enum.PlaybackState.Completed) wait();
+        OnPlayPress();
+    });
 });
+
+// Play all tweens
+fadeLevelTween.Play();
+fadeHintTween.Play();

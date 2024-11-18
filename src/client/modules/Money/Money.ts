@@ -1,24 +1,57 @@
 import { UI } from "client/onload/UI/currency";
-import { BigNumber } from "shared/modules/BigNumber/BigNumber";
+import { BigNumber, BigNumberAltConstructor } from "shared/modules/BigNumber/BigNumber";
 import { Common } from "shared/modules/Common/Common";
 import { Inventory } from "../Inventory/Inventory";
+import { Level } from "../Level/Level";
 
 
 export namespace Money {
     const State = {
+        AltCurrency: new BigNumber(0),
         Money: new BigNumber(0),
+        PendingAdd: new BigNumber(0),
     }
+
+    Level.Events.LevelUp.Connect(() => AddAltCurrency());
 
     export const GetMoney = () => {
         return State.Money;
     }
 
-    export const AddMoney = (Value: BigNumber) => {
-        const Final = State.Money.Add(Value);
-        UI.Currency.TweenMoney(State.Money, Final);
-        State.Money = Final;
+    export const AddAltCurrency = (Value: BigNumber = new BigNumber(5)) => {
+        const Final = State.AltCurrency.Add(Value);
+        UI.Currency.TweenMoney(State.AltCurrency, Final, true);
+        State.AltCurrency = Final;
+        _G.Log(`Added ${Value.ToString()} to AltCurrency.`, "Money");
+    }
+
+    export const AddMoney = (Value: BigNumber, AddXP = true, UpdateUi = true) => {
+        if (AddXP) {
+            Level.AddXP(Value);
+        }
+
+        State.Money = State.Money.Add(Value);
+
+        if (UpdateUi) {
+            UpdateUI();
+        }
+
         _G.Log(`Added ${Value.ToString()} to Money.`, "Money");
     }
+
+
+    export const UpdateUI = () => {
+        const From = State.PendingAdd.Clone();
+        const To = State.Money.Clone();
+
+        if (State.PendingAdd.IsEqualTo(State.Money)) {
+            return;
+        }
+
+        State.PendingAdd = State.Money.Clone();
+        UI.Currency.TweenMoney(From, To);
+    }
+    
 
     export const BuyItem = (PID: number): boolean => {
         const Item = Common.GetItemById(PID);
@@ -40,9 +73,7 @@ export namespace Money {
     }
 
     export const RemoveMoney = (Value: BigNumber) => {
-        const Final = State.Money.Subtract(Value);
-        UI.Currency.TweenMoney(State.Money, Final);
-        State.Money = Final;
+        State.Money = State.Money.Subtract(Value);
         _G.Log(`Removed ${Value.ToString()} from Money.`, "Money");
     }
 }

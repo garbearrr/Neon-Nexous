@@ -1,7 +1,7 @@
 import { BGScroll } from "../MainUI/BGScroll";
 import { BaseActionButton } from "./BaseActionButton";
 
-declare type ButtonTemplate = StarterGui["MainUI"]["Top"]["2_Actions"]["2_Inventory"];
+declare type ButtonTemplate = StarterGui["MainUI"]["Left"]["Actions"]["2_Inventory"];
 
 export abstract class BaseMainUIActionButton extends BaseActionButton {
     protected readonly Page: Frame;
