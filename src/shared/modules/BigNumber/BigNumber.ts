@@ -1,6 +1,6 @@
 export class BigNumber implements iBigNumber {
-    protected mantissa: number = 0;
-    protected exponent: number = 0;
+    protected mantissa = 0;
+    protected exponent = 0;
 
     public static readonly ToFixedPrecision = 3;
 
@@ -22,24 +22,14 @@ export class BigNumber implements iBigNumber {
     }
 
     private Compare(other: BigNumber): number {
-        // Compare exponents first
-        if (this.exponent > other.exponent) {
-            return 1;
-        } else if (this.exponent < other.exponent) {
-            return -1;
+        if (this.exponent !== other.GetExponent()) {
+            return this.exponent > other.GetExponent() ? 1 : -1;
         }
-    
-        // If exponents are the same, compare mantissas
-        if (this.mantissa > other.mantissa) {
-            return 1;
-        } else if (this.mantissa < other.mantissa) {
-            return -1;
+        if (this.mantissa !== other.GetMantissa()) {
+            return this.mantissa > other.GetMantissa() ? 1 : -1;
         }
-    
-        // Both mantissa and exponent are equal
         return 0;
     }
-    
 
     private FromNumber(value: number) {
         if (value === 0) {
@@ -47,7 +37,6 @@ export class BigNumber implements iBigNumber {
             this.exponent = 0;
             return;
         }
-
         const exp = math.floor(math.log10(math.abs(value)));
         const man = value / 10 ** exp;
 
@@ -57,33 +46,46 @@ export class BigNumber implements iBigNumber {
 
     private FromString(value: string) {
         // Remove commas and spaces
-        value = value.gsub(",", "")[0].gsub(" ", "")[0];
+        value = value.gsub("[,%s]", "")[0];
 
-        const numberValue = tonumber(value);
-        if (numberValue !== undefined) {
-            this.FromNumber(numberValue);
-            return;
-        }
+        // Match patterns like "1.23K", "5e9", "1.2e+3", "-1.2K"
+        const pattern = "^([+-]?%d*%.?%d+)([eE]([+-]?%d+))?([a-zA-Z]*)$";
+        const match = string.match(value, pattern);
 
-        // Handle abbreviations (e.g., "1.23K")
-        const pattern = "([%d%.]+)(%a+)";
-        const match = value.match(pattern);
         if (match) {
             const numPart = match[1];
-            const abbr = match[2];
+            const exponentPart = match[3];
+            const abbr = match[4] as string;
 
-            const numValue = tonumber(numPart);
+            let numValue = tonumber(numPart);
             if (numValue !== undefined) {
-                const exp = this.GetExponentFromAbbreviation(abbr as string);
-                if (exp !== undefined) {
-                    this.mantissa = numValue;
-                    this.exponent = exp;
-                    return;
+                let exp = 0;
+
+                if (exponentPart) {
+                    exp += tonumber(exponentPart)!;
                 }
+                if (abbr !== "") {
+                    const abbrExp = this.GetExponentFromAbbreviation(abbr);
+                    if (abbrExp !== undefined) {
+                        exp += abbrExp;
+                    } else {
+                        throw `Unknown abbreviation: ${abbr}`;
+                    }
+                }
+                this.mantissa = numValue;
+                this.exponent = exp;
+                const normalized = this.Normalize(this.mantissa, this.exponent);
+                this.mantissa = normalized.mantissa;
+                this.exponent = normalized.exponent;
+                return;
             }
         }
 
         throw `Invalid string format for BigNumber: ${value}`;
+    }
+
+    public IsNegative(): boolean {
+        return this.mantissa < 0;
     }
 
     public GetExponent(): number {
@@ -96,9 +98,13 @@ export class BigNumber implements iBigNumber {
 
     private GetExponentFromAbbreviation(abbr: string): number | undefined {
         const abbreviations: { [abbr: string]: number } = {
+            k: 3,
             K: 3,
+            m: 6,
             M: 6,
+            b: 9,
             B: 9,
+            t: 12,
             T: 12,
             Qa: 15,
             Qi: 18,
@@ -119,7 +125,6 @@ export class BigNumber implements iBigNumber {
             Vg: 63,
             Uvg: 66,
             Dvg: 69,
-            // Add more abbreviations as needed
         };
 
         return abbreviations[abbr];
@@ -127,9 +132,6 @@ export class BigNumber implements iBigNumber {
 
     private GetAbbreviationFromExponent(exp: number): string | undefined {
         const abbreviations: { [exp: number]: string } = {
-            0: ' ',
-            1: ' ',
-            2: ' ',
             3: 'K',
             6: 'M',
             9: 'B',
@@ -153,7 +155,6 @@ export class BigNumber implements iBigNumber {
             63: 'Vg',
             66: 'Uvg',
             69: 'Dvg',
-            // Add more abbreviations as needed
         };
 
         return abbreviations[exp];
@@ -172,19 +173,19 @@ export class BigNumber implements iBigNumber {
     }
 
     public Add(other: BigNumber): BigNumber {
-        const expDiff = this.exponent - other.exponent;
+        const expDiff = this.exponent - other.GetExponent();
         let newMantissa: number;
         let newExponent: number;
 
         if (expDiff === 0) {
-            newMantissa = this.mantissa + other.mantissa;
+            newMantissa = this.mantissa + other.GetMantissa();
             newExponent = this.exponent;
         } else if (expDiff > 0) {
-            newMantissa = this.mantissa + other.mantissa * 10 ** -expDiff;
+            newMantissa = this.mantissa + other.GetMantissa() * 10 ** -expDiff;
             newExponent = this.exponent;
         } else {
-            newMantissa = this.mantissa * 10 ** expDiff + other.mantissa;
-            newExponent = other.exponent;
+            newMantissa = this.mantissa * 10 ** expDiff + other.GetMantissa();
+            newExponent = other.GetExponent();
         }
 
         const normalized = this.Normalize(newMantissa, newExponent);
@@ -192,19 +193,19 @@ export class BigNumber implements iBigNumber {
     }
 
     public Subtract(other: BigNumber): BigNumber {
-        const expDiff = this.exponent - other.exponent;
+        const expDiff = this.exponent - other.GetExponent();
         let newMantissa: number;
         let newExponent: number;
 
         if (expDiff === 0) {
-            newMantissa = this.mantissa - other.mantissa;
+            newMantissa = this.mantissa - other.GetMantissa();
             newExponent = this.exponent;
         } else if (expDiff > 0) {
-            newMantissa = this.mantissa - other.mantissa * 10 ** -expDiff;
+            newMantissa = this.mantissa - other.GetMantissa() * 10 ** -expDiff;
             newExponent = this.exponent;
         } else {
-            newMantissa = this.mantissa * 10 ** expDiff - other.mantissa;
-            newExponent = other.exponent;
+            newMantissa = this.mantissa * 10 ** expDiff - other.GetMantissa();
+            newExponent = other.GetExponent();
         }
 
         const normalized = this.Normalize(newMantissa, newExponent);
@@ -212,16 +213,16 @@ export class BigNumber implements iBigNumber {
     }
 
     public Multiply(other: BigNumber): BigNumber {
-        const newMantissa = this.mantissa * other.mantissa;
-        const newExponent = this.exponent + other.exponent;
+        const newMantissa = this.mantissa * other.GetMantissa();
+        const newExponent = this.exponent + other.GetExponent();
 
         const normalized = this.Normalize(newMantissa, newExponent);
         return new BigNumberAltConstructor(normalized.mantissa, normalized.exponent);
     }
 
     public Divide(other: BigNumber): BigNumber {
-        const newMantissa = this.mantissa / other.mantissa;
-        const newExponent = this.exponent - other.exponent;
+        const newMantissa = this.mantissa / other.GetMantissa();
+        const newExponent = this.exponent - other.GetExponent();
 
         const normalized = this.Normalize(newMantissa, newExponent);
         return new BigNumberAltConstructor(normalized.mantissa, normalized.exponent);
@@ -230,73 +231,69 @@ export class BigNumber implements iBigNumber {
     public IsEqualTo(other: BigNumber): boolean {
         return this.Compare(other) === 0;
     }
-    
+
     public IsNotEqualTo(other: BigNumber): boolean {
         return this.Compare(other) !== 0;
     }
-    
+
     public IsGreaterThan(other: BigNumber): boolean {
         return this.Compare(other) > 0;
     }
-    
+
     public IsGreaterThanOrEqualTo(other: BigNumber): boolean {
         return this.Compare(other) >= 0;
     }
-    
+
     public IsLessThan(other: BigNumber): boolean {
         return this.Compare(other) < 0;
     }
-    
+
     public IsLessThanOrEqualTo(other: BigNumber): boolean {
         return this.Compare(other) <= 0;
     }
 
-    public GetAbbreviation(): string {
-        if (this.exponent < 3) return "";
-        return this.GetAbbreviationFromExponent(this.exponent) || `e${this.exponent}`;
-    }
-
     public ToString(): string {
-        return `${this.mantissa}e${this.exponent}`;
+        if (this.mantissa === 0) {
+            return "0";
+        }
+        return `${BigNumber.ToFixed(this.mantissa, BigNumber.ToFixedPrecision)}e${this.exponent}`;
     }
 
     public ToNumber(): number {
         return this.mantissa * 10 ** this.exponent;
     }
 
-    public ToAbbreviatedString(noAbbrev: boolean = false, decimalPlaces: number = BigNumber.ToFixedPrecision): string {
-        const abbrExponent = math.floor(this.exponent / 3) * 3;
-        const abbreviation = this.GetAbbreviationFromExponent(abbrExponent);
-        const scaledMantissa = this.mantissa * 10 ** (this.exponent - abbrExponent);
-
-        if (noAbbrev) {
-            return BigNumber.ToFixed(scaledMantissa, decimalPlaces);
-        }
-    
-        if (abbreviation) {
-            return `${BigNumber.ToFixed(scaledMantissa, decimalPlaces)}${abbreviation}`;
-        } else {
-            // If no abbreviation, format in scientific notation
-            return this.ToString();
-        }
+    public GetAbbreviation(): string {
+        return this.GetAbbreviationFromExponent(this.exponent) || `e${this.exponent}`;
     }
 
-    public static ToFixed(num: number, decimalPlaces: number, removeTrailingZeros: boolean = true): string {
-        const factor = math.pow(10, decimalPlaces);
-        const rounded = math.floor(num * factor + 0.5) / factor;
-    
-        let result = string.format("%." + decimalPlaces + "f", rounded);
-    
-        if (removeTrailingZeros) {
-            // Remove trailing zeros and the decimal point if necessary
-            result = result.gsub("0+$", "")[0]; // Remove trailing zeros
-            result = result.gsub("%.$", "")[0]; // Remove the decimal point if no decimals remain
+    public ToAbbreviatedString(noAbbrev = false, decimalPlaces = BigNumber.ToFixedPrecision): string {
+        if (this.mantissa === 0) {
+            return "0";
         }
-    
+
+        const abbrExponent = math.floor(this.exponent / 3) * 3;
+        const abbreviation = this.GetAbbreviationFromExponent(abbrExponent) || `e${abbrExponent}`;
+        const scaledMantissa = this.mantissa * 10 ** (this.exponent - abbrExponent);
+        const formattedMantissa = BigNumber.ToFixed(scaledMantissa, decimalPlaces);
+
+        if (noAbbrev || this.exponent < 3) {
+            return BigNumber.ToFixed(this.ToNumber(), decimalPlaces);
+        }
+
+        return `${formattedMantissa}${abbreviation}`;
+    }
+
+    public static ToFixed(num: number, decimalPlaces: number, removeTrailingZeros = true): string {
+        let result = string.format(`%.${decimalPlaces}f`, num);
+
+        if (removeTrailingZeros) {
+            result = result.gsub("(%d)0+$", "%1")[0]; // Remove trailing zeros
+            result = result.gsub("%.$", "")[0];        // Remove trailing decimal point
+        }
+
         return result;
     }
-    
-    
 }
 
 export class BigNumberAltConstructor extends BigNumber {

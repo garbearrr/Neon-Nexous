@@ -5,7 +5,7 @@ const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
 
-declare type TemplatePage = Frame;
+declare type TemplatePage = Frame | CanvasGroup;
 
 export abstract class MainUIPage {
     public readonly Page: TemplatePage;

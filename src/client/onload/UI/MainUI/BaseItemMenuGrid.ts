@@ -72,11 +72,11 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
             CollectionService.AddTag(CellClone, this.CellTag);
 
             CellClone.Visible = true;
-            CellClone.ImageButton.Image = Img;
+            CellClone.Icon.Image = Img;
             CellClone.LayoutOrder = tonumber(ItemId) || 0;
             NewCells.push(CellClone);
 
-            this.OnCellAdded([CellClone, CellClone.ImageButton], ItemId, Name, Item, Img);
+            this.OnCellAdded([CellClone], ItemId, Name, Item, Img);
         }
 
         return NewCells;
@@ -134,7 +134,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
                     CellClone.Parent = RowClone;
                     CellClone.Position = new UDim2(0, j * NewCellSize, 0, 0);
                     CellClone.Visible = true;
-                    CellClone.ImageButton.Visible = false;
+                    CellClone.Icon.Visible = false;
                     CellClone.UIStroke.Enabled = false;
                     CellClone.LayoutOrder = 999999;
                 }

@@ -65,10 +65,10 @@ const MainUI = Parent.Parent!.WaitForChild("MainUI") as ScreenGui
 MainUI.Enabled = false;
 
 const Main = Parent.WaitForChild("Main") as CanvasGroup;
-const BG = Main.WaitForChild("BG") as typeof Parent["BG"];
+const BG = Main.WaitForChild("BG") as Frame;
 const Blur = Main.WaitForChild("Blur") as Frame;
-const Container = BG.WaitForChild("Container") as typeof Parent["BG"]["Container"];
-const Logo = Container.WaitForChild("Logo") as typeof Parent["BG"]["Container"]["Logo"];
+const Container = BG.WaitForChild("Container") as Frame;
+const Logo = Container.WaitForChild("Logo") as ImageLabel;
 
 const PauseEvery = (Parent.WaitForChild("PauseEvery") as NumberValue).Value;
 
@@ -89,7 +89,7 @@ const AssetsToPreload = [
     ...Workspace.WaitForChild("Items").GetDescendants(),
     ...Workspace.WaitForChild("Plots").GetDescendants(),
     //...ReplicatedStorage.GetDescendants(),
-    ...StarterGui.GetDescendants()
+    ...Players.LocalPlayer.WaitForChild("PlayerGui").GetDescendants(),
 ]
 
 const AssetCount = AssetsToPreload.size();

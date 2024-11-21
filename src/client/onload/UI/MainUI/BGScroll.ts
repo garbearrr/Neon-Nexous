@@ -53,7 +53,7 @@ export namespace BGScroll {
             .Connect(() => UpdateTileSize());
         Connections.Set("SizeChange", SizeChangeConn);
 
-        const CloseConn = MainContent.TopBar.FillBotCorners.Close.Activated.Connect(() => {
+        const CloseConn = MainContent.TopBar.BarContent.Sparkle.Close.Activated.Connect(() => {
             Deactivate();
         });
         Connections.Set("Close", CloseConn);
@@ -174,7 +174,7 @@ export namespace BGScroll {
         const TargetCanvasPosY = Index * FrameHeight;
 
         Background.Image = ImageOrder[Index].Texture;
-        MainContent.TopBar.FillBotCorners.Title.Text = TargetFrame.Name;
+        MainContent.TopBar.BarContent.Sparkle.Title.Text = TargetFrame.Name;
 
         if (!Active) {
             // If the module is not active, immediately set the scroll to the target frame
