@@ -1,6 +1,7 @@
 import { Players, RunService, TweenService } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 import { MainUIPage } from "./MainUIPage";
+import { Placement } from "client/modules/Placement/Placement";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -25,6 +26,7 @@ const ImageOrder = [
     Background.WaitForChild("MH-Boxes-Padded") as Decal,
     Background.WaitForChild("MH-Shop-Padded") as Decal,
     Background.WaitForChild("MH-Cog-Padded") as Decal,
+    Background.WaitForChild("NN-Grad-Padded") as Decal,
     Background.WaitForChild("MH-Bug-Padded") as Decal,
 ];
 
@@ -67,6 +69,7 @@ export namespace BGScroll {
         Connections.Set("Update", UpdateConn);
 
         MainFrame.Visible = true; // Show the MainFrame
+        Placement.PausePlacement();
         _G.Log("Activated BGScroll", "BGScroll");
     }
 
@@ -112,6 +115,7 @@ export namespace BGScroll {
             Frame.OnClose();
         }
 
+        Placement.UnpausePlacement();
         _G.Log("Deactivated BGScroll", "BGScroll");
     };
 

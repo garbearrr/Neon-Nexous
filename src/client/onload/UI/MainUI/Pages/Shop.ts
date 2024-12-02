@@ -50,14 +50,18 @@ class ShopMenuGrid extends BaseItemMenuGrid {
     }
 
     protected override OnCellAdded(Cells: GuiButton[], ItemId: number, Name: string, Item: PossibleItems, Img: string): void {
+        if (this.Clicked === undefined) {
+            this.OnCellHovered(Cells[0], ItemId, Name, Item, Img);
+        }
+
         for (const Cell of Cells) {
             const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item, Img));
             const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item, Img));
-            const UnhoverConnection = Cell.MouseLeave.Connect(() => this.OnCellUnhovered(Cell, ItemId, Name, Item));
+            //const UnhoverConnection = Cell.MouseLeave.Connect(() => this.OnCellUnhovered(Cell, ItemId, Name, Item));
 
             this.Connections.Set(ItemId + "hover" + Cell.Name, HoverConnection);
             this.Connections.Set(ItemId + "click" + Cell.Name, ClickConnection);
-            this.Connections.Set(ItemId + "unhover" + Cell.Name, UnhoverConnection);
+            //this.Connections.Set(ItemId + "unhover" + Cell.Name, UnhoverConnection);
         }
     }
 

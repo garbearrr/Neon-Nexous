@@ -1,5 +1,6 @@
 import { Players } from "@rbxts/services";
 
+/*
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const SurfaceGui = PlayerGui.WaitForChild("ThreeDUI") as StarterGui["ThreeDUI"];
@@ -17,3 +18,4 @@ export abstract class ThreeDeePage {
 
     public abstract OnClose(): void;
 }
+*/

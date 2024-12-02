@@ -1,4 +1,25 @@
 interface StarterGui extends BasePlayerGui {
+	Widgets: ScreenGui & {
+		WikiWidget: Frame & {
+			Content: ScrollingFrame & {
+				UIListLayout: UIListLayout;
+				TemplateLine: TextLabel & {
+					UIGradient: UIGradient;
+					UIStroke: UIStroke;
+				};
+				TemplateImage: ImageLabel & {
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+				};
+			};
+		};
+		WidgetManagerWidget: Frame & {
+			Content: ScrollingFrame & {
+				UIListLayout: UIListLayout;
+				TemplateButton: TextButton;
+			};
+			UICorner: UICorner;
+		};
+	};
 	MainUI: ScreenGui & {
 		Top: Frame & {
 			UIListLayout: UIListLayout;
@@ -434,6 +455,26 @@ interface StarterGui extends BasePlayerGui {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
 					};
 				};
+				["5_Wiki"]: TextButton & {
+					BG: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					Shadow: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+					UIGradient: UIGradient;
+					Sparkle: ImageLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UICorner: UICorner;
+					};
+					UICorner: UICorner;
+					Page: ObjectValue;
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					Icon: ImageButton & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+					};
+				};
 				["1_Build"]: TextButton & {
 					Sparkle: ImageLabel & {
 						UIAspectRatioConstraint: UIAspectRatioConstraint;
@@ -535,6 +576,21 @@ interface StarterGui extends BasePlayerGui {
 												};
 												Left: Frame & {
 													UIListLayout: UIListLayout;
+													DropSpeed: Frame & {
+														StatText: TextLabel & {
+															UIGradient: UIGradient;
+															UIStroke: UIStroke;
+														};
+														UIListLayout: UIListLayout;
+														StatIcon: ImageButton & {
+															UIAspectRatioConstraint: UIAspectRatioConstraint;
+															Info: TextLabel & {
+																UICorner: UICorner;
+																UIStroke: UIStroke;
+																UIGradient: UIGradient;
+															};
+														};
+													};
 												};
 												StatEntry: Frame & {
 													StatText: TextLabel & {
@@ -576,6 +632,8 @@ interface StarterGui extends BasePlayerGui {
 									UIListLayout: UIListLayout;
 									Buy: TextButton & {
 										UICorner: UICorner;
+										UIStroke: UIStroke;
+										UIGradient: UIGradient;
 									};
 								};
 							};
@@ -586,6 +644,148 @@ interface StarterGui extends BasePlayerGui {
 						Img: StringValue;
 						Content: Frame & {
 							UIListLayout: UIListLayout;
+							Desc: Frame & {
+								BG: CanvasGroup & {
+									GridBG: ImageLabel;
+									UIStroke: UIStroke & {
+										UIGradient: UIGradient;
+									};
+									BG: ImageLabel;
+									Sparkle: ImageLabel;
+								};
+								Container: Frame & {
+									StatsFrame: Frame & {
+										UICorner: UICorner;
+										StatsFrame: ScrollingFrame & {
+											UIListLayout: UIListLayout;
+											Statistics: Frame & {
+												UIListLayout: UIListLayout;
+												Right: Frame & {
+													UIListLayout: UIListLayout;
+													MinOreValue: Frame & {
+														StatText: TextLabel & {
+															UIGradient: UIGradient;
+															UIStroke: UIStroke;
+														};
+														UIListLayout: UIListLayout;
+														StatIcon: ImageButton & {
+															UIAspectRatioConstraint: UIAspectRatioConstraint;
+															Info: TextLabel & {
+																UICorner: UICorner;
+																UIStroke: UIStroke;
+																UIGradient: UIGradient;
+															};
+														};
+													};
+													Add: Frame & {
+														StatText: TextLabel & {
+															UIGradient: UIGradient;
+															UIStroke: UIStroke;
+														};
+														UIListLayout: UIListLayout;
+														StatIcon: ImageButton & {
+															UIAspectRatioConstraint: UIAspectRatioConstraint;
+															Info: TextLabel & {
+																UICorner: UICorner;
+																UIStroke: UIStroke;
+																UIGradient: UIGradient;
+															};
+														};
+													};
+												};
+												Left: Frame & {
+													UIListLayout: UIListLayout;
+													MaxOreValue: Frame & {
+														StatText: TextLabel & {
+															UIGradient: UIGradient;
+															UIStroke: UIStroke;
+														};
+														UIListLayout: UIListLayout;
+														StatIcon: ImageButton & {
+															UIAspectRatioConstraint: UIAspectRatioConstraint;
+															Info: TextLabel & {
+																UICorner: UICorner;
+																UIStroke: UIStroke;
+																UIGradient: UIGradient;
+															};
+														};
+													};
+													MaxUpgrades: Frame & {
+														StatText: TextLabel & {
+															UIGradient: UIGradient;
+															UIStroke: UIStroke;
+														};
+														UIListLayout: UIListLayout;
+														StatIcon: ImageButton & {
+															UIAspectRatioConstraint: UIAspectRatioConstraint;
+															Info: TextLabel & {
+																UICorner: UICorner;
+																UIStroke: UIStroke;
+																UIGradient: UIGradient;
+															};
+														};
+													};
+													Multiplier: Frame & {
+														StatText: TextLabel & {
+															UIGradient: UIGradient;
+															UIStroke: UIStroke;
+														};
+														UIListLayout: UIListLayout;
+														StatIcon: ImageButton & {
+															UIAspectRatioConstraint: UIAspectRatioConstraint;
+															Info: TextLabel & {
+																UICorner: UICorner;
+																UIStroke: UIStroke;
+																UIGradient: UIGradient;
+															};
+														};
+													};
+												};
+												StatEntry: Frame & {
+													StatText: TextLabel & {
+														UIGradient: UIGradient;
+														UIStroke: UIStroke;
+													};
+													UIListLayout: UIListLayout;
+													StatIcon: ImageButton & {
+														UIAspectRatioConstraint: UIAspectRatioConstraint;
+														Info: TextLabel & {
+															UICorner: UICorner;
+															UIStroke: UIStroke;
+															UIGradient: UIGradient;
+														};
+													};
+												};
+											};
+											Description: Frame & {
+												DescText: TextLabel & {
+													UIGradient: UIGradient;
+													UIStroke: UIStroke;
+												};
+											};
+											UIPadding: UIPadding;
+										};
+									};
+									ItemName: TextLabel & {
+										UIGradient: UIGradient;
+										UIStroke: UIStroke;
+									};
+									UIPadding: UIPadding;
+									IconContainer: Frame & {
+										Icon: ImageLabel & {
+											UICorner: UICorner;
+											UIStroke: UIStroke;
+											UIAspectRatioConstraint: UIAspectRatioConstraint;
+										};
+									};
+									UIListLayout: UIListLayout;
+									Buy: TextButton & {
+										UICorner: UICorner;
+										UIStroke: UIStroke;
+										UIGradient: UIGradient;
+									};
+								};
+							};
 							ItemFrame: ScrollingFrame & {
 								TemplateRow: Frame & {
 									UIListLayout: UIListLayout;
@@ -608,71 +808,6 @@ interface StarterGui extends BasePlayerGui {
 								};
 								UIGridLayout: UIGridLayout;
 								UIPadding: UIPadding;
-							};
-							Desc: Frame & {
-								BG: CanvasGroup & {
-									GridBG: ImageLabel;
-									UIStroke: UIStroke & {
-										UIGradient: UIGradient;
-									};
-									BG: ImageLabel;
-									Sparkle: ImageLabel;
-								};
-								Container: Frame & {
-									StatsFrame: Frame & {
-										UICorner: UICorner;
-										StatsFrame: ScrollingFrame & {
-											UIListLayout: UIListLayout;
-											Statistics: Frame & {
-												UIListLayout: UIListLayout;
-												Right: Frame & {
-													UIListLayout: UIListLayout;
-												};
-												Left: Frame & {
-													UIListLayout: UIListLayout;
-												};
-												StatEntry: Frame & {
-													StatText: TextLabel & {
-														UIGradient: UIGradient;
-														UIStroke: UIStroke;
-													};
-													UIListLayout: UIListLayout;
-													StatIcon: ImageButton & {
-														UIAspectRatioConstraint: UIAspectRatioConstraint;
-														Info: TextLabel & {
-															UICorner: UICorner;
-															UIStroke: UIStroke;
-															UIGradient: UIGradient;
-														};
-													};
-												};
-											};
-											Description: Frame & {
-												DescText: TextLabel & {
-													UIGradient: UIGradient;
-													UIStroke: UIStroke;
-												};
-											};
-											UIPadding: UIPadding;
-										};
-									};
-									ItemName: TextLabel & {
-										UIGradient: UIGradient;
-										UIStroke: UIStroke;
-									};
-									UIPadding: UIPadding;
-									IconContainer: Frame & {
-										Icon: ImageLabel & {
-											UICorner: UICorner;
-											UIStroke: UIStroke;
-											UIAspectRatioConstraint: UIAspectRatioConstraint;
-										};
-									};
-									UIListLayout: UIListLayout;
-									Buy: TextButton & {
-										UICorner: UICorner;
-									};
-								};
 							};
 						};
 					};
@@ -761,6 +896,21 @@ interface StarterGui extends BasePlayerGui {
 						};
 					};
 					UIListLayout: UIListLayout;
+					Wiki: CanvasGroup & {
+						Button: ObjectValue;
+						Img: StringValue;
+						Content: Frame & {
+							WikiFrame: Frame;
+							WMFrame: Frame;
+							ParentList: Frame & {
+								ScrollingFrame: ScrollingFrame & {
+									UIListLayout: UIListLayout;
+									TemplateButton: TextButton;
+								};
+								UICorner: UICorner;
+							};
+						};
+					};
 					Settings: Frame & {
 						Button: ObjectValue;
 						Img: StringValue;

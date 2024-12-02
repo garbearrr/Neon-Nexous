@@ -11,7 +11,9 @@ export class BigNumber implements iBigNumber {
         } else if (typeOf(value) === "number") {
             this.FromNumber(value as number);
         } else if (typeOf(value) === "string") {
-            this.FromString(value as string);
+            (tonumber(value) !== undefined) 
+                ? this.FromNumber(tonumber(value)!) 
+                : this.FromString(value as string);
         } else {
             throw `Invalid input type for BigNumber: ${typeOf(value)}`;
         }
@@ -132,6 +134,9 @@ export class BigNumber implements iBigNumber {
 
     private GetAbbreviationFromExponent(exp: number): string | undefined {
         const abbreviations: { [exp: number]: string } = {
+            0: ' ',
+            1: ' ',
+            2: ' ',
             3: 'K',
             6: 'M',
             9: 'B',
@@ -278,12 +283,13 @@ export class BigNumber implements iBigNumber {
         const formattedMantissa = BigNumber.ToFixed(scaledMantissa, decimalPlaces);
 
         if (noAbbrev || this.exponent < 3) {
-            return BigNumber.ToFixed(this.ToNumber(), decimalPlaces);
+            return BigNumber.ToFixed(this.ToNumber(), decimalPlaces, false);
         }
 
         return `${formattedMantissa}${abbreviation}`;
     }
 
+    // TODO: removeTrailingZeros removes zeros before the decimal point
     public static ToFixed(num: number, decimalPlaces: number, removeTrailingZeros = true): string {
         let result = string.format(`%.${decimalPlaces}f`, num);
 

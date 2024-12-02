@@ -55,7 +55,7 @@ export namespace ItemActions {
 
     const SellAction = () => {
         SelectedItems.ForEach((Item) => {
-            Money.AddMoney(new BigNumber(Item.Stats.Cost.Value));
+            Money.AddMoney(new BigNumber(Item.Stats.Cost.Value), false);
             PlacedItems.RemoveItem(Item.GetPID());
         });
         HideUI();

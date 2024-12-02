@@ -8,6 +8,7 @@ import BuildActionButton from "../../ActionButtons/BuildActionButton";
 import { Inventory } from "client/modules/Inventory/Inventory";
 import { Common } from "shared/modules/Common/Common";
 import { StatMap } from "../DescData";
+import InvActionButton from "../../ActionButtons/InvActionButton";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -49,18 +50,24 @@ class InventoryMenuGrid extends BaseItemMenuGrid {
         if (Placement.IsActive()) Placement.Deactivate();
         Placement.Activate(ID);
         BuildActionButton.SetOn();
+        InvActionButton.OnActivated();
         BGScroll.Deactivate();
     }
 
     protected override OnCellAdded(Cells: GuiButton[], ItemId: number, Name: string, Item: PossibleItems, Img: string): void {
+        // Default item showing
+        if (this.Clicked === undefined) {
+            this.OnCellHovered(Cells[0], ItemId, Name, Item, Img);
+        }
+
         for (const Cell of Cells) {
             const HoverConnection = Cell.MouseEnter.Connect(() => this.OnCellHovered(Cell, ItemId, Name, Item, Img));
             const ClickConnection = Cell.Activated.Connect(() => this.OnCellClicked(Cell, ItemId, Name, Item, Img));
-            const UnhoverConnection = Cell.MouseLeave.Connect(() => this.OnCellUnhovered(Cell, ItemId, Name, Item));
+            //const UnhoverConnection = Cell.MouseLeave.Connect(() => this.OnCellUnhovered(Cell, ItemId, Name, Item));
 
             this.Connections.Set(ItemId + "hover" + Cell.Name, HoverConnection);
             this.Connections.Set(ItemId + "click" + Cell.Name, ClickConnection);
-            this.Connections.Set(ItemId + "unhover" + Cell.Name, UnhoverConnection);
+            //this.Connections.Set(ItemId + "unhover" + Cell.Name, UnhoverConnection);
         }
 
         const [TButton, _IButton] = Cells as [typeof TemplateInvCell, GuiButton];

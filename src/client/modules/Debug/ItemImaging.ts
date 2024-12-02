@@ -1,8 +1,9 @@
-import { Players, RunService, UserInputService, Workspace } from "@rbxts/services";
-import { Collection } from "shared/modules/Collection/Collection";
-import { Common } from "shared/modules/Common/Common";
-import { Plot } from "../Plot/Plot";
+//import { Players, RunService, UserInputService, Workspace } from "@rbxts/services";
+//import { Collection } from "shared/modules/Collection/Collection";
+//import { Common } from "shared/modules/Common/Common";
+//import { Plot } from "../Plot/Plot";
 
+/*
 export namespace DebugItemImaging {
     const Base = Workspace.ItemImaging.ItemImageLoc;
     const CamFollow = Workspace.ItemImaging.CamFollow;
@@ -220,3 +221,4 @@ export namespace DebugItemImaging {
         ));
     }
 }
+*/

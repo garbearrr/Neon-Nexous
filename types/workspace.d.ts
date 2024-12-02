@@ -130,11 +130,11 @@ interface Workspace extends Model {
 					Cost: StringValue;
 					Multiplier: NumberValue;
 					MaxUpgrades: NumberValue;
-					MinOreValue: NumberValue;
-					MaxOreValue: NumberValue;
+					MinOreValue: StringValue;
+					MaxOreValue: StringValue;
 					ItemId: IntValue;
 					Icon: StringValue;
-					Add: NumberValue;
+					Add: StringValue;
 				};
 				CollisionHitbox: Part & {
 					SelectionBox: SelectionBox;

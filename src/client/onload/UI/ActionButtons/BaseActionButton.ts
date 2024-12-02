@@ -5,10 +5,10 @@ declare type ButtonTemplate = StarterGui["MainUI"]["Left"]["Actions"]["1_Build"]
 export abstract class BaseActionButton {
     protected readonly Button: ButtonTemplate;
 
-    protected readonly ActiveColor: Color3 = Color3.fromHex("#585858");
+    public readonly ActiveColor: Color3 = Color3.fromHex("#585858");
     protected readonly HoverSize: number = 1.25;
 
-    private readonly OGBGColor: Color3;
+    public readonly OGBGColor: Color3;
 
     public constructor(Button: ButtonTemplate) {
         this.Button = Button;

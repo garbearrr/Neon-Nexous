@@ -49,7 +49,7 @@ const clamp = (Value: number, Min: number, Max: number) => {
 }
 
 // Lock Player Movement
-const Humanoid = Players.LocalPlayer.Character?.FindFirstChild("Humanoid") as Humanoid;
+const Humanoid = Players.LocalPlayer.Character?.WaitForChild("Humanoid") as Humanoid;
 Humanoid.WalkSpeed = 0;
 Humanoid.JumpPower = 0;
 

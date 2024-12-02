@@ -1,1 +1,2 @@
 import "./startingItems"
+import "./controls"

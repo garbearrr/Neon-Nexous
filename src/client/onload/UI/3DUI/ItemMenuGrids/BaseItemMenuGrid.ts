@@ -1,9 +1,10 @@
-import { CollectionService, Players } from "@rbxts/services";
-import { Collection } from "shared/modules/Collection/Collection";
-import { Scheduling } from "shared/modules/Scheduling/Scheduling";
-import { Util } from "shared/modules/Util/Util";
-import { Template3DPage, ThreeDeePage } from "../ThreeDeePage";
+//import { CollectionService, Players } from "@rbxts/services";
+//import { Collection } from "shared/modules/Collection/Collection";
+//import { Scheduling } from "shared/modules/Scheduling/Scheduling";
+//import { Util } from "shared/modules/Util/Util";
+//import { Template3DPage, ThreeDeePage } from "../ThreeDeePage";
 
+/*
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const ThreeDUI = PlayerGui.WaitForChild("ThreeDUI") as StarterGui["ThreeDUI"];
@@ -131,4 +132,4 @@ export abstract class BaseItemMenuGrid extends ThreeDeePage {
             Row.Destroy();
         }
     }
-}
+}*/

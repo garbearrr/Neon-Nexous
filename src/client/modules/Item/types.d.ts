@@ -104,8 +104,9 @@ interface UpgraderData extends BaseItemData {
         Add: StringValue;
         Cost: StringValue;
         Description: StringValue;
-        MinOreValue: NumberValue;
-        MaxOreValue: NumberValue;
+        MinOreValue: StringValue;
+        MaxOreValue: StringValue;
+        MaxUpgrades: NumberValue;
         Multiplier: NumberValue;
         ItemName: StringValue;
         Icon: StringValue;

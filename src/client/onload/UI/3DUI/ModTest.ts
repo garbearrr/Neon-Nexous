@@ -1,9 +1,9 @@
-import { Players, Workspace } from "@rbxts/services";
-import { Ui3DManager } from "client/modules/Ui3D/3DManager";
-import { Ui3DPage } from "client/modules/Ui3D/3DPage";
+//import { Players, Workspace } from "@rbxts/services";
+//import { Ui3DManager } from "client/modules/Ui3D/3DManager";
+//import { Ui3DPage } from "client/modules/Ui3D/3DPage";
 
 
-const GuiPart = Workspace.WaitForChild("GuiPart") as Workspace["GuiPart"];
+/*const GuiPart = Workspace.WaitForChild("GuiPart") as Workspace["GuiPart"];
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -26,3 +26,4 @@ for (const Page of Pages) {
 }
 
 Ui3DManager.Activate();
+*/

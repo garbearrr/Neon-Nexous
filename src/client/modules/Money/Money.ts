@@ -1,5 +1,5 @@
 import { UI } from "client/onload/UI/currency";
-import { BigNumber, BigNumberAltConstructor } from "shared/modules/BigNumber/BigNumber";
+import { BigNumber } from "shared/modules/BigNumber/BigNumber";
 import { Common } from "shared/modules/Common/Common";
 import { Inventory } from "../Inventory/Inventory";
 import { Level } from "../Level/Level";
@@ -74,6 +74,7 @@ export namespace Money {
 
     export const RemoveMoney = (Value: BigNumber) => {
         State.Money = State.Money.Subtract(Value);
+        UpdateUI();
         _G.Log(`Removed ${Value.ToString()} from Money.`, "Money");
     }
 }
