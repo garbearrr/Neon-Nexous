@@ -18,6 +18,10 @@ export namespace Money {
         return State.Money;
     }
 
+    export const GetAltCurrency = () => {
+        return State.AltCurrency;
+    }
+
     export const AddAltCurrency = (Value: BigNumber = new BigNumber(5)) => {
         const Final = State.AltCurrency.Add(Value);
         UI.Currency.TweenMoney(State.AltCurrency, Final, true);
@@ -70,6 +74,13 @@ export namespace Money {
         Inventory.AddItem(PID);
         _G.Log(`Bought item ${PID} for ${Cost.ToString()}.`, "Money");
         return true;
+    }
+
+    export const RemoveAltCurrency = (Value: BigNumber) => {
+        const Final = State.AltCurrency.Subtract(Value);
+        UI.Currency.TweenMoney(State.AltCurrency, Final, true);
+        State.AltCurrency = Final;
+        _G.Log(`Removed ${Value.ToString()} from AltCurrency.`, "Money");
     }
 
     export const RemoveMoney = (Value: BigNumber) => {

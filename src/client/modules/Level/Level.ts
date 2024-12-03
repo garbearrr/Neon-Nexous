@@ -9,7 +9,7 @@ interface LevelUpPayload {
 }
 
 export namespace Level {
-    const BASE_AMOUNT = 100;
+    const BASE_AMOUNT = 200;
 
     // Internal state using BigNumber for XP
     const State = {

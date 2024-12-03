@@ -12,3 +12,8 @@ Inventory.AddItem(30001, 99);
 Inventory.AddItem(30002, 99);
 Inventory.AddItem(30003, 99);
 Inventory.AddItem(40000, 99);
+Inventory.AddItem(40001, 99);
+Inventory.AddItem(40002, 99);
+Inventory.AddItem(40003, 99);
+Inventory.AddItem(40004, 99);
+Inventory.AddItem(40005, 99);

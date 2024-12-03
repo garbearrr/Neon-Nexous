@@ -68,6 +68,7 @@ const Main = Parent.WaitForChild("Main") as CanvasGroup;
 const BG = Main.WaitForChild("BG") as Frame;
 const Blur = Main.WaitForChild("Blur") as Frame;
 const Container = BG.WaitForChild("Container") as Frame;
+const BGImage = BG.WaitForChild("BGImage") as ImageLabel;
 const Logo = Container.WaitForChild("Logo") as ImageLabel;
 
 const PauseEvery = (Parent.WaitForChild("PauseEvery") as NumberValue).Value;
@@ -159,6 +160,12 @@ const mainFade = TweenService.Create(
     { GroupTransparency: 1 }
 );
 
+const bgImageFade = TweenService.Create(
+    BGImage,
+    TI,
+    { ImageTransparency: 1 }
+);
+
 let camDiscon: () => void;
 const OnPlayPress = () => {
     mainFade.Completed.Connect(() => {
@@ -181,7 +188,8 @@ const OnPlayPress = () => {
 // Wait for all tweens to complete before proceeding
 fadeHintTween.Completed.Connect(() => {
     logoTween.Play();
-    bgTween.Play();
+    //bgTween.Play();
+    bgImageFade.Play();
     PlayButtonTween.Play();
 
     const Target = (Workspace.WaitForChild("Environment").WaitForChild("Base") as Model).WorldPivot.Position;

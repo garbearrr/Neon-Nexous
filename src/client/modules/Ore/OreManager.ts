@@ -28,7 +28,7 @@ export namespace OreManager {
         Plot.PlotItem.Touched.Connect((Other) => {
             if (!CollectionService.HasTag(Other, "Ore")) return;
             const OID = Other.Name;
-            OreManager.Get(tonumber(OID) || -1)?.Destroy();
+            OreManager.Get(tonumber(OID) ?? -1)?.Destroy();
             _G.Log(`Ore hit plot ${OID}`, "Plot|Ore");
         });
     }

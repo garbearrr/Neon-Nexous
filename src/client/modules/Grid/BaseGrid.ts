@@ -220,11 +220,10 @@ export abstract class BaseGrid {
         const LocInCells = this.GetItemLocInCells(Loc);
 
         const CellsTakenUp: Vector2[] = [];
-        for (let y = 0; y < ItemSizeCells.Y; y++) {
-            for (let x = 0; x < ItemSizeCells.X; x++) {
-                const CX = LocInCells.X + x;
-                const CY = math.abs(LocInCells.Y + y);
-                CellsTakenUp.push(new Vector2(math.floor(CX), math.floor(CY)));
+        // Top left is 0,0
+        for (let x = 0; x < ItemSizeCells.X; x++) {
+            for (let y = 0; y < ItemSizeCells.Y; y++) {
+                CellsTakenUp.push(new Vector2(LocInCells.X + x, LocInCells.Y + y));
             }
         }
 
@@ -236,35 +235,22 @@ export abstract class BaseGrid {
      */
     public GetItemLocInCells(Loc?: Vector3): Vector2 {
         const ItemSizeCells = this.GetItemSizeInCellsXY();
-        const [CellSkip, CellOffset] = this.GetCellSkipAndCellOffset();
+        //const [CellSkip, CellOffset] = this.GetCellSkipAndCellOffset();
         const Target = Loc || this.LastTargetCFrame.Position;
 
         const GridParent = this.PState.ParentGridPart;
         const GridTexture = this.GridTexture;
 
-        const GridSizeCells = new Vector2(GridParent.Size.X / GridTexture.StudsPerTileU, GridParent.Size.Z / GridTexture.StudsPerTileV);
+        //const GridSizeCells = new Vector2(GridParent.Size.X / GridTexture.StudsPerTileU, GridParent.Size.Z / GridTexture.StudsPerTileV);
         const TopLeftGrid = new Vector2(GridParent.Position.X - GridParent.Size.X / 2, GridParent.Position.Z - GridParent.Size.Z / 2);
+        const TopLeftTarget = new Vector2(Target.X - this.ItemSize.X / 2, Target.Z - this.ItemSize.Z / 2);
 
         const CellSizeX = GridTexture.StudsPerTileU;
         const CellSizeY = GridTexture.StudsPerTileV;
 
-        const ClampedTarget = new Vector3(
-            math.clamp(
-                Target.X,
-                TopLeftGrid.X                               + CellSkip.X * CellSizeX + CellOffset.X,
-                TopLeftGrid.X + GridSizeCells.X * CellSizeX - CellSkip.X * CellSizeX - CellOffset.X
-            ),
-            GridParent.Position.Y + GridParent.Size.Y / 2 + this.ItemSize.Y / 2,
-            math.clamp(
-                Target.Z, 
-                TopLeftGrid.Y                               + CellSkip.Y * CellSizeY + CellOffset.Y, 
-                TopLeftGrid.Y + GridSizeCells.Y * CellSizeY - CellSkip.Y * CellSizeY - CellOffset.Y,
-            )
-        );
-
         const CellsAwayFromTopLeft = new Vector2(
-            (ClampedTarget.X - TopLeftGrid.X) / CellSizeX,
-            (TopLeftGrid.Y - ClampedTarget.Z) / CellSizeY
+            (TopLeftTarget.X - TopLeftGrid.X) / CellSizeX,
+            (TopLeftGrid.Y - TopLeftTarget.Y) / CellSizeY
         );
 
         const NoWholeNumber = new Vector2(
@@ -277,12 +263,9 @@ export abstract class BaseGrid {
             math.floor(CellsAwayFromTopLeft.Y)
         );
 
-        const SnapSize = this.SnapSize;
-
-        // Adjust for fractional cells if SnapSize is set
         const SnappedDecimal = new Vector2(
-            this.FindClosestFraction(NoWholeNumber.X, SnapSize, ItemSizeCells.X),
-            this.FindClosestFraction(NoWholeNumber.Y, SnapSize, ItemSizeCells.Y)
+            this.FindClosestFraction(NoWholeNumber.X, this.SnapSize, ItemSizeCells.X),
+            this.FindClosestFraction(NoWholeNumber.Y, this.SnapSize, ItemSizeCells.Y)
         );
 
         const SnappedWhole = new Vector2(
@@ -290,7 +273,7 @@ export abstract class BaseGrid {
             NoDecimal.Y + SnappedDecimal.Y
         );
 
-        return SnappedWhole;
+        return new Vector2(math.abs(SnappedWhole.X), math.abs(SnappedWhole.Y));
     }
 
     /**

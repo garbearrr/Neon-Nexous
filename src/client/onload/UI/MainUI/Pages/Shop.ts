@@ -35,6 +35,9 @@ class ShopMenuGrid extends BaseItemMenuGrid {
             const Items = Folder.GetChildren() as PossibleItems[];
 
             for (const Item of Items) {
+
+                if (!Item.Stats.InShop.Value) continue;
+
                 const ID = Item.Stats.ItemId.Value;
                 const Name = Item.Stats.ItemName.Value;
                 const Img = Item.Stats.Icon.Value;

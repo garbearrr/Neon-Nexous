@@ -1,12 +1,51 @@
 interface Workspace extends Model {
 	Items: Model & {
 		Furnaces: Folder & {
+			["20001"]: Part & {
+				Stats: Folder & {
+					ItemName: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					Multiplier: StringValue;
+					InAltShop: BoolValue;
+					InShop: BoolValue;
+					MaxOreValue: StringValue;
+					MinOreValue: StringValue;
+					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Wire: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Frame: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				ClickDetector: ClickDetector;
+				["Infused Processor"]: Folder;
+				Receiver: Part & {
+					PointLight: PointLight;
+					Beam: Beam;
+					WeldConstraint: WeldConstraint;
+				};
+			};
 			["20000"]: Part & {
 				Stats: Folder & {
 					ItemName: StringValue;
 					Description: StringValue;
 					Cost: StringValue;
 					Multiplier: StringValue;
+					InAltShop: NumberValue;
+					InShop: BoolValue;
 					MaxOreValue: StringValue;
 					MinOreValue: StringValue;
 					Add: StringValue;
@@ -34,16 +73,94 @@ interface Workspace extends Model {
 					WeldConstraint: WeldConstraint;
 				};
 			};
+			["20002"]: Part & {
+				Stats: Folder & {
+					ItemName: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					Multiplier: StringValue;
+					InAltShop: BoolValue;
+					InShop: BoolValue;
+					MaxOreValue: StringValue;
+					MinOreValue: StringValue;
+					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					RecCover: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Neon: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Rocks: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				Receiver: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+				ClickDetector: ClickDetector;
+				["Ancient Processor"]: Folder;
+			};
+			["20003"]: Part & {
+				Stats: Folder & {
+					ItemName: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					Multiplier: StringValue;
+					InAltShop: BoolValue;
+					InShop: BoolValue;
+					MaxOreValue: StringValue;
+					MinOreValue: StringValue;
+					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Sun: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Frame: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				Receiver: Part & {
+					ParticleEmitter: ParticleEmitter;
+					PointLight: PointLight;
+					Beam: Beam;
+					WeldConstraint: WeldConstraint;
+				};
+				Sunburn: Folder;
+				ClickDetector: ClickDetector;
+			};
 		};
 		Platform: Part;
 		Conveyors: Folder & {
 			["30000"]: Part & {
 				ConveyA1: Attachment;
 				Stats: Folder & {
+					InShop: BoolValue;
 					ItemName: StringValue;
 					Description: StringValue;
 					Cost: StringValue;
 					Speed: NumberValue;
+					InAltShop: NumberValue;
 					Icon: StringValue;
 					ItemId: IntValue;
 				};
@@ -71,8 +188,162 @@ interface Workspace extends Model {
 				ClickDetector: ClickDetector;
 				BeamA2: Attachment;
 			};
+			["30002"]: Part & {
+				ConveyA1: Attachment;
+				Stats: Folder & {
+					InShop: BoolValue;
+					ItemName: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					Speed: NumberValue;
+					InAltShop: BoolValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				BeamA1: Attachment;
+				DirectionIndicator: Beam & {
+					["Conveyor Arrow"]: Decal;
+				};
+				ConveyA2: Attachment;
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Conveyor: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Front: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Sides: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				["Infused Conveyor"]: Folder;
+				ClickDetector: ClickDetector;
+				BeamA2: Attachment;
+			};
+			["30003"]: Part & {
+				ConveyA1: Attachment;
+				Stats: Folder & {
+					InShop: BoolValue;
+					ItemName: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					Speed: NumberValue;
+					InAltShop: BoolValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				BeamA1: Attachment;
+				DirectionIndicator: Beam & {
+					["Conveyor Arrow"]: Decal;
+				};
+				ConveyA2: Attachment;
+				["Optimized Conveyor"]: Folder;
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Front: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Sides: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				ClickDetector: ClickDetector;
+				BeamA2: Attachment;
+			};
+			["30001"]: Part & {
+				ConveyA1: Attachment;
+				Stats: Folder & {
+					InShop: BoolValue;
+					ItemName: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					Speed: NumberValue;
+					InAltShop: BoolValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				BeamA1: Attachment;
+				DirectionIndicator: Beam & {
+					["Conveyor Arrow"]: Decal;
+				};
+				ConveyA2: Attachment;
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Conveyor: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Front: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Sides: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				["Walled Conveyor"]: Folder;
+				ClickDetector: ClickDetector;
+				BeamA2: Attachment;
+			};
 		};
 		Upgraders: Folder & {
+			["40002"]: Part & {
+				["Infused Refiner"]: Folder;
+				Stats: Folder & {
+					MaxOreValue: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					MinOreValue: StringValue;
+					InShop: BoolValue;
+					InAltShop: BoolValue;
+					Multiplier: StringValue;
+					MaxUpgrades: NumberValue;
+					ItemName: StringValue;
+					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					UpgraderGuide: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Conveyor: Folder & {
+						Front: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+						Conveyor: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+					};
+				};
+				ClickDetector: ClickDetector;
+				Conveyor: Part & {
+					ConveyA1: Attachment;
+					BeamA2: Attachment;
+					DirectionIndicator: Beam & {
+						["Conveyor Arrow"]: Decal;
+					};
+					Speed: NumberValue;
+					BeamA1: Attachment;
+					ConveyA2: Attachment;
+					WeldConstraint: WeldConstraint;
+				};
+				Upgrade: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+			};
 			["40001"]: Part & {
 				Conveyor: Part & {
 					ConveyA1: Attachment;
@@ -94,6 +365,7 @@ interface Workspace extends Model {
 					SelectionBox: SelectionBox;
 					WeldConstraint: WeldConstraint;
 				};
+				ProximityPrompt: ProximityPrompt;
 				Model: Folder & {
 					Conveyor: Folder & {
 						Front: Part & {
@@ -111,30 +383,86 @@ interface Workspace extends Model {
 					WeldConstraint: WeldConstraint;
 				};
 				Stats: Folder & {
-					ItemName: StringValue;
+					MaxOreValue: StringValue;
 					Description: StringValue;
 					Cost: StringValue;
-					Multiplier: NumberValue;
+					MinOreValue: StringValue;
+					InShop: BoolValue;
+					InAltShop: BoolValue;
+					Multiplier: StringValue;
+					Add: StringValue;
 					MaxUpgrades: NumberValue;
-					MinOreValue: NumberValue;
-					MaxOreValue: NumberValue;
-					ItemId: IntValue;
+					ItemName: StringValue;
 					Icon: StringValue;
-					Add: NumberValue;
+					ItemId: IntValue;
+				};
+			};
+			["40003"]: Part & {
+				["Ancient Upgrader"]: Folder;
+				Stats: Folder & {
+					MaxOreValue: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					MinOreValue: StringValue;
+					InShop: BoolValue;
+					InAltShop: BoolValue;
+					Multiplier: StringValue;
+					MaxUpgrades: NumberValue;
+					ItemName: StringValue;
+					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					UpgraderGuide: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+					Conveyor: Folder & {
+						Front: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+						Conveyor: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+					};
+					Walls: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				ClickDetector: ClickDetector;
+				Conveyor: Part & {
+					ConveyA1: Attachment;
+					BeamA2: Attachment;
+					DirectionIndicator: Beam & {
+						["Conveyor Arrow"]: Decal;
+					};
+					Speed: NumberValue;
+					BeamA1: Attachment;
+					ConveyA2: Attachment;
+					WeldConstraint: WeldConstraint;
+				};
+				Upgrade: Part & {
+					WeldConstraint: WeldConstraint;
 				};
 			};
 			["40000"]: Part & {
 				Stats: Folder & {
-					ItemName: StringValue;
+					MaxOreValue: StringValue;
 					Description: StringValue;
 					Cost: StringValue;
-					Multiplier: NumberValue;
-					MaxUpgrades: NumberValue;
 					MinOreValue: StringValue;
-					MaxOreValue: StringValue;
-					ItemId: IntValue;
-					Icon: StringValue;
+					InShop: BoolValue;
+					InAltShop: NumberValue;
+					Multiplier: StringValue;
+					MaxUpgrades: NumberValue;
+					ItemName: StringValue;
 					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
 				};
 				CollisionHitbox: Part & {
 					SelectionBox: SelectionBox;
@@ -180,6 +508,150 @@ interface Workspace extends Model {
 					WeldConstraint: WeldConstraint;
 				};
 			};
+			["40005"]: Part & {
+				Stats: Folder & {
+					MaxOreValue: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					MinOreValue: StringValue;
+					InShop: BoolValue;
+					InAltShop: BoolValue;
+					Multiplier: StringValue;
+					MaxUpgrades: NumberValue;
+					ItemName: StringValue;
+					Add: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					UpgraderSupport: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					NeonRing: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					NeonSupport: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Sun: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Base: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Conveyor: Folder & {
+						Front: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+						Conveyor: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+					};
+				};
+				["Artificial Horizon"]: Folder;
+				ClickDetector: ClickDetector;
+				Conveyor: Part & {
+					ConveyA1: Attachment;
+					BeamA2: Attachment;
+					DirectionIndicator: Beam & {
+						["Conveyor Arrow"]: Decal;
+					};
+					Speed: NumberValue;
+					BeamA1: Attachment;
+					ConveyA2: Attachment;
+					WeldConstraint: WeldConstraint;
+				};
+				Upgrade: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+			};
+			["40004"]: Part & {
+				Stats: Folder & {
+					MaxOreValue: StringValue;
+					Description: StringValue;
+					Cost: StringValue;
+					MinOreValue: StringValue;
+					InShop: BoolValue;
+					InAltShop: BoolValue;
+					Multiplier: StringValue;
+					Add: StringValue;
+					MaxUpgrades: NumberValue;
+					ItemName: StringValue;
+					Icon: StringValue;
+					ItemId: IntValue;
+				};
+				CollisionHitbox: Part & {
+					SelectionBox: SelectionBox;
+					WeldConstraint: WeldConstraint;
+				};
+				Model: Folder & {
+					Rails: UnionOperation & {
+						WeldConstraint: WeldConstraint;
+					};
+					Conveyor: Folder & {
+						Front: Part & {
+							WeldConstraint: WeldConstraint;
+						};
+						Conveyor: Part & {
+							Hit: Attachment;
+							WeldConstraint: WeldConstraint;
+						};
+					};
+					Lazer: Part & {
+						Part3: Part & {
+							Mesh: BlockMesh;
+							WeldConstraint: WeldConstraint;
+						};
+						Part1: Part & {
+							Mesh: BlockMesh;
+							WeldConstraint: WeldConstraint;
+						};
+						Part5: Part & {
+							Mesh: BlockMesh;
+							WeldConstraint: WeldConstraint;
+						};
+						Part6: Part & {
+							Barrel: Attachment;
+							Mesh: BlockMesh;
+							WeldConstraint: WeldConstraint;
+						};
+						Part4: Part & {
+							Mesh: BlockMesh;
+							WeldConstraint: WeldConstraint;
+						};
+						Part2: Part & {
+							Mesh: BlockMesh;
+							WeldConstraint: WeldConstraint;
+						};
+						Beam: Beam;
+						Mesh: BlockMesh;
+						WeldConstraint: WeldConstraint;
+					};
+					Part: Part & {
+						WeldConstraint: WeldConstraint;
+					};
+				};
+				["Focused Refiner"]: Folder;
+				ClickDetector: ClickDetector;
+				Conveyor: Part & {
+					ConveyA1: Attachment;
+					BeamA2: Attachment;
+					DirectionIndicator: Beam & {
+						["Conveyor Arrow"]: Decal;
+					};
+					Speed: NumberValue;
+					BeamA1: Attachment;
+					ConveyA2: Attachment;
+					WeldConstraint: WeldConstraint;
+				};
+				Upgrade: Part & {
+					WeldConstraint: WeldConstraint;
+				};
+			};
 		};
 		SpawnLocation: SpawnLocation;
 		Droppers: Folder & {
@@ -188,8 +660,10 @@ interface Workspace extends Model {
 				Stats: Folder & {
 					ItemName: StringValue;
 					Description: StringValue;
-					OreValue: StringValue;
 					Cost: StringValue;
+					InAltShop: NumberValue;
+					OreValue: StringValue;
+					InShop: BoolValue;
 					DropSpeed: NumberValue;
 					Icon: StringValue;
 					ItemId: IntValue;
@@ -229,8 +703,10 @@ interface Workspace extends Model {
 				Stats: Folder & {
 					ItemName: StringValue;
 					Description: StringValue;
-					OreValue: StringValue;
 					Cost: StringValue;
+					InAltShop: BoolValue;
+					OreValue: StringValue;
+					InShop: BoolValue;
 					DropSpeed: NumberValue;
 					Icon: StringValue;
 					ItemId: IntValue;
@@ -270,8 +746,10 @@ interface Workspace extends Model {
 				Stats: Folder & {
 					ItemName: StringValue;
 					Description: StringValue;
-					OreValue: StringValue;
 					Cost: StringValue;
+					InAltShop: BoolValue;
+					OreValue: StringValue;
+					InShop: BoolValue;
 					DropSpeed: NumberValue;
 					Icon: StringValue;
 					ItemId: IntValue;
@@ -311,12 +789,19 @@ interface Workspace extends Model {
 	Camera: Camera;
 	Environment: Folder & {
 		AltShop: Model & {
+			ProximityPrompt: ProximityPrompt;
 			NeonCrystal: Model;
 			Top: Model & {
 				Top: Part;
 			};
 			Pillars: Model;
-			Base: Model;
+			Base: Model & {
+				Container: Part & {
+					Item: Attachment;
+					Cam: Attachment;
+					Sparks: ParticleEmitter;
+				};
+			};
 		};
 		Islands: Folder & {
 			Orbs: Model;

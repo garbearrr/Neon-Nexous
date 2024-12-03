@@ -105,6 +105,8 @@ export class Input {
     private readonly Bindings = new Collection<string, Collection<string, iBindConfig>>();
     private readonly Connections = new Collection<string, RBXScriptConnection>();
 
+    private Paused = false;
+
     private static _instance: Input | undefined;
 
     public readonly Events = {
@@ -136,11 +138,21 @@ export class Input {
         return this.Bindings;
     }
 
+    public PauseInputs(): void {
+        this.Paused = true;
+    }
+
+    public ResumeInputs(): void {
+        this.Paused = false;
+    }
+
     public static Instance(): Input {
         return Input._instance || (Input._instance = new Input());
     }
 
     private OnEvent(input: InputObject, gameProcessedEvent: boolean, onType: keyof typeof OnType): void {
+        if (this.Paused) return;
+
         const Key = input.KeyCode.Name !== "Unknown" ? input.KeyCode.Name : input.UserInputType.Name;
         const KeyEnding = Key + "_" + onType;
         const Bindings = this.Bindings.Filter((_, k) => k.sub(-KeyEnding.size()) === KeyEnding);
