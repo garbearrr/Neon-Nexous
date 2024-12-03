@@ -183,7 +183,7 @@ export namespace UI.Currency {
         currentTweenAltCurrency = TweenService.Create(NumberValue, TI, { Value: tonumber(to.ToAbbreviatedString(true)) || 0 });
         currentTweenAltCurrency.Completed.Connect(() => {
             Connection.Disconnect();
-            MoneyText.Text = to.ToAbbreviatedString();
+            MoneyText.Text = to.ToAbbreviatedString(false, 0);
             MoneyText.Size = OriginalSize;
             Grad.Enabled = false;
             MoneyText.UIGradient.Enabled = true;

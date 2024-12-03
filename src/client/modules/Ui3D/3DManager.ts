@@ -1,7 +1,8 @@
 // Ui3DManager.ts
-import { Ui3DPage } from "./3DPage";
-import { LinkedList } from "shared/modules/LinkedList/LinkedList";
+//import { Ui3DPage } from "./3DPage";
+//import { LinkedList } from "shared/modules/LinkedList/LinkedList";
 
+/*
 export namespace Ui3DManager {
     const NewPageOffset = 0.25; // Offset between pages
     const PageYOffset = -0.5;
@@ -52,4 +53,4 @@ export namespace Ui3DManager {
             Page.SetFocused(true);
         }
     };
-}
+}*/

@@ -68,6 +68,11 @@ export namespace PlacedItems {
         });
     }
 
+    /** Get Item by PID */
+    export const GetItem = (PID: number): BaseItemType | undefined => {
+        return PIDItemCache.Get(PID);
+    }
+
     /** Get unique items in cache */
     export const GetUniqueItems = (): ICollection<number, BaseItemType> => {
         return PIDItemCache;

@@ -1,8 +1,9 @@
-import { Workspace, RunService, UserInputService, TweenService, Players } from "@rbxts/services";
-import { Collection } from "shared/modules/Collection/Collection";
-import { Scheduling } from "shared/modules/Scheduling/Scheduling";
-import { ThreeDeePage } from "./ThreeDeePage";
+//import { Workspace, RunService, UserInputService, TweenService, Players } from "@rbxts/services";
+//import { Collection } from "shared/modules/Collection/Collection";
+//import { Scheduling } from "shared/modules/Scheduling/Scheduling";
+//import { ThreeDeePage } from "./ThreeDeePage";
 
+/*
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const SurfaceGui = PlayerGui.WaitForChild("ThreeDUI") as StarterGui["ThreeDUI"];
@@ -293,3 +294,4 @@ class ThreeDUIManager {
 }
 
 export default new ThreeDUIManager();
+*/

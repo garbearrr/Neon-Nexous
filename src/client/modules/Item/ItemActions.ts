@@ -55,7 +55,7 @@ export namespace ItemActions {
 
     const SellAction = () => {
         SelectedItems.ForEach((Item) => {
-            Money.AddMoney(new BigNumber(Item.Stats.Cost.Value));
+            Money.AddMoney(new BigNumber(Item.Stats.Cost.Value), false);
             PlacedItems.RemoveItem(Item.GetPID());
         });
         HideUI();
@@ -74,6 +74,7 @@ export namespace ItemActions {
         
         ActionUI.Visible = true;
         ActionUI.Info.ItemName.Text = Item.Stats.ItemName.Value;
+        ActionUI.ItemIcon.Image = Item.Stats.Icon.Value;
         ActionUI.Info.Actions.Visible = true;
         ActionUI.Info.UIListLayout.VerticalFlex = Enum.UIFlexAlignment.Fill;
         ActionUIOpen = true;
@@ -86,9 +87,10 @@ export namespace ItemActions {
         Connections.Set("move", ActionUI.Info.Actions.Move.Activated.Connect(() => MoveAction()));
     }
 
-    export const ShowBasicUI = (ItemName: string) => {
+    export const ShowBasicUI = (ItemName: string, Icon: string) => {
         ActionUI.Visible = true;
         ActionUI.Info.ItemName.Text = ItemName;
+        ActionUI.ItemIcon.Image = Icon
         ActionUI.Info.Actions.Visible = false;
         ActionUI.Info.UIListLayout.VerticalFlex = Enum.UIFlexAlignment.None;
     }

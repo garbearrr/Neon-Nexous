@@ -49,7 +49,7 @@ const clamp = (Value: number, Min: number, Max: number) => {
 }
 
 // Lock Player Movement
-const Humanoid = Players.LocalPlayer.Character?.FindFirstChild("Humanoid") as Humanoid;
+const Humanoid = Players.LocalPlayer.Character?.WaitForChild("Humanoid") as Humanoid;
 Humanoid.WalkSpeed = 0;
 Humanoid.JumpPower = 0;
 
@@ -65,10 +65,11 @@ const MainUI = Parent.Parent!.WaitForChild("MainUI") as ScreenGui
 MainUI.Enabled = false;
 
 const Main = Parent.WaitForChild("Main") as CanvasGroup;
-const BG = Main.WaitForChild("BG") as typeof Parent["BG"];
+const BG = Main.WaitForChild("BG") as Frame;
 const Blur = Main.WaitForChild("Blur") as Frame;
-const Container = BG.WaitForChild("Container") as typeof Parent["BG"]["Container"];
-const Logo = Container.WaitForChild("Logo") as typeof Parent["BG"]["Container"]["Logo"];
+const Container = BG.WaitForChild("Container") as Frame;
+const BGImage = BG.WaitForChild("BGImage") as ImageLabel;
+const Logo = Container.WaitForChild("Logo") as ImageLabel;
 
 const PauseEvery = (Parent.WaitForChild("PauseEvery") as NumberValue).Value;
 
@@ -89,7 +90,7 @@ const AssetsToPreload = [
     ...Workspace.WaitForChild("Items").GetDescendants(),
     ...Workspace.WaitForChild("Plots").GetDescendants(),
     //...ReplicatedStorage.GetDescendants(),
-    ...StarterGui.GetDescendants()
+    ...Players.LocalPlayer.WaitForChild("PlayerGui").GetDescendants(),
 ]
 
 const AssetCount = AssetsToPreload.size();
@@ -159,6 +160,12 @@ const mainFade = TweenService.Create(
     { GroupTransparency: 1 }
 );
 
+const bgImageFade = TweenService.Create(
+    BGImage,
+    TI,
+    { ImageTransparency: 1 }
+);
+
 let camDiscon: () => void;
 const OnPlayPress = () => {
     mainFade.Completed.Connect(() => {
@@ -181,7 +188,8 @@ const OnPlayPress = () => {
 // Wait for all tweens to complete before proceeding
 fadeHintTween.Completed.Connect(() => {
     logoTween.Play();
-    bgTween.Play();
+    //bgTween.Play();
+    bgImageFade.Play();
     PlayButtonTween.Play();
 
     const Target = (Workspace.WaitForChild("Environment").WaitForChild("Base") as Model).WorldPivot.Position;

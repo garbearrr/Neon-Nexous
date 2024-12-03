@@ -23,6 +23,10 @@ export class WidgetPage {
         return this.PageName;
     }
 
+    public GetParent(): GuiObject {
+        return this.Parent;
+    }
+
     public GetWidget<T extends BaseWidget<GuiObject, any>>(Name: string): T {
         return this.Widgets.Get(Name) as T;
     }

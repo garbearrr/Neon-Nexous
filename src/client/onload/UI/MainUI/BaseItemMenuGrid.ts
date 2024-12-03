@@ -61,22 +61,24 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
         }
     }
 
-    private GenerateCells() {
+    private GenerateCells(existing: string[] = []) {
         const FoundItems = this.ItemSource();
         const Sorted = FoundItems.Sort((a, b) => (tonumber(a.ItemId) || 0) - (tonumber(b.ItemId) || 0));
+        const Filtered = Sorted.Filter((Val, _Key) => !existing.includes(Val.ItemId + ""));
 
         const NewCells = [];
-        for (const {ItemId, Name, Item, Img} of Sorted.Values()) {
+        for (const {ItemId, Name, Item, Img} of Filtered.Values()) {
             const CellClone = this.TemplateRow.TemplateItem.Clone();
             CellClone.Parent = this.ContentFrame;
             CollectionService.AddTag(CellClone, this.CellTag);
 
             CellClone.Visible = true;
-            CellClone.ImageButton.Image = Img;
+            CellClone.Icon.Image = Img;
             CellClone.LayoutOrder = tonumber(ItemId) || 0;
+            CellClone.Name = ItemId + "";
             NewCells.push(CellClone);
 
-            this.OnCellAdded([CellClone, CellClone.ImageButton], ItemId, Name, Item, Img);
+            this.OnCellAdded([CellClone], ItemId, Name, Item, Img);
         }
 
         return NewCells;
@@ -97,11 +99,13 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
     }
 
     protected PopulateMenu() {
-        let ExistingCells = this.ContentFrame.GetDescendants().filter(c => CollectionService.HasTag(c, this.CellTag)) as (typeof this.TemplateRow.TemplateItem)[];
-        if (ExistingCells.size() <= 0) {
-            ExistingCells = this.GenerateCells();
-        }
-        ExistingCells.sort((a, b) => a.LayoutOrder < b.LayoutOrder);
+        //let ExistingCells = this.ContentFrame.GetDescendants().filter(c => CollectionService.HasTag(c, this.CellTag)) as (typeof this.TemplateRow.TemplateItem)[];
+        //if (ExistingCells.size() <= 0) {
+            //ExistingCells = this.GenerateCells();
+        //}
+        //ExistingCells.sort((a, b) => a.LayoutOrder < b.LayoutOrder);
+
+        const ExistingCells = this.GenerateCells().sort((a, b) => a.LayoutOrder < b.LayoutOrder);
 
         const TemplateRowWidth = this.TemplateRow.AbsoluteSize.X;
         const CellsInRow = TemplateRowWidth / this.OGCellSize;
@@ -134,7 +138,7 @@ export abstract class BaseItemMenuGrid extends MainUIPage {
                     CellClone.Parent = RowClone;
                     CellClone.Position = new UDim2(0, j * NewCellSize, 0, 0);
                     CellClone.Visible = true;
-                    CellClone.ImageButton.Visible = false;
+                    CellClone.Icon.Visible = false;
                     CellClone.UIStroke.Enabled = false;
                     CellClone.LayoutOrder = 999999;
                 }

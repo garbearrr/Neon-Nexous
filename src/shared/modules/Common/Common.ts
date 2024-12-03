@@ -3,6 +3,11 @@ import { Collection } from "../Collection/Collection";
 
 
 export namespace Common {
+    export const GetAllAltShopItems = (): ICollection<string, PossibleItems> => {
+        const All = GetAllItems();
+        return All.Filter((Item, _) => Item.Stats.InAltShop.Value > 0);
+    }
+
     export const GetAllItems = (): Collection<string, PossibleItems> => {
         const FoundItems = new Collection<string, PossibleItems>();
         const Items = Workspace.FindFirstChild("Items") as Workspace["Items"];

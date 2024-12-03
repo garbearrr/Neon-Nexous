@@ -1,6 +1,7 @@
 import { Players, RunService, TweenService } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 import { MainUIPage } from "./MainUIPage";
+import { Placement } from "client/modules/Placement/Placement";
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
@@ -25,6 +26,7 @@ const ImageOrder = [
     Background.WaitForChild("MH-Boxes-Padded") as Decal,
     Background.WaitForChild("MH-Shop-Padded") as Decal,
     Background.WaitForChild("MH-Cog-Padded") as Decal,
+    Background.WaitForChild("NN-Grad-Padded") as Decal,
     Background.WaitForChild("MH-Bug-Padded") as Decal,
 ];
 
@@ -53,7 +55,7 @@ export namespace BGScroll {
             .Connect(() => UpdateTileSize());
         Connections.Set("SizeChange", SizeChangeConn);
 
-        const CloseConn = MainContent.TopBar.FillBotCorners.Close.Activated.Connect(() => {
+        const CloseConn = MainContent.TopBar.BarContent.Sparkle.Close.Activated.Connect(() => {
             Deactivate();
         });
         Connections.Set("Close", CloseConn);
@@ -67,6 +69,7 @@ export namespace BGScroll {
         Connections.Set("Update", UpdateConn);
 
         MainFrame.Visible = true; // Show the MainFrame
+        Placement.PausePlacement();
         _G.Log("Activated BGScroll", "BGScroll");
     }
 
@@ -112,6 +115,7 @@ export namespace BGScroll {
             Frame.OnClose();
         }
 
+        Placement.UnpausePlacement();
         _G.Log("Deactivated BGScroll", "BGScroll");
     };
 
@@ -174,7 +178,7 @@ export namespace BGScroll {
         const TargetCanvasPosY = Index * FrameHeight;
 
         Background.Image = ImageOrder[Index].Texture;
-        MainContent.TopBar.FillBotCorners.Title.Text = TargetFrame.Name;
+        MainContent.TopBar.BarContent.Sparkle.Title.Text = TargetFrame.Name;
 
         if (!Active) {
             // If the module is not active, immediately set the scroll to the target frame

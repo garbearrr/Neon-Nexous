@@ -7,9 +7,12 @@ interface BaseItemData {
     readonly Model: Folder;
     readonly Stats: Folder & {
         ItemId: IntValue;
-        Cost: NumberValue;
+        Cost: StringValue;
         ItemName: StringValue;
         Icon: StringValue;
+        InAltShop: NumberValue;
+        InShop: BoolValue;
+        Description: StringValue;
     };
 }
 
@@ -51,8 +54,11 @@ interface ConveyorData extends BaseItemData {
     Stats: Folder & {
         Speed: NumberValue;
         ItemId: IntValue;
-        Cost: NumberValue;
+        Cost: StringValue;
+        Description: StringValue;
         Icon: StringValue;
+        InAltShop: NumberValue;
+        InShop: BoolValue;
         ItemName: StringValue;
     };
 }
@@ -65,9 +71,12 @@ interface DropperData extends BaseItemData {
     Stats: Folder & {
         ItemId: IntValue;
         DropSpeed: NumberValue;
-        OreValue: NumberValue;
-        Cost: NumberValue;
+        OreValue: StringValue;
+        Cost: StringValue;
+        Description: StringValue;
         Icon: StringValue;
+        InAltShop: NumberValue;
+        InShop: BoolValue;
         ItemName: StringValue;
     };
 }
@@ -75,11 +84,16 @@ interface DropperData extends BaseItemData {
 interface FurnaceData extends BaseItemData {
     Receiver: Part;
     Stats: Folder & {
-        Add: NumberValue;
-        Cost: NumberValue;
-        Multiplier: NumberValue;
+        Add: StringValue;
+        Cost: StringValue;
+        Description: StringValue;
+        MinOreValue: StringValue;
+        MaxOreValue: StringValue;
+        Multiplier: StringValue;
         ItemId: IntValue;
         Icon: StringValue;
+        InAltShop: NumberValue;
+        InShop: BoolValue;
         ItemName: StringValue;
     }
 }
@@ -95,13 +109,17 @@ interface UpgraderData extends BaseItemData {
         WeldConstraint: WeldConstraint;
     }
     Stats: Folder & {
-        Add: NumberValue;
-        Cost: NumberValue;
-        MinOreValue: NumberValue;
-        MaxOreValue: NumberValue;
-        Multiplier: NumberValue;
+        Add: StringValue;
+        Cost: StringValue;
+        Description: StringValue;
+        MinOreValue: StringValue;
+        MaxOreValue: StringValue;
+        MaxUpgrades: NumberValue;
+        Multiplier: StringValue;
         ItemName: StringValue;
         Icon: StringValue;
+        InAltShop: NumberValue;
+        InShop: BoolValue;
         ItemId: IntValue;
     }
     Upgrade: Part & {

@@ -2,6 +2,7 @@
 import { Players, RunService, UserInputService, Workspace } from "@rbxts/services";
 import { Collection } from "shared/modules/Collection/Collection";
 
+/*
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
 const Base3D = PlayerGui.WaitForChild("Base3D") as StarterGui["Base3D"];
@@ -226,4 +227,4 @@ export class Ui3DPage {
         // Destroy the Part
         this.Part.Destroy();
     }
-}
+}*/

@@ -15,6 +15,9 @@ interface iBindConfig extends RBXScriptConnection {
 }
 
 interface iControlData<T extends UniqueInputTypes> {
+    readonly Control: T;
+    readonly Scheme: keyof ControlsType;
+    readonly Changeable: boolean;
     /**
      * Disconnects all binds for the current control and its scheme.
      */
@@ -107,7 +110,10 @@ type KeyboardMouseControls = {
     GridAnchor:     Enum.KeyCode | UserInputTypeKBStrip;
     GridItemRotate: Enum.KeyCode | UserInputTypeKBStrip;
     GridItemPlace:  Enum.KeyCode | UserInputTypeKBStrip;
+    Sprint:         Enum.KeyCode | UserInputTypeKBStrip;
     ToggleBuild:    Enum.KeyCode | UserInputTypeKBStrip;
+    ToggleInventory:     Enum.KeyCode | UserInputTypeKBStrip;
+    ToggleShop:     Enum.KeyCode | UserInputTypeKBStrip;
 };
 
 type KeyboardMouseControlData = {

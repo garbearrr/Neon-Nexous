@@ -9,3 +9,5 @@ engineering.png - https://www.flaticon.com/authors/prosymbols-premium
 bug.png - apien flaticon.com
 x.png - https://www.flaticon.com/authors/ariefstudio
 skyline.png - <a href="https://www.flaticon.com/free-icons/skyline" title="skyline icons">Skyline icons created by kerismaker - Flaticon</a>
+cspeed.png - https://www.flaticon.com/authors/vanda-arief
+gradcap.png - https://www.flaticon.com/authors/hilmy-abiyyu-a

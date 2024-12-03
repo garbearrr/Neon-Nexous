@@ -34,7 +34,7 @@ export class Ore implements IOre {
         this.RaycastParams.FilterType = Enum.RaycastFilterType.Exclude;
         this.RaycastParams.FilterDescendantsInstances = [this.Ore];
 
-        this.StartOreRayCheck();
+        //this.StartOreRayCheck();
     }
 
     public AddValue(Value: BigNumber): void {

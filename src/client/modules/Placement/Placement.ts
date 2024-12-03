@@ -16,6 +16,7 @@ import { Inventory } from "../Inventory/Inventory";
 
 const ROT_SMOOTH = 0.75;
 const CAM_TILT_PITCH = -45;
+const CACHE_SIZE = 10;
 
 let pid = 0;
 
@@ -37,6 +38,7 @@ export namespace Placement {
         ItemModule: undefined as unknown as BaseItem,
         ManagerMode: false,
         ObjectCache: undefined as unknown as IObjectCache,
+        Paused: false,
         SimpleDrag: false,
         SimplePlace: false,
         TweenIsMoving: false,
@@ -59,7 +61,7 @@ export namespace Placement {
 
         State.Item = SetupClone(ItemData);
 
-        State.ObjectCache = new ObjectCache(ItemData, Grid.GetGlobalInstance().MaxItemsPossible(State.Item));
+        State.ObjectCache = new ObjectCache(ItemData, CACHE_SIZE /*Grid.GetGlobalInstance().MaxItemsPossible(State.Item)*/);
         Workspace.FindFirstChild("ObjectCache")!.ChildRemoved.Connect((child) => {
             print("ObjectCache child removed " + child.Name);
         });
@@ -194,11 +196,20 @@ export namespace Placement {
         PlacedItems.HideHitboxes();
 
         State.Active = false;
+        State.Paused = false;
+        State.HideGuide = false;
+    }
+
+    export const PausePlacement = () => {
+        State.HideGuide = true;
+        State.Paused = true;
     }
 
     export const IsActive = () => State.Active;
 
     const OnPlace = (CF: LinkedListCollection<string, CFrame>) => {
+        if (State.Paused) return;
+
         CF.ForEachWithKey((Cframe, _Key, _Index) => {
             const Clone = State.Item.Clone();
             Clone.CFrame = Cframe;
@@ -230,6 +241,7 @@ export namespace Placement {
 
     const OnUpdate = (CFrames: LinkedListCollection<string, CFrame>) => {
         if (CFrames.GetSize() === State.DragCache.Size()) return;
+        if (State.Paused) return;
 
         const InvAmount = Inventory.GetItem(State.ItemId);
         const FrameCache = new Collection<string, BaseItem>();
@@ -376,6 +388,11 @@ export namespace Placement {
         }
     }
 
+    export const UnpausePlacement = () => {
+        State.HideGuide = false;
+        State.Paused = false;
+    }
+
     const UpdateItem = (Item: Part, ItemId: number) => {
         State.ItemId = ItemId;
         State.Item.Destroy();
@@ -388,7 +405,7 @@ export namespace Placement {
         State.DragCache.Clear();
 
         State.ObjectCache.Destroy();
-        State.ObjectCache = new ObjectCache(Item, Grid.GetGlobalInstance().MaxItemsPossible(State.Item));
+        State.ObjectCache = new ObjectCache(Item, CACHE_SIZE /*Grid.GetGlobalInstance().MaxItemsPossible(State.Item)*/);
 
         while (Grid.GetGlobalInstance().IsPlaceButtonDown()) wait();
         Grid.Instance("SquareDragGrid", Plot.PlotItem).StartCasting(State.Item, ItemId);

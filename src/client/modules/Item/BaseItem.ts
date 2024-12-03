@@ -89,7 +89,7 @@ export abstract class BaseItem implements BaseItemType {
         this.ShowHitbox();
 
         if (ItemActions.IsActionUIOpen()) return;
-        ItemActions.ShowBasicUI(this.Stats.ItemName.Value);
+        ItemActions.ShowBasicUI(this.Stats.ItemName.Value, this.Stats.Icon.Value);
         _G.Log(`Hover detected for ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
