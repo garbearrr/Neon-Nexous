@@ -1,6 +1,7 @@
 import { Collection } from "shared/modules/Collection/Collection";
 import { Plot } from "../Plot/Plot";
 import { CollectionService } from "@rbxts/services";
+import { Scheduling } from "shared/modules/Scheduling/Scheduling";
 
 export namespace OreManager {
     /** Key is ore id */
@@ -28,8 +29,17 @@ export namespace OreManager {
         Plot.PlotItem.Touched.Connect((Other) => {
             if (!CollectionService.HasTag(Other, "Ore")) return;
             const OID = Other.Name;
-            OreManager.Get(tonumber(OID) ?? -1)?.Destroy();
-            _G.Log(`Ore hit plot ${OID}`, "Plot|Ore");
+
+            Scheduling.SetTimeout(() => {
+                const O = OreManager.Get(tonumber(OID) ?? -1);
+                if (O === undefined) return;
+                
+                try {
+                    O.Destroy();
+                } catch (e) {}
+                
+                _G.Log(`Ore hit plot ${OID}`, "Plot|Ore");
+            }, 0.1);
         });
     }
 

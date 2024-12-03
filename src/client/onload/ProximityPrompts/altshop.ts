@@ -11,5 +11,5 @@ ProximityPromptService.PromptTriggered.Connect((Prompt, Player) => {
 ProximityPromptService.PromptShown.Connect((Prompt, Player) => {
     if (Prompt.Parent?.Name !== "AltShop") return;
 
-    AltShop.SetAltObjectText(`Neon Crystal Shop - ${AltShop.GetAltShopPrice().ToNumber()} Crystals`);
+    AltShop.SetAltObjectText(`Crystal Uplink - ${AltShop.GetAltShopPrice().ToNumber()} Crystals`);
 });
