@@ -2,12 +2,12 @@ import { Players } from "@rbxts/services";
 import { Util } from "shared/modules/Util/Util";
 import { BaseWidget } from "./BaseWidget";
 
-declare type TemplateDragBar = StarterGui["MainUI"]["MainFrame"]["Content"]["ScrollingFrame"]["Debug"]["Content"]["SettingsFrame"]["ScrollingFrame"]["TemplateDragBar"];
+declare type TemplateDragBar = StarterGui["Widgets"]["TemplateDragBar"];
 
 const Player = Players.LocalPlayer;
 const PlayerGui = Player.WaitForChild("PlayerGui") as StarterGui;
-const MainUI = PlayerGui.WaitForChild("MainUI") as StarterGui["MainUI"];
-const Template = MainUI.MainFrame.Content.ScrollingFrame.Debug.Content.SettingsFrame.ScrollingFrame.TemplateDragBar;
+const Widgets = PlayerGui.WaitForChild("Widgets") as StarterGui["Widgets"];
+const Template = Widgets.TemplateDragBar;
 
 export class DragBarWidget extends BaseWidget<TemplateDragBar, number> {
     private LowerBound = 0;

@@ -1,3 +1,6 @@
+import Object from "@rbxts/object-utils";
+import { Collection } from "../Collection/Collection";
+
 export class BigNumber implements iBigNumber {
     protected mantissa = 0;
     protected exponent = 0;
@@ -49,42 +52,89 @@ export class BigNumber implements iBigNumber {
     private FromString(value: string) {
         // Remove commas and spaces
         value = value.gsub("[,%s]", "")[0];
-
-        // Match patterns like "1.23K", "5e9", "1.2e+3", "-1.2K"
-        const pattern = "^([+-]?%d*%.?%d+)([eE]([+-]?%d+))?([a-zA-Z]*)$";
-        const match = string.match(value, pattern);
-
-        if (match) {
-            const numPart = match[1];
-            const exponentPart = match[3];
-            const abbr = match[4] as string;
-
-            let numValue = tonumber(numPart);
-            if (numValue !== undefined) {
-                let exp = 0;
-
-                if (exponentPart) {
-                    exp += tonumber(exponentPart)!;
-                }
-                if (abbr !== "") {
-                    const abbrExp = this.GetExponentFromAbbreviation(abbr);
-                    if (abbrExp !== undefined) {
-                        exp += abbrExp;
-                    } else {
-                        throw `Unknown abbreviation: ${abbr}`;
-                    }
-                }
-                this.mantissa = numValue;
-                this.exponent = exp;
-                const normalized = this.Normalize(this.mantissa, this.exponent);
-                this.mantissa = normalized.mantissa;
-                this.exponent = normalized.exponent;
-                return;
+    
+        // Define the patterns to match mantissa with suffix or mantissa with exponent
+        const SuffixPattern = "^([+-]?%d*%.?%d+)([a-zA-Z]+)$";      // mantissa , suffix
+        const ExponentPattern = "^([+-]?%d*%.?%d+)([eE][+-]?%d+)$"; // mantissa , exponent
+    
+        // Attempt to match the suffix pattern first
+        const resultSuffix = value.match(SuffixPattern);
+        // If suffix pattern doesn't match, try the exponent pattern
+        const resultExponent = resultSuffix ? undefined : value.match(ExponentPattern);
+    
+        // Handle suffix pattern match
+        if (resultSuffix) {
+            const mantissaStr = resultSuffix[0];
+            const suffixStr = resultSuffix[1] as string;
+    
+            // Parse the mantissa
+            const mantissa = tonumber(mantissaStr);
+            if (mantissa === undefined) {
+                throw `Invalid mantissa in BigNumber FromString: "${mantissaStr}"`;
             }
+    
+            let exponent = 0;
+    
+            // Parse the suffix abbreviation if it exists
+            if (suffixStr && suffixStr !== "") {
+                const abbrExponent = this.GetExponentFromAbbreviation(suffixStr.lower());
+                if (abbrExponent === undefined) {
+                    throw `Invalid suffix abbreviation in BigNumber FromString: "${suffixStr}"`;
+                }
+                exponent += abbrExponent;
+            }
+    
+            // Set the mantissa and exponent of the BigNumber
+            this.mantissa = mantissa;
+            this.exponent = exponent;
+    
+            // Normalize the mantissa and exponent
+            const normalized = this.Normalize(this.mantissa, this.exponent);
+            this.mantissa = normalized.mantissa;
+            this.exponent = normalized.exponent;
+    
         }
-
-        throw `Invalid string format for BigNumber: ${value}`;
+        // Handle exponent pattern match
+        else if (resultExponent) {
+            const mantissaStr = resultExponent[0];
+            const exponentStr = resultExponent[1] as string;
+    
+            // Parse the mantissa
+            const mantissa = tonumber(mantissaStr);
+            if (mantissa === undefined) {
+                throw `Invalid mantissa in BigNumber FromString: "${mantissaStr}"`;
+            }
+    
+            let exponent = 0;
+    
+            // Parse the exponent part
+            if (exponentStr) {
+                // Remove the 'e' or 'E' from the exponent string
+                const expValueStr = exponentStr.sub(2);
+                const expValue = tonumber(expValueStr);
+                if (expValue === undefined) {
+                    throw `Invalid exponent in BigNumber FromString: "${exponentStr}"`;
+                }
+                exponent += expValue;
+            }
+    
+            // Set the mantissa and exponent of the BigNumber
+            this.mantissa = mantissa;
+            this.exponent = exponent;
+    
+            // Normalize the mantissa and exponent
+            const normalized = this.Normalize(this.mantissa, this.exponent);
+            this.mantissa = normalized.mantissa;
+            this.exponent = normalized.exponent;
+        }
+        // If neither pattern matches, throw an error
+        else {
+            throw `Invalid string format for BigNumber: "${value}"`;
+        }
     }
+    
+    
+       
 
     public IsNegative(): boolean {
         return this.mantissa < 0;
@@ -107,36 +157,33 @@ export class BigNumber implements iBigNumber {
             b: 9,
             B: 9,
             t: 12,
-            T: 12,
-            Qa: 15,
-            Qi: 18,
-            Sx: 21,
-            Sp: 24,
-            Oc: 27,
-            No: 30,
-            Dc: 33,
-            Ud: 36,
-            Dd: 39,
-            Td: 42,
-            Qad: 45,
-            Qid: 48,
-            Sxd: 51,
-            Spd: 54,
-            Ocd: 57,
-            Nod: 60,
-            Vg: 63,
-            Uvg: 66,
-            Dvg: 69,
+            qa: 15,
+            qi: 18,
+            sx: 21,
+            sp: 24,
+            oc: 27,
+            no: 30,
+            dc: 33,
+            ud: 36,
+            dd: 39,
+            td: 42,
+            qad: 45,
+            qid: 48,
+            sxd: 51,
+            spd: 54,
+            ocd: 57,
+            nod: 60,
+            vg: 63,
+            uvg: 66,
+            dvg: 69,
         };
 
         return abbreviations[abbr];
     }
 
-    private GetAbbreviationFromExponent(exp: number): string | undefined {
+    private GetAbbreviationFromExponent(exp: number): string {
         const abbreviations: { [exp: number]: string } = {
-            0: ' ',
-            1: ' ',
-            2: ' ',
+            0: '',
             3: 'K',
             6: 'M',
             9: 'B',
@@ -162,7 +209,9 @@ export class BigNumber implements iBigNumber {
             69: 'Dvg',
         };
 
-        return abbreviations[exp];
+        const selectedExponent = math.floor(exp / 3) * 3;
+
+        return abbreviations[selectedExponent] ?? `e${exp}`;
     }
 
     private Normalize(mantissa: number, exponent: number): { mantissa: number; exponent: number } {
@@ -269,7 +318,7 @@ export class BigNumber implements iBigNumber {
     }
 
     public GetAbbreviation(): string {
-        return this.GetAbbreviationFromExponent(this.exponent) || `e${this.exponent}`;
+        return this.GetAbbreviationFromExponent(this.exponent);
     }
 
     public ToAbbreviatedString(noAbbrev = false, decimalPlaces = BigNumber.ToFixedPrecision): string {
@@ -278,7 +327,7 @@ export class BigNumber implements iBigNumber {
         }
 
         const abbrExponent = math.floor(this.exponent / 3) * 3;
-        const abbreviation = this.GetAbbreviationFromExponent(abbrExponent) || `e${abbrExponent}`;
+        const abbreviation = this.GetAbbreviationFromExponent(this.exponent);
         const scaledMantissa = this.mantissa * 10 ** (this.exponent - abbrExponent);
         const formattedMantissa = BigNumber.ToFixed(scaledMantissa, decimalPlaces);
 
@@ -289,13 +338,20 @@ export class BigNumber implements iBigNumber {
         return `${formattedMantissa}${abbreviation}`;
     }
 
-    // TODO: removeTrailingZeros removes zeros before the decimal point
     public static ToFixed(num: number, decimalPlaces: number, removeTrailingZeros = true): string {
+        if (num % 1 === 0) {
+            // Number is an integer, return as is
+            return tostring(num);
+        }
+
+        // Use string.format to format the number with the specified decimal places
         let result = string.format(`%.${decimalPlaces}f`, num);
 
         if (removeTrailingZeros) {
-            result = result.gsub("(%d)0+$", "%1")[0]; // Remove trailing zeros
-            result = result.gsub("%.$", "")[0];        // Remove trailing decimal point
+            // Remove trailing zeros after the decimal point
+            result = result.gsub("(%d%.%d*[1-9])0*$", "%1")[0]; // Match digits followed by zeros after the decimal point
+            // Remove the decimal point if there are no digits after it
+            result = result.gsub("(%d+)%.0*$", "%1")[0];
         }
 
         return result;

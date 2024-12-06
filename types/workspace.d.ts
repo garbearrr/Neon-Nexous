@@ -48,6 +48,7 @@ interface Workspace extends Model {
 					InShop: BoolValue;
 					MaxOreValue: StringValue;
 					MinOreValue: StringValue;
+					MaxUpgrades: NumberValue;
 					Add: StringValue;
 					Icon: StringValue;
 					ItemId: IntValue;

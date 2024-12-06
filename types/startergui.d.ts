@@ -19,6 +19,36 @@ interface StarterGui extends BasePlayerGui {
 			};
 			UICorner: UICorner;
 		};
+		TemplateDragBar: Frame & {
+			TextArea: Frame & {
+				UIListLayout: UIListLayout;
+				Update: TextButton & {
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+				};
+				Desc: TextLabel;
+			};
+			DragBar: Frame & {
+				TextButton: TextButton;
+				Under: Frame;
+				Dec: ImageButton & {
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					LowerBound: TextLabel;
+				};
+				ManualEntry: TextBox;
+				Inc: ImageButton & {
+					UIAspectRatioConstraint: UIAspectRatioConstraint;
+					UpperBound: TextLabel;
+				};
+				Bar: Frame & {
+					Handle: TextLabel & {
+						UIAspectRatioConstraint: UIAspectRatioConstraint;
+						UIDragDetector: UIDragDetector;
+					};
+					UIGradient: UIGradient;
+				};
+			};
+			UIPadding: UIPadding;
+		};
 	};
 	MainUI: ScreenGui & {
 		Top: Frame & {
@@ -836,36 +866,7 @@ interface StarterGui extends BasePlayerGui {
 										};
 									};
 									UIListLayout: UIListLayout;
-									TemplateDragBar: Frame & {
-										TextArea: Frame & {
-											UIListLayout: UIListLayout;
-											Update: TextButton & {
-												UIAspectRatioConstraint: UIAspectRatioConstraint;
-											};
-											Desc: TextLabel;
-										};
-										DragBar: Frame & {
-											TextButton: TextButton;
-											Under: Frame;
-											Dec: ImageButton & {
-												UIAspectRatioConstraint: UIAspectRatioConstraint;
-												LowerBound: TextLabel;
-											};
-											ManualEntry: TextBox;
-											Inc: ImageButton & {
-												UIAspectRatioConstraint: UIAspectRatioConstraint;
-												UpperBound: TextLabel;
-											};
-											Bar: Frame & {
-												Handle: TextLabel & {
-													UIAspectRatioConstraint: UIAspectRatioConstraint;
-													UIDragDetector: UIDragDetector;
-												};
-												UIGradient: UIGradient;
-											};
-										};
-										UIPadding: UIPadding;
-									};
+									
 									TemplateMultiToggle: Frame & {
 										ButtonArea: Frame & {
 											UIListLayout: UIListLayout;

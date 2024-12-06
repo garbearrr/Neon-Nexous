@@ -73,6 +73,27 @@ export namespace PlacedItems {
         return PIDItemCache.Get(PID);
     }
 
+    /**
+     * Get the item that can be replaced with the current item if possible.
+     * @param Cells The cells that the item occupies
+     * @param PlacingCat The category of the item being placed
+     * @returns BaseItemType | undefined
+     */
+    export const GetReplaceableItem = (Cells: Vector2[], PlacingCat: string): BaseItemType | undefined => {
+        const PIDCache = new Set<number>();
+        for (const C of Cells) {
+            const Item = PlacedItemCache.Get(C.X + "_" + C.Y);
+            if (Item === undefined) return undefined;
+            if (PIDCache.size() > 0 && !PIDCache.has(Item.GetPID())) return undefined;
+            if (Item.GetCategory() !== PlacingCat) return undefined;
+
+            PIDCache.add(Item.GetPID());
+            return Item;
+        }
+
+        return;
+    }
+
     /** Get unique items in cache */
     export const GetUniqueItems = (): ICollection<number, BaseItemType> => {
         return PIDItemCache;

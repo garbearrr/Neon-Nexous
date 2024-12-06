@@ -12,7 +12,7 @@ class DebugActionButton extends BaseMainUIActionButton {
     }
 
     public override OnActivated(): void {
-        if (!RunService.IsStudio()) return;
+        //if (!RunService.IsStudio()) return;
         super.OnActivated();
     }
 }

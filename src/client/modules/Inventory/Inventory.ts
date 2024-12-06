@@ -25,6 +25,11 @@ export namespace Inventory {
         return Inv.Has(ItemID) && Inv.Get(ItemID)! >= Amount;
     }
 
+    export const RemoveAllItems = () => {
+        Inv.Clear();
+        _G.Log(`Removed all items from inventory`, "Inventory");
+    }
+
     export const RemoveItem = (ItemID: number, Amount = 1) => {
         if (!Inv.Has(ItemID)) return;
 
