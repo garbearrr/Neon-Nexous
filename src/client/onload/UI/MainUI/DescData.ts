@@ -13,6 +13,11 @@ StatMap.set("DroppersDropSpeed", {
     img: "http://www.roblox.com/asset/?id=122935947738414"
 });
 
+StatMap.set("DroppersOreValue", {
+    hoverText: "Ore Value",
+    img: "http://www.roblox.com/asset/?id=78074384617710"
+});
+
 // Furnace
 StatMap.set("FurnacesAdd", {
     hoverText: "Ore Value Added",
@@ -51,7 +56,7 @@ StatMap.set("UpgradersMaxOreValue", {
 });
 
 StatMap.set("UpgradersMinOreValue", {
-    hoverText: "Mini Ore Value",
+    hoverText: "Min Ore Value",
     img: "http://www.roblox.com/asset/?id=104442901428471"
 });
 

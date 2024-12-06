@@ -89,6 +89,7 @@ interface FurnaceData extends BaseItemData {
         Description: StringValue;
         MinOreValue: StringValue;
         MaxOreValue: StringValue;
+        MaxUpgrades: NumberValue;
         Multiplier: StringValue;
         ItemId: IntValue;
         Icon: StringValue;

@@ -28,15 +28,45 @@ export class Furnace extends BaseItem implements FurnaceData {
             const Ore = OreManager.Get(tonumber(HitPart.Name)!);
             if (Ore === undefined) return;
 
-            const CurValue = Ore.GetValue();
-            const NewValue = CurValue
-                .Multiply(new BigNumber(this.Stats.Multiplier.Value))
-                .Add(new BigNumber(this.Stats.Add.Value));
-
-            Ore.SetValue(NewValue);
-            Ore.Process();
+            this.ProcessOre(Ore);
         });
 
         this.Connections.Set("receiver_touch", Conn);
+    }
+
+    private ProcessOre(Ore: IOre): void {
+        const CurValue = Ore.GetValue();
+        const MinValueAccepted = new BigNumber(this.Stats.MinOreValue.Value);
+        const MaxValueAccepted = new BigNumber(this.Stats.MaxOreValue.Value);
+        const MaxUpgrades = this.Stats.MaxUpgrades.Value;
+        const UpgradeCount = Ore.GetUpgradeCount();
+
+        // If the ore value is less than the min value accepted or greater than the max value accepted, return.
+        if (MinValueAccepted.ToNumber() !== -1 && CurValue.IsLessThan(MinValueAccepted)) {
+            Ore.Destroy();
+            return;
+        }
+
+        if (MaxValueAccepted.ToNumber() !== -1 && CurValue.IsGreaterThan(MaxValueAccepted)) {
+            Ore.Destroy();
+            return;
+        }
+
+        // Accounts for unupgraded cases
+        const AdjustedCount = (MaxUpgrades === 0) ? UpgradeCount - 1 : UpgradeCount;
+
+        // If the upgrade count is greater than the max upgrades, return.
+        if (MaxUpgrades !== -1 && AdjustedCount >= MaxUpgrades) {
+            Ore.Destroy();
+            return;
+        }
+
+        // Add then multiply ore value.
+        const NewValue = CurValue
+            .Add(new BigNumber(this.Stats.Add.Value))
+            .Multiply(new BigNumber(this.Stats.Multiplier.Value));
+
+        Ore.SetValue(NewValue);
+        Ore.Process();
     }
 }

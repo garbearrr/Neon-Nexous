@@ -24,6 +24,7 @@ export class Ore implements IOre {
     private readonly LevelUI = LUI.Level.GetLevelUI();
     private readonly RaycastParams = new RaycastParams();
     private Stucks = 0;
+    private Upgrades = 0;
     private Value: BigNumber;
 
     public constructor(Dropper: DropperData, Ore: TemplateOre) {
@@ -41,6 +42,15 @@ export class Ore implements IOre {
         this.Value = this.Value.Add(Value);
         this.Stucks = 0;
         _G.Log(`Added ${Value} to ${this.OreId}`, "Ore");
+    }
+
+    public AddUpgrade(): void {
+        this.Upgrades++;
+        _G.Log(`Added upgrade to ${this.OreId}`, "Ore");
+    }
+
+    public GetUpgradeCount(): number {
+        return this.Upgrades;
     }
 
     public GetValue(): BigNumber {

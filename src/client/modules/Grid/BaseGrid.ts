@@ -235,46 +235,59 @@ export abstract class BaseGrid {
      */
     public GetItemLocInCells(Loc?: Vector3): Vector2 {
         const ItemSizeCells = this.GetItemSizeInCellsXY();
-        //const [CellSkip, CellOffset] = this.GetCellSkipAndCellOffset();
         const Target = Loc || this.LastTargetCFrame.Position;
-
+    
         const GridParent = this.PState.ParentGridPart;
         const GridTexture = this.GridTexture;
-
-        //const GridSizeCells = new Vector2(GridParent.Size.X / GridTexture.StudsPerTileU, GridParent.Size.Z / GridTexture.StudsPerTileV);
-        const TopLeftGrid = new Vector2(GridParent.Position.X - GridParent.Size.X / 2, GridParent.Position.Z - GridParent.Size.Z / 2);
-        const TopLeftTarget = new Vector2(Target.X - this.ItemSize.X / 2, Target.Z - this.ItemSize.Z / 2);
-
+    
+        // Determine if the item dimensions should be flipped based on rotation
+        const shouldflip = (this.PState.Rotation / 90) % 2 !== 0;
+    
+        // Adjust item size based on rotation
+        const AdjustedItemSizeX = shouldflip ? this.ItemSize.Z : this.ItemSize.X;
+        const AdjustedItemSizeZ = shouldflip ? this.ItemSize.X : this.ItemSize.Z;
+    
+        const TopLeftGrid = new Vector2(
+            GridParent.Position.X - GridParent.Size.X / 2,
+            GridParent.Position.Z - GridParent.Size.Z / 2
+        );
+    
+        const TopLeftTarget = new Vector2(
+            Target.X - AdjustedItemSizeX / 2,
+            Target.Z - AdjustedItemSizeZ / 2
+        );
+    
         const CellSizeX = GridTexture.StudsPerTileU;
         const CellSizeY = GridTexture.StudsPerTileV;
-
+    
         const CellsAwayFromTopLeft = new Vector2(
             (TopLeftTarget.X - TopLeftGrid.X) / CellSizeX,
-            (TopLeftGrid.Y - TopLeftTarget.Y) / CellSizeY
+            (TopLeftTarget.Y - TopLeftGrid.Y) / CellSizeY
         );
-
+    
         const NoWholeNumber = new Vector2(
             CellsAwayFromTopLeft.X - math.floor(CellsAwayFromTopLeft.X),
             CellsAwayFromTopLeft.Y - math.floor(CellsAwayFromTopLeft.Y)
         );
-
+    
         const NoDecimal = new Vector2(
             math.floor(CellsAwayFromTopLeft.X),
             math.floor(CellsAwayFromTopLeft.Y)
         );
-
+    
         const SnappedDecimal = new Vector2(
             this.FindClosestFraction(NoWholeNumber.X, this.SnapSize, ItemSizeCells.X),
             this.FindClosestFraction(NoWholeNumber.Y, this.SnapSize, ItemSizeCells.Y)
         );
-
+    
         const SnappedWhole = new Vector2(
             NoDecimal.X + SnappedDecimal.X,
             NoDecimal.Y + SnappedDecimal.Y
         );
-
+    
         return new Vector2(math.abs(SnappedWhole.X), math.abs(SnappedWhole.Y));
     }
+    
 
     /**
      * Get the current rotation of the item being placed in degrees.

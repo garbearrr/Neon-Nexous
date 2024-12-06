@@ -78,6 +78,7 @@ export namespace ItemActions {
         ActionUI.Info.Actions.Visible = true;
         ActionUI.Info.UIListLayout.VerticalFlex = Enum.UIFlexAlignment.Fill;
         ActionUIOpen = true;
+        SelectedItems.Clear();
         SelectedItems.Set(Item.GetPID(), Item);
         UndoCb = UndoCallback;
 

@@ -198,8 +198,22 @@ export abstract class BaseItem implements BaseItemType {
         this.CanPlace = PlacedItems.CanPlace(this.CellsOccupied);
         this.CanReplace = PlacedItems.CanReplace(this.CellsOccupied, this.GetCategory());
 
-        if (!this.CanPlace) return this.Destroy(true);
+        // Have to do this first or else it will think its replacing itself
+        const Replaceable = PlacedItems.GetReplaceableItem(this.CellsOccupied, this.GetCategory());
+
+        if (!this.CanPlace && !this.CanReplace) return this.Destroy(true);
         if (this.CellsOccupied.size() === 0) return this.Destroy(true);
+
+        if (this.CanReplace && Replaceable !== undefined) {
+            const ReplacedName = Replaceable.Stats.ItemName.Value;
+            const RPID = Replaceable.GetPID();
+
+            Inventory.AddItem(Replaceable.Stats.ItemId.Value);
+            PlacedItems.RemoveItem(RPID);
+
+            _G.Log(`Replaced ${ReplacedName} ${RPID}`, "BaseItem");
+        }
+
         this.PlacementId = PlacedItems.AddItem(this.CellsOccupied, this);
         this.Part.Parent = Plot.PlacedFolder;
 
@@ -207,6 +221,7 @@ export abstract class BaseItem implements BaseItemType {
         this.ShowHitbox(false);
         Inventory.RemoveItem(this.Stats.ItemId.Value);
         this.OutOfItems = false;
+
         _G.Log(`Placed ${this.Stats.ItemName.Value} ${this.PlacementId}`, "BaseItem");
     }
 
