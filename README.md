@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/7321387a-dabc-4623-aa22-a2a94d34766b" />
+  <img src="https://github.com/user-attachments/assets/91624089-19c2-4908-a023-7cfdb4d43020" />
 </p>
 
 # Install Instructions
