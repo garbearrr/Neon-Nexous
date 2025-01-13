@@ -49,3 +49,49 @@ export class Util {
         return (t - a) / (b - a);
     }
 }
+
+export namespace NewUtil {
+    export namespace Array {
+        export function Concat<T extends defined>(...arrays: T[][]): T[] {
+            const newArray: T[] = [];
+            for (const array of arrays) {
+                for (const item of array) {
+                    newArray.push(item);
+                }
+            }
+            return newArray;
+        }
+
+        export function Insert<T extends defined>(array: T[], index: number, ...items: T[]): T[] {
+            const newArray: T[] = [];
+            for (let i = 0; i < array.size(); i++) {
+                if (i === index) {
+                    for (const item of items) {
+                        newArray.push(item);
+                    }
+                }
+                newArray.push(array[i]);
+            }
+            return newArray;
+        }
+
+        export function Slice<T extends defined>(array: T[], start: number, ending: number): T[] {
+            const newArray: T[] = [];
+            for (let i = start; i < ending; i++) {
+                newArray.push(array[i]);
+            }
+            return newArray;
+        };
+
+        export function Splice<T extends defined>(array: T[], start: number, deleteCount: number, ...items: T[]): T[] {
+            const newArray: T[] = [];
+            for (let i = 0; i < array.size(); i++) {
+                if (i >= start && i < start + deleteCount) {
+                    continue;
+                }
+                newArray.push(array[i]);
+            }
+            return Concat(newArray, items);
+        }
+    }
+}
